@@ -5,13 +5,13 @@
         </head-top>
         <section class="address">
         	<ul class="addresslist">
-        		<li v-for="(item,index) in removeAddress">
+        		<li v-for="(item,index) in adressList.data">
         			<div>
         				<p>{{item.address}}</p>
-        				<p><span>{{item.phone}}</span><span v-if="item.phonepk">、{{item.phonepk}}</span></p>
+        				<p><span>{{item.phone}}</span></p>
         			</div>
         			<div class="deletesite" v-if="deletesite">
-        				<span @click="deleteSite(index, item)">x</span>
+        				<span @click="addressDelete(index ,item.id)">x</span>
         			</div>
         		</li>
         	</ul>
@@ -35,24 +35,26 @@
 <script>
     import headTop from 'src/components/header/head'
     import {getImgPath} from 'src/components/common/mixin'
+    import alertTip from 'src/components/common/alertTip'
     import {mapState,mapActions,} from 'vuex'
-    import {getAddressList, deleteAddress} from 'src/service/getData'
+    import {getAddressList, deleteAddress,getaddress,addressDelete} from 'src/service/getData'
+    import Request from 'src/service/api'
 
     export default {
       data(){
             return{
-    			deletesite:false, //是否编辑状态
-    			editText:'编辑',
-    			adressList:[], //地址列表
+              deletesite:false, //是否编辑状态
+              editText:'编辑',
+              adressList:[], //地址列表
+              showAlert: false, //显示提示组件
+              current:1,
+              size:5,
             }
         },
         mounted(){
             this.initData();
         },
         mixins: [getImgPath],
-        mounted(){
-        	
-        },
         components: {
             headTop,
         },
@@ -60,7 +62,7 @@
              ...mapState([
                 'userInfo','removeAddress'
             ]),
-             
+
         },
         props:[],
         methods: {
@@ -68,9 +70,19 @@
                 'saveAddress'
             ]),
             //初始化信息
-            initData(){
-                if (this.userInfo && this.userInfo.user_id) {
-                   this.saveAddress();
+          async initData(){
+
+                if (this.userInfo && this.userInfo.token) {
+
+                  Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
+                    .then((res) => {
+                      console.log(res);
+                      this.adressList = res;
+                      console.log(this.adressList);
+                    })
+
+//                  this.adressList = await getaddress(this.current,this.size,this.userInfo.token);
+//                  console.log(this.adressList);
                 }
             },
             //编辑
@@ -84,26 +96,41 @@
             	}
             },
             //删除地址
-            async deleteSite(index, item){
-                if (this.userInfo && this.userInfo.user_id) {
-                    await deleteAddress(this.userInfo.user_id, item.id);
-            	    this.removeAddress.splice(index, 1);
+            async addressDelete(index,id){
+
+//                console.log(id);
+//                console.log(this.userInfo.token);
+//
+//                console.log(index)
+
+                if (this.userInfo && this.userInfo.token) {
+                    Request.Delete('address/' + id, { token: this.userInfo.token })
+                    .then((res) => {
+//                      console.log(res);
+                      if(res.code === 200){
+                        this.showAlert = true;
+                        this.alertText = res.msg;
+                      }
+                    })
                 }
-            }
+            },
+          closeTip(){
+            this.showAlert = false;
+          }
         },
         watch: {
             userInfo: function (value) {
-                if (value && value.user_id) {
+                if (value && value.userInfo.token) {
                     this.initData();
                 }
             }
         }
     }
 </script>
-  
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-  
+
     .rating_page{
         position: absolute;
         top: 0;

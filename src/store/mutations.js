@@ -150,13 +150,10 @@ export default {
 		state.shopid = shopid;
 	},
 	//记录订单页面用户选择的备注, 传递给订单确认页面
-	[CONFIRM_REMARK](state, {
-		remarkText,
-		inputText
-	}) {
-		state.remarkText = remarkText;
+	[CONFIRM_REMARK](state, inputText) {
 		state.inputText = inputText;
 	},
+
 	//是否开发票
 	[CONFIRM_INVOICE](state, invoice) {
 		state.invoice = invoice;
@@ -168,7 +165,7 @@ export default {
 	//保存geohash
 	[SAVE_GEOHASH](state, geohash) {
 		state.geohash = geohash;
-		
+
 	},
 	//确认订单页添加新的的地址
 	[CONFIRM_ADDRESS](state, newAddress) {

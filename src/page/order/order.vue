@@ -1,37 +1,239 @@
  <template>
+
+
     <div class="order_page">
         <head-top head-title="订单列表" go-back='true'></head-top>
-        <ul class="order_list_ul" v-load-more="loaderMore">
-            <li class="order_list_li" v-for="item in orderList" :key="item.id">
-                <img :src="imgBaseUrl + item.restaurant_image_url" class="restaurant_image">
-                <section class="order_item_right">
-                    <section @click="showDetail(item)">
-                        <header class="order_item_right_header">
-                            <section class="order_header">
-                                <h4 >
-                                    <span class="ellipsis">{{item.restaurant_name}} </span>
-                                    <svg fill="#333" class="arrow_right">
-                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                                    </svg>
-                                </h4>
-                                <p class="order_time">{{item.formatted_created_at}}</p>
-                            </section>
-                            <p class="order_status">
-                                {{item.status_bar.title}}
-                            </p>
-                        </header>
-                        <section class="order_basket">
-                            <p class="order_name ellipsis">{{item.basket.group[0][0].name}}{{item.basket.group[0].length > 1 ? ' 等' + item.basket.group[0].length + '件商品' : ''}}</p>
-                            <p class="order_amount">¥{{item.total_amount.toFixed(2)}}</p>
-                        </section>
-                    </section>
-                    <div class="order_again">
-                        <compute-time v-if="item.status_bar.title == '等待支付'" :time="item.time_pass"></compute-time>
-                        <router-link :to="{path: '/shop', query: {geohash, id: item.restaurant_id}}" tag="span" class="buy_again" v-else>再来一单</router-link>
-                    </div>
-                </section>
-            </li>
+
+
+      <div class="order-box">
+
+        <ul class="order-list-top" ref="chooseOrder">
+          <li>
+            <span :class='{ordero_on: changeShowType =="order_all"}' @click="changeShowType='order_all'">全部</span>
+          </li>
+          <li>
+            <span :class='{ordero_on: changeShowType =="order_unpayed"}' @click="changeShowType='order_unpayed'">待付款</span>
+          </li>
+          <li>
+            <span :class='{ordero_on: changeShowType =="order_unshipped"}' @click="changeShowType='order_unshipped'">待发货</span>
+          </li>
+          <li>
+            <span :class='{ordero_on: changeShowType =="order_shipped"}' @click="changeShowType='order_shipped'">待收货</span>
+          </li>
         </ul>
+
+        <transition name="fade-choose">
+          <section v-show="changeShowType =='order_all'" class="order-center-content">
+            <ul class="order_list_ul" v-load-more="loaderMore">
+              <li class="order_list_li" v-for="item in orderList.data" :key="item.id">
+                <span v-for="goods in item.goods">
+                  <img :src="goods.thumb" class="restaurant_image">
+                </span>
+                <section class="order_item_right">
+                  <section @click="showDetail(item.id)">
+                    <header class="order_item_right_header" v-for="goodDE in item.goods ">
+                      <section class="order_header">
+                        <h4>
+                          <span class="ellipsis">{{goodDE.name}}</span>
+                          <svg fill="#333" class="arrow_right">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                          </svg>
+                        </h4>
+                        <p class="order_time">{{goodDE.outline}}</p>
+                      </section>
+                      <p class="order_status">
+                      交易成功
+                      </p>
+                    </header>
+                    <section class="order_basket">
+                      <!--<p class="order_name ellipsis">44444444</p>-->
+                      <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
+                    </section>
+                  </section>
+                  <div class="order_again">
+                    <!--<compute-time>46465456</compute-time>-->
+                    <router-link :to="{path: '/shop', query: {geohash, id: item.id}}" tag="span" class="buy_again" >再来一单</router-link>
+                  </div>
+                </section>
+              </li>
+            </ul>
+
+            <!--<div class="no-data-div" >-->
+              <!--<div class="no-data-img">-->
+                <!--<img src="../../images/bg_empty_list.png">-->
+              <!--</div>-->
+              <!--<dl>-->
+                <!--<dt>您还没有相关的订单</dt>-->
+                <!--<dd>可以去看看哪些想买的</dd>-->
+              <!--</dl>-->
+              <!--<router-link to="/msite">-->
+                <!--<p class="no-data-btn">立即去购买</p>-->
+              <!--</router-link>-->
+            <!--</div>-->
+
+          </section>
+        </transition>
+
+
+        <transition name="fade-choose">
+          <section v-show="changeShowType =='order_unpayed'" class="order-center-content">
+            <ul class="order_list_ul" v-load-more="loaderMore">
+              <li class="order_list_li" v-for="item in orderList.data" :key="item.id">
+                <span v-for="goods in item.goods">
+                  <img :src="goods.thumb" class="restaurant_image">
+                </span>
+                <section class="order_item_right">
+                  <section @click="showDetail(item.id)">
+                    <header class="order_item_right_header" v-for="goodDE in item.goods ">
+                      <section class="order_header">
+                        <h4>
+                          <span class="ellipsis">{{goodDE.name}}</span>
+                          <svg fill="#333" class="arrow_right">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                          </svg>
+                        </h4>
+                        <p class="order_time">{{goodDE.outline}}</p>
+                      </section>
+                      <p class="order_status">
+                        交易成功
+                      </p>
+                    </header>
+                    <section class="order_basket">
+                      <!--<p class="order_name ellipsis">44444444</p>-->
+                      <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
+                    </section>
+                  </section>
+                  <div class="order_again">
+                    <!--<compute-time>46465456</compute-time>-->
+                    <router-link :to="{path: '/shop', query: {geohash, id: item.id}}" tag="span" class="buy_again" >再来一单</router-link>
+                  </div>
+                </section>
+              </li>
+            </ul>
+
+            <!--<div class="no-data-div" v-else>-->
+              <!--<div class="no-data-img">-->
+                <!--<img src="../../images/bg_empty_list.png">-->
+              <!--</div>-->
+              <!--<dl>-->
+                <!--<dt>您还没有相关的订单</dt>-->
+                <!--<dd>可以去看看哪些想买的</dd>-->
+              <!--</dl>-->
+              <!--<router-link to="/msite">-->
+                <!--<p class="no-data-btn">立即去购买</p>-->
+              <!--</router-link>-->
+            <!--</div>-->
+          </section>
+        </transition>
+
+
+        <transition name="fade-choose">
+          <section v-show="changeShowType =='order_unshipped'" class="order-center-content">
+            <ul class="order_list_ul" v-load-more="loaderMore">
+              <li class="order_list_li" v-for="item in orderList.data" :key="item.id">
+                <span v-for="goods in item.goods">
+                  <img :src="goods.thumb" class="restaurant_image">
+                </span>
+                <section class="order_item_right">
+                  <section @click="showDetail(item.id)">
+                    <header class="order_item_right_header" v-for="goodDE in item.goods ">
+                      <section class="order_header">
+                        <h4>
+                          <span class="ellipsis">{{goodDE.name}}</span>
+                          <svg fill="#333" class="arrow_right">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                          </svg>
+                        </h4>
+                        <p class="order_time">{{goodDE.outline}}</p>
+                      </section>
+                      <p class="order_status">
+                        交易成功
+                      </p>
+                    </header>
+                    <section class="order_basket">
+                      <!--<p class="order_name ellipsis">44444444</p>-->
+                      <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
+                    </section>
+                  </section>
+                  <div class="order_again">
+                    <!--<compute-time>46465456</compute-time>-->
+                    <router-link :to="{path: '/shop', query: {geohash, id: item.id}}" tag="span" class="buy_again" >再来一单</router-link>
+                  </div>
+                </section>
+              </li>
+            </ul>
+
+            <!--<div class="no-data-div" v-else>-->
+              <!--<div class="no-data-img">-->
+                <!--<img src="../../images/bg_empty_list.png">-->
+              <!--</div>-->
+              <!--<dl>-->
+                <!--<dt>您还没有相关的订单</dt>-->
+                <!--<dd>可以去看看哪些想买的</dd>-->
+              <!--</dl>-->
+              <!--<router-link to="/msite">-->
+                <!--<p class="no-data-btn">立即去购买</p>-->
+              <!--</router-link>-->
+            <!--</div>-->
+          </section>
+        </transition>
+
+
+        <transition name="fade-choose">
+          <section v-show="changeShowType =='order_shipped'" class="order-center-content">
+            <ul class="order_list_ul" v-load-more="loaderMore">
+              <li class="order_list_li" v-for="item in orderList.data" :key="item.id">
+                <span v-for="goods in item.goods">
+                  <img :src="goods.thumb" class="restaurant_image">
+                </span>
+                <section class="order_item_right">
+                  <section @click="showDetail(item.id)">
+                    <header class="order_item_right_header" v-for="goodDE in item.goods ">
+                      <section class="order_header">
+                        <h4>
+                          <span class="ellipsis">{{goodDE.name}}</span>
+                          <svg fill="#333" class="arrow_right">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                          </svg>
+                        </h4>
+                        <p class="order_time">{{goodDE.outline}}</p>
+                      </section>
+                      <p class="order_status">
+                        交易成功
+                      </p>
+                    </header>
+                    <section class="order_basket">
+                      <!--<p class="order_name ellipsis">44444444</p>-->
+                      <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
+                    </section>
+                  </section>
+                  <div class="order_again">
+                    <!--<compute-time>46465456</compute-time>-->
+                    <router-link :to="{path: '/shop', query: {geohash, id: item.id}}" tag="span" class="buy_again" >再来一单</router-link>
+                  </div>
+                </section>
+              </li>
+            </ul>
+
+            <!--<div class="no-data-div" v-else>-->
+              <!--<div class="no-data-img">-->
+                <!--<img src="../../images/bg_empty_list.png">-->
+              <!--</div>-->
+              <!--<dl>-->
+                <!--<dt>您还没有相关的订单</dt>-->
+                <!--<dd>可以去看看哪些想买的</dd>-->
+              <!--</dl>-->
+              <!--<router-link to="/msite">-->
+                <!--<p class="no-data-btn">立即去购买</p>-->
+              <!--</router-link>-->
+            <!--</div>-->
+
+          </section>
+        </transition>
+
+
+      </div>
+
         <foot-guide></foot-guide>
         <transition name="loading">
             <loading v-show="showLoading"></loading>
@@ -39,7 +241,7 @@
         <transition name="router-slid" mode="out-in">
             <router-view></router-view>
         </transition>
- 
+
     </div>
 </template>
 
@@ -50,19 +252,23 @@
     import loading from 'src/components/common/loading'
     import {getImgPath} from 'src/components/common/mixin'
     import footGuide from 'src/components/footer/footGuide'
-    import {getOrderList} from 'src/service/getData'
+    import {getOrderList,listOrder} from 'src/service/getData'
     import {loadMore} from 'src/components/common/mixin'
     import {imgBaseUrl} from 'src/config/env'
+    import Request from '../../service/api'
 
 
     export default {
       data(){
             return{
                 orderList: null, //订单列表
-                offset: 0, 
+                offset: 0,
+                changeShowType: 'order_all',
                 preventRepeat: false,  //防止重复获取
-                showLoading: true, //显示加载动画
-                imgBaseUrl
+                showLoading: false, //显示加载动画
+                imgBaseUrl,
+                current:1,
+                size:2,
             }
         },
         mounted(){
@@ -86,10 +292,28 @@
             ]),
             //初始化获取信息
             async initData(){
-                if (this.userInfo && this.userInfo.user_id) {
-                    let res = await getOrderList(this.userInfo.user_id, this.offset);
-                    this.orderList = [...res];
-                    this.hideLoading();
+
+                if (this.userInfo && this.userInfo.token) {
+
+                  console.log(this.userInfo.token);
+
+
+                  Request.Get('order', {current:this.current, size:this.size,token:this.userInfo.token,})
+                    .then((res) => {
+                      this.orderList = res;
+                      console.log(this.orderList);
+                    })
+
+
+
+//                    let res = await listOrder(this.current, this.size,this.userInfo.token,);
+//
+////                    let res2 = await getOrderList(this.userInfo.user_id, this.offset);
+//
+//                    this.orderList = [...res];
+
+//                    console.log(res);
+
                 }else{
                     this.hideLoading();
                 }
@@ -131,19 +355,19 @@
         }
     }
 </script>
-  
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-    
+
     .order_page{
-        background-color: #f1f1f1;
+        /*background-color: #f1f1f1;*/
         margin-bottom: 1.95rem;
         p, span, h4{
             font-family: Helvetica Neue,Tahoma,Arial;
         }
     }
     .order_list_ul{
-        padding-top: 1.95rem;
+        /*padding-top: 1.95rem;*/
         .order_list_li{
             background-color: #fff;
             display: flex;
@@ -222,4 +446,25 @@
         transform: translate3d(2rem, 0, 0);
         opacity: 0;
     }
+
+    .order-box{margin-top: 1.95rem;}
+    .order-list-top{ width:100%; height:45px; background:#FFF;border-bottom:1px solid #EEE;}
+    .order-list-top li{ width:25%; float:left; height:45px; text-align:center;}
+    .order-together-group .order-list-top li{ width:25%;}
+    .order-list-top li span{ display:inline-block; margin:auto;text-align:center; font-size:0.6rem; line-height:43px; color:#222}
+    .order-list-top li .ordero_on{border-bottom:2px solid #fd5138;}
+    .order-center-content{ width:100%; overflow:hidden; margin-top:0.4rem;}
+
+    .no-data-div{ width:90%; margin:0rem auto 0; text-align:center;}
+    .no-data-div .no-data-icon { height: 5rem;width: 5rem;line-height: 12rem;text-align: center;display: block;background: #DFE0E8;border-radius: 100%;margin: 0 auto;}
+    .no-data-div .no-data-img { margin: 0 auto; }
+    .no-data-div .no-data-icon i { display: block; color: #fff; line-height:5rem; font-size:3rem; }
+    .no-data-div dl { margin: 0.15rem auto; text-align:center; }
+    .no-data-div dl dt { display: block; color: #777; font-size: .8rem}
+    .no-data-div dl dd { display: block; margin-bottom: 0.15rem;  color: #999; font-size: .6rem}
+    .no-data-div .no-data-btn { background: #f23030; display:block !important; margin: 1rem auto 0 auto; color: #fff !important; line-height: 1.5rem; text-align: center;border-radius: 0.15rem; height: 1.5rem;width: 6rem;font-size: 0.7rem ;}
+    .no-data-div .no-data-img img {
+      height: 6.5rem;
+    }
+
 </style>

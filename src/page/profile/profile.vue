@@ -3,9 +3,9 @@
         <head-top go-back='true' :head-title="profiletitle"></head-top>
         <section>
             <section class="profile-number">
-                <router-link :to="userInfo&&userInfo.user_id? '/profile/info' : '/login'" class="profile-link">
-                    <img :src="imgBaseUrl + userInfo.avatar" class="privateImage" v-if="userInfo&&userInfo.user_id">
-                    <span class="privateImage" v-else>
+                <router-link :to="userInfo? '/profile/info' : '/login'" class="profile-link">
+                    <!--<img  class="privateImage" v-if="userInfo">-->
+                    <span class="privateImage">
                         <svg class="privateImage-svg">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#avatar-default"></use>
                         </svg>
@@ -28,106 +28,161 @@
                     </span>
                 </router-link>
             </section>
-            <section class="info-data">
-                <ul class="clear">
-                    <router-link to="/balance" tag="li" class="info-data-link">
-                        <span class="info-data-top"><b>{{parseInt(balance).toFixed(2)}}</b>元</span>
-                        <span class="info-data-bottom">我的余额</span>
-                    </router-link>
-                    <router-link to="/benefit" tag="li" class="info-data-link">
-                        <span class="info-data-top"><b>{{count}}</b>个</span>
-                        <span class="info-data-bottom">我的优惠</span>
-                    </router-link>
-                    <router-link to="/points" tag="li" class="info-data-link">
-                        <span class="info-data-top"><b>{{pointNumber}}</b>分</span>
-                        <span class="info-data-bottom">我的积分</span>
-                    </router-link>
-                </ul>
-            </section>
+
+          <div class="user-order-box">
+            <dl>
+              <router-link :to="userInfo? '/order' : '/login'"  class="myorder">
+                <dt>
+                  <strong>全部订单</strong>
+                  <span>查看全部订单</span>
+                </dt>
+              </router-link>
+            </dl>
+            <ul>
+              <li>
+                <router-link :to="userInfo? '/order' : '/login'" class="myorder">
+                  <div class="user_order">
+                    <i class="iconfont">&#xe605;</i>
+                  </div>
+                  <span>待付款</span>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="userInfo? '/order' : '/login'" class="myorder">
+                  <div class="user_order">
+                    <i class="iconfont">&#xe61f;</i>
+                  </div>
+                  <span>待发货</span>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="userInfo? '/order' : '/login'" class="myorder">
+                  <div class="user_order">
+                    <i class="iconfont">&#xe70b;</i>
+                  </div>
+                  <span>待收货</span>
+                </router-link>
+              </li>
+
+            </ul>
+          </div>
+
+
+          <!--zx我的订单-->
+
+
+
+
+
+
             <section class="profile-1reTe">
                 <!-- 我的订单 -->
-                <router-link to='/order' class="myorder">
-                    <aside>
-                        <svg fill="#4aa5f0">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#order"></use>
-                        </svg>
-                    </aside>
-                    <div class="myorder-div">
-                        <span>我的订单</span>
-                        <span class="myorder-divsvg">
-                            <svg fill="#bbb">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
-                    </div>
-                </router-link>
-                <!-- 积分商城 -->
-                <a href='https://home.m.duiba.com.cn/#/chome/index' class="myorder">
+                <!--<router-link to='/order' class="myorder">-->
+                    <!--<aside>-->
+                        <!--<svg fill="#4aa5f0">-->
+                            <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#order"></use>-->
+                        <!--</svg>-->
+                    <!--</aside>-->
+                    <!--<div class="myorder-div">-->
+                        <!--<span>我的订单</span>-->
+                        <!--<span class="myorder-divsvg">-->
+                            <!--<svg fill="#bbb">-->
+                                <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>-->
+                            <!--</svg>-->
+                        <!--</span>-->
+                    <!--</div>-->
+                <!--</router-link>-->
+                <!-- 优惠券 -->
+              <li class="myorder">
                     <aside>
                         <svg fill="#fc7b53">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>
                         </svg>
                     </aside>
                     <div class="myorder-div">
-                        <span>积分商城</span>
+                        <span>优惠券</span>
                         <span class="myorder-divsvg">
                             <svg fill="#bbb">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                             </svg>
                         </span>
                     </div>
-                </a>
-                <!-- 饿了么会员卡 -->
-                <router-link to='/vipcard' class="myorder">
-                    <aside>
-                        <svg fill="#ffc636">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#vip"></use>
-                        </svg>
-                    </aside>
-                    <div class="myorder-div">
-                        <span>饿了么会员卡</span>
-                        <span class="myorder-divsvg">
+              </li>
+
+
+              <!-- 收货地址 -->
+
+              <router-link to="/profile/info/address" tag="li" class="myorder">
+                <aside>
+                  <svg fill="#fc7b53">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>
+                  </svg>
+                </aside>
+                <div class="myorder-div">
+                  <span>收货地址</span>
+                  <span class="myorder-divsvg">
                             <svg fill="#bbb">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                             </svg>
                         </span>
-                    </div>
-                </router-link>
+                </div>
+              </router-link>
+
+
+
+              <!-- 联系客服 -->
+              <router-link to='/service' class="myorder">
+                <aside>
+                  <svg fill="#fc7b53">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>
+                  </svg>
+                </aside>
+                <div class="myorder-div">
+                  <span>联系客服</span>
+                  <span class="myorder-divsvg">
+                            <svg fill="#bbb">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                            </svg>
+                        </span>
+                </div>
+              </router-link>
             </section>
-            <section class="profile-1reTe">
-                <!-- 服务中心 -->
-                <router-link to='/service' class="myorder">
-                    <aside>
-                        <svg fill="#4aa5f0">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#service"></use>
-                        </svg>
-                    </aside>
-                    <div class="myorder-div">
-                        <span>服务中心</span>
-                        <span class="myorder-divsvg">
-                            <svg fill="#bbb">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
-                    </div>
-                </router-link>
-                <!-- 下载饿了么APP -->
-                <router-link to='/download' class="myorder">
-                    <aside>
-                        <svg fill="#3cabff">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#download"></use>
-                        </svg>
-                    </aside>
-                    <div class="myorder-div" style="border-bottom:0;">
-                        <span>下载饿了么APP</span>
-                        <span class="myorder-divsvg">
-                            <svg fill="#bbb">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
-                    </div>
-                </router-link>
-            </section>
+
+            <!--<section class="profile-1reTe">-->
+                <!--&lt;!&ndash; 服务中心 &ndash;&gt;-->
+                <!--<router-link to='/service' class="myorder">-->
+                    <!--<aside>-->
+                        <!--<svg fill="#4aa5f0">-->
+                            <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#service"></use>-->
+                        <!--</svg>-->
+                    <!--</aside>-->
+                    <!--<div class="myorder-div">-->
+                        <!--<span>服务中心</span>-->
+                        <!--<span class="myorder-divsvg">-->
+                            <!--<svg fill="#bbb">-->
+                                <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>-->
+                            <!--</svg>-->
+                        <!--</span>-->
+                    <!--</div>-->
+                <!--</router-link>-->
+                <!--&lt;!&ndash; 下载饿了么APP &ndash;&gt;-->
+                <!--<router-link to='/download' class="myorder">-->
+                    <!--<aside>-->
+                        <!--<svg fill="#3cabff">-->
+                            <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#download"></use>-->
+                        <!--</svg>-->
+                    <!--</aside>-->
+                    <!--<div class="myorder-div" style="border-bottom:0;">-->
+                        <!--<span>下载饿了么APP</span>-->
+                        <!--<span class="myorder-divsvg">-->
+                            <!--<svg fill="#bbb">-->
+                                <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>-->
+                            <!--</svg>-->
+                        <!--</span>-->
+                    <!--</div>-->
+                <!--</router-link>-->
+            <!--</section>-->
+
         </section>
         <foot-guide></foot-guide>
         <transition name="router-slid" mode="out-in">
@@ -150,9 +205,6 @@ export default {
             username: '登录/注册',           //用户名
             resetname: '',
             mobile: '暂无绑定手机号',             //电话号码
-            balance: 0,            //我的余额
-            count : 0,             //优惠券个数
-            pointNumber : 0,       //积分数
             avatar: '',             //头像地址
             imgBaseUrl,
         }
@@ -171,16 +223,16 @@ export default {
             'userInfo',
         ]),
         //后台会返回两种头像地址格式，分别处理
-        imgpath:function () {
-            let path;
-            if(this.avatar.indexOf('/') !==-1){
-                path = imgBaseUrl +　this.avatar;
-            }else{
-                path = this.getImgPath(this.avatar)
-            }
-            this.SAVE_AVANDER(path);
-            return path;
-        }
+//        imgpath:function () {
+//            let path;
+//            if(this.avatar.indexOf('/') !==-1){
+//                path = imgBaseUrl +　this.avatar;
+//            }else{
+//                path = this.getImgPath(this.avatar)
+//            }
+//            this.SAVE_AVANDER(path);
+//            return path;
+//        }
     },
 
     methods:{
@@ -188,10 +240,11 @@ export default {
             'SAVE_AVANDER'
         ]),
         initData(){
-            if (this.userInfo && this.userInfo.user_id) {
+          console.log(this.userInfo);
+            if (this.userInfo) {
                 this.avatar = this.userInfo.avatar;
                 this.username = this.userInfo.username;
-                this.mobile = this.userInfo.mobile || '暂无绑定手机号';
+                this.mobile = this.userInfo.username || '暂无绑定手机号';
                 this.balance = this.userInfo.balance;
                 this.count = this.userInfo.gift_amount;
                 this.pointNumber = this.userInfo.point;
@@ -371,4 +424,21 @@ export default {
         transform: translate3d(2rem, 0, 0);
         opacity: 0;
     }
+
+
+   /*用户中心首页-我的订单模块*/
+   .user-order-box{ width:100%; background:#fff; overflow:hidden;margin-top:10px; position:relative;}
+   .user-order-box dl{ width:100%; height:50px; line-height:50px; position:relative;}
+   .user-order-box dl dt{ width:100%;}
+   .user-order-box dl dt strong{display: block;float: left;font-size:16px;color: #222;font-weight: normal;margin-left: 3%;}
+   .user-order-box dl dt span{ display:block;float: right;background-size: auto 18px;padding-right: 15px;font-size: 14px;color: #999;margin-right: 10px;}
+   .user-order-box ul{ width:100%; height:75px; padding:10px 0; border-top:1px solid #e4e4e4}
+   .user-order-box ul li{ width:33%; float:left;}
+   .user-order-box ul li .user_order{width: 35px;margin: auto;position: relative;}
+   .user-order-box ul li .user_order i{position: relative;display: block;width: 35px;height: 35px; line-height:35px;margin: auto;color:#999; font-size:1.2em; text-align:center;}
+   .user-order-box ul li .user_order em{display: block;min-width:15px;height: 15px;position: absolute;font-size:0.5rem;line-height: 15px;text-align: center;border-radius: 50%; top:2px;right:-2px;color: #fff;vertical-align:middle;}
+   .user-order-box ul li span {display: block;width: 50px; height:20px;margin: auto;font-size: 14px;line-height:20px;color: #222;text-align: center;}
+
+
+
 </style>

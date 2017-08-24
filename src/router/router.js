@@ -6,6 +6,7 @@ const msite = r => require.ensure([], () => r(require('../page/msite/msite')), '
 const search = r => require.ensure([], () => r(require('../page/search/search')), 'search')
 const shop = r => require.ensure([], () => r(require('../page/shop/shop')), 'shop')
 const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
+const register= r => require.ensure([], () => r(require('../page/register/register')), 'register')
 const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
 const forget = r => require.ensure([], () => r(require('../page/forget/forget')), 'forget')
 const order = r => require.ensure([], () => r(require('../page/order/order')), 'order')
@@ -15,6 +16,7 @@ const invoiceRecord = r => require.ensure([], () => r(require('../page/vipcard/c
 const useCart = r => require.ensure([], () => r(require('../page/vipcard/children/useCart')), 'useCart')
 const vipDescription = r => require.ensure([], () => r(require('../page/vipcard/children/vipDescription')), 'vipDescription')
 const food = r => require.ensure([], () => r(require('../page/food/food')), 'food')
+const shopcart = r => require.ensure([], () => r(require('../page/shopcart/shopcart')), 'shopcart')
 const confirmOrder = r => require.ensure([], () => r(require('../page/confirmOrder/confirmOrder')), 'confirmOrder')
 const remark = r => require.ensure([], () => r(require('../page/confirmOrder/children/remark')), 'remark')
 const payment = r => require.ensure([], () => r(require('../page/confirmOrder/children/payment')), 'payment')
@@ -56,7 +58,8 @@ export default [{
         //地址为空时跳转home页面
         {
             path: '',
-            redirect: '/home'
+            //redirect: '/home'
+          redirect: '/msite'
         },
         //首页城市列表页
         {
@@ -79,9 +82,16 @@ export default [{
             path: '/food',
             component: food
         },
+
+      //购物车
+        {
+          path: '/shopcart',
+          component: shopcart
+        },
+
         //搜索页
         {
-            path: '/search/:geohash',
+            path: '/search',
             component: search
         },
         //商铺详情页
@@ -134,6 +144,13 @@ export default [{
             path: '/login',
             component: login
         },
+
+      //注册页
+      {
+        path: '/register',
+        component: register
+      },
+
         //个人信息页
         {
             path: '/profile',

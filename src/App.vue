@@ -8,7 +8,7 @@
     	<transition name="router-fade" mode="out-in">
 			<router-view v-if="!$route.meta.keepAlive"></router-view>
 		</transition>
-		<svg-icon></svg-icon>	
+		<svg-icon></svg-icon>
     </div>
 </template>
 
@@ -22,8 +22,13 @@
 
 </script>
 
+<style lang="css">
+  @import './images/iconfont.css';
+</style>
 <style lang="scss">
   	@import './style/common';
+
+    /*@import '../elm/static/css/iconfont.css';*/
 	.router-fade-enter-active, .router-fade-leave-active {
 	  	transition: opacity .3s;
 	}

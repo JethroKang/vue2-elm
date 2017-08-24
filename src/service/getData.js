@@ -1,6 +1,303 @@
 import fetch from '../config/fetch'
 import {getStore} from '../config/mUtils'
 
+
+
+/**
+ * 获取首页轮播图
+ */
+
+export const indexBanner = () => fetch('/api/v1/slides');
+
+
+/**
+ * 获取首页分类
+ */
+export const homeFoodTypes = () => fetch('/api/v1/speed');
+
+
+/**
+ * 获取热卖商品（吃货最爱）
+ */
+
+export const goodsHot = (current, size) => fetch('/api/v1/goods_hot', {
+  current:'current',
+  size:"size",
+});
+
+
+/**
+ * 获取推荐商品（小编精选）
+ */
+
+export const goodsRec = (current, size) => fetch('/api/v1/goods_rec', {
+  current:'current',
+  size:"size",
+});
+
+
+/**
+ * 获取分类下的商品列表
+ */
+
+export const goodsTypeRec = (classifyId,current, size,) => fetch('/api/v1/goods_rec', {
+  classify_id:'classifyId',
+  current:'current',
+  size:"size",
+});
+
+
+/**
+ * 获取分类下的商品列表(热门)
+ */
+
+export const goodsTypeRecHot = (classifyId,current, size,is_hot) => fetch('/api/v1/goods_rec', {
+  classify_id:'classifyId',
+  current:'current',
+  size:"size",
+  is_hot:'is_hot',
+});
+
+
+
+/**
+ * 获取分类下的商品列表(新品)
+ */
+
+export const goodsTypeRecNew = (classifyId,current, size,is_new) => fetch('/api/v1/goods_rec', {
+  classify_id:'classifyId',
+  current:'current',
+  size:"size",
+  is_new:'is_new',
+});
+
+
+/**
+ * 获取分类下的商品列表(推荐)
+ */
+
+export const goodsTypeRecRec = (classifyId,current, size,is_rec) => fetch('/api/v1/goods_rec', {
+  classify_id:'classifyId',
+  current:'current',
+  size:"size",
+  is_rec:'is_rec',
+});
+
+
+
+
+/**
+ * 获取热门搜索的词
+ */
+
+export const searchKey = () => fetch('/api/v1/search_key');
+
+
+/**
+ * 获取搜索商品
+ */
+
+export const searchRec = (searchkey,current, size) => fetch('/api/v1/goods_rec', {
+  search_key:'searchkey',
+  current:'current',
+  size:"size",
+});
+
+
+
+/**
+ * 获取查询指定商品
+ */
+
+export const goods = number => fetch('/api/v1/goods/'+ number);
+
+
+
+/**
+ * 注册
+ */
+export const register = (username, password, repassword) => fetch('/api/v1/reg', {username, password, repassword}, 'POST');
+
+
+/**
+ * 登录
+ */
+export const login = (username, password) => fetch('/api/v1/login', {username, password}, 'POST');
+
+
+
+/**
+ * 刷新token
+ */
+export const token = (token) => fetch('/api/v1/refresh_token', {token}, 'POST');
+
+
+
+/**
+ * 收货地址列表
+ */
+
+export const getaddress = (current, size,token) => fetch('/api/v1/address', {
+  current:'current',
+  size:'size',
+  token,
+});
+
+
+/**
+ * 收货地址管理（新增）
+ */
+
+
+export const addressAdd = (token, name, phone,province,city,area,street,address,) => {
+
+  let data = {
+    token,
+    name,
+    phone,
+    province,
+    city,
+    area,
+    street,
+    address,
+  };
+  return fetch('/api/v1/address', data,'POST');
+};
+
+
+
+/**
+ * 收货地址管理（修改）
+ */
+
+
+export const addressEdit = (token,id, name, phone,province,city,area,street = '',address, zip = '',is_default='',) => {
+
+  let data = {
+    token,
+    id,
+    name,
+    phone,
+    province,
+    city,
+    area,
+    street,
+    address,
+    zip,
+    is_default,
+  };
+  return fetch('/api/v1/address', data,'PUT');
+};
+
+
+
+
+/**
+ * 收货地址管理（单个删除）
+ */
+
+
+export const addressDelete = (number,token) => fetch('api/v1/address/delete' ,{
+  token,
+  id:'number',
+
+},'DELETE');
+
+
+
+
+/**
+ * 收货地址管理（批量删除）
+ */
+
+
+export const addressDeleteAll = (token,delete_all,support_ids = []) => fetch('/api/v1/address', {
+  token:'token',
+  delete_all:'delete_all',
+  ids
+},'DELETE');
+
+
+
+
+/**
+ * 创建订单（即下单）
+ */
+
+export const createOrder = (token,address_id,orders = '',content) => fetch('/api/v1/order', {
+  token:'token',
+  address_id:'address_id',
+  orders,
+  content,
+},'POST');
+
+
+
+/**
+ * 支付成功后的回调函数
+ */
+
+export const successOrder = (token,number,out_trade_no) => fetch('/api/v1/order/id'+ number, {
+  token:'token',
+  out_trade_no:'out_trade_no',
+},'POST');
+
+
+/**
+ * 订单列表
+ */
+
+export const listOrder = (current,size,token) => fetch('/api/v1/order', {
+  current:'current',
+  size:'size',
+  token,
+});
+
+
+/**
+ * 查询各种订单状态
+ */
+
+export const variousOrder = (current,size,query,token) => fetch('/api/v1/order', {
+  current:'current',
+  size:'size',
+  query:'query',
+  token:'token',
+});
+
+
+/**
+ * 获取指定订单
+ */
+
+export const inquireOrder = (number,token) => fetch('/api/v1/order'+ number, {
+  token:'token',
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * 获取首页默认地址
  */
@@ -8,6 +305,9 @@ import {getStore} from '../config/mUtils'
 export const cityGuess = () => fetch('/v1/cities', {
 	type: 'guess'
 });
+
+
+
 
 
 /**
@@ -457,6 +757,8 @@ export const deleteAddress = (userid, addressid) => fetch( '/v1/users/' + userid
  * 账号密码登录
  */
 export const accountLogin = (username, password, captcha_code) => fetch('/v2/login', {username, password, captcha_code}, 'POST');
+
+
 
 
 /**

@@ -1,232 +1,229 @@
- <template>
-  <div class="rating_page">
-        <head-top head-title="新增地址" go-back='true'></head-top>
-        <section class="adddetail">
-        	<form action="" v-on:submit.prevent>
-        		<section class="ui-padding-block">
-        			<div class="input-new">
-        				<input type="text" placeholder="请填写你的姓名" :class="{verifies:verify}" v-model="message" @input="inputThing">
-        				<p v-if="verify">请填写您的姓名</p>
-        			</div>
-        			<router-link to='/profile/info/address/add/addDetail' class="add-detail">
-	        			<div class="input-new">
-	        				<input type="text" placeholder="小区/写字楼/学校等" readonly="readonly" v-model="addAddress" />
-	        			</div>
-        			</router-link>
-        			 <div class="input-new">
-        				<input type="text" placeholder="请填写详细送餐地址" :class="{verifies:verifythree}" @input="inputThingthree" v-model="mesthree"/>
-        				<p v-if="verifythree">{{sendaddress}}</p>
-        			</div>
-        			<div class="input-new">
-        				<input type="text" placeholder="请填写能够联系到您的手机号" :class="{verifies:verifyfour}" v-model="telenum" @input="inputThingfour" />
-        				<p v-if="verifyfour">{{telephone}}</p>
-        			</div>
-        			<div class="input-new">
-        				<input type="text" placeholder="备用联系电话（选填）" v-model="standbytelenum" @input="inputThingfive" />
-        				<p v-if="verifyfive">{{standbytele}}</p>
-        			</div>
-        		</section>
-        		<section class="addbutton">
-        			<button :class="{butopacity:butpart}" @click.prevent="submitThing">新增地址</button>
-        		</section>
-        	</form>
+<template>
+  <div class="address_page">
+    <head-top head-title="添加地址" go-back='true'></head-top>
+    <section class="page_text_container">
+      <section class="section_list">
+        <span class="section_left">联系人</span>
+        <section class="section_right">
+          <input type="text" name="name" placeholder="你的名字" v-model="name" class="input_style">
         </section>
-        <transition name="router-slid" mode="out-in">
-            <router-view></router-view>
-        </transition>
-        <alert-tip v-if="showAlert" @closeTip="showAlert = false" :alertText="alertText"></alert-tip>
-    </div>
+      </section>
+      <section class="section_list">
+        <span class="section_left">联系电话</span>
+        <section class="section_right">
+          <div class="phone_add">
+            <input type="text" name="phone" placeholder="你的手机号" v-model="phone" class="input_style">
+          </div>
+        </section>
+      </section>
+      <section class="section_list">
+        <span class="section_left">省份</span>
+        <section class="section_right">
+          <input type="text" name="province" placeholder="省份" v-model="province" class="input_style">
+        </section>
+      </section>
+      <section class="section_list">
+        <span class="section_left">城市</span>
+        <section class="section_right">
+          <input type="text" name="city" placeholder="城市" v-model="city" class="input_style">
+        </section>
+      </section>
+      <section class="section_list">
+        <span class="section_left">县区</span>
+        <section class="section_right">
+          <input type="text" name="area" placeholder="县区" v-model="area" class="input_style">
+        </section>
+      </section>
+
+      <section class="section_list">
+        <span class="section_left">街道</span>
+        <section class="section_right">
+          <input type="text" name="street" placeholder="街道" v-model="street" class="input_style">
+        </section>
+      </section>
+
+      <section class="section_list">
+        <span class="section_left">详细地址</span>
+        <section class="section_right">
+          <input type="text" name="address" placeholder="详细地址" v-model="address" class="input_style">
+        </section>
+      </section>
+
+    </section>
+    <div class="determine" @click="addAddress">确定</div>
+    <alert-tip v-if="showAlert" @closeTip="showAlert = false" :alertText="alertText"></alert-tip>
+    <transition name="router-slid" mode="out-in">
+      <router-view></router-view>
+    </transition>
+  </div>
 </template>
 
 <script>
-    import headTop from 'src/components/header/head'
-    import {getImgPath} from 'src/components/common/mixin'
-    import {mapState, mapMutations} from 'vuex'
-    import {postAddAddress} from 'src/service/getData'
-    import alertTip from 'src/components/common/alertTip'
 
+  import headTop from 'src/components/header/head'
+  import {mapState, mapMutations} from 'vuex'
+  import {getAddress, getUser, postAddAddress,addressAdd} from 'src/service/getData'
+  import alertTip from 'src/components/common/alertTip'
+  import Request from 'src/service/api'
 
-    export default {
-      data(){
-            return{
-    			verify:false,			//姓名
-    			verifytwo:false,		//备注
-    			verifythree:false,		//地址
-    			verifyfour:false,		//电话
-    			verifyfive:false,		//备用电话
-    			butpart:false,			//新增地址按钮的透明度
-    			sendaddress:'',  //地址
-    			message:'', //信息
-    			mesthree:'', //送餐地址
-    			telenum:'', //手机号
-    			telephone:'', //手机号提示
-    			standbytele:'', //备用手机号提示 
-    			standbytelenum:'', //备用手机号
-    			addSearch:false, //添加搜索地址
-    			newAddress:{},			//增加数组的元素
-                showAlert: false, //弹出框
-                alertText: null, //弹出信息
-            }
-        },
-        created(){
+  export default {
+    data(){
+      return{
+        name: null, //姓名
+        phone: null, //电话
+        address_detail: null, //详细地址
+        province: null,//省份
+        city: null,//城市
+        area: null,//县区
+        street: null, //街道
+        address: null, //详细地址
+        showAlert: false, //弹出框
+        alertText: null, //弹出框信息
+      }
+    },
+    created(){
 
-        },
-        mixins: [getImgPath],
-        components: {
-            headTop,
-            alertTip,
-        },
-        computed:{
-             ...mapState([
-                'userInfo', 'addAddress','removeAddress','newAddress', 'geohash'
-            ]),
-            
-        },
-        props:[],
-        methods: {
-        	...mapMutations([
-            	'ADD_ADDRESS'
-            ]),
-            inputThing(){
-            	(!this.message) ? this.verify=true : this.verify=false;
-            	this.bindThing()
-            },
-            //输入地址
-            inputThingthree(){
-            	this.verifythree=true;
-            	if(this.mesthree.length == 0){
-            		this.sendaddress='请详细填写送餐地址';
-            		
-            	}else if(this.mesthree.length > 0 && this.mesthree.length <= 2){
-            		this.sendaddress='送餐地址太短了，不能辨识';
-            	}else{
-            		this.sendaddress='';
-            		this.verifythree=false;
-            	}
-            	this.bindThing()	
-            },
-            //输入手机号
-            inputThingfour(){
-            	this.verifyfour=true;
-            	if((/^[1][358][0-9]{9}$/).test(this.telenum)){
-            		this.verifyfour=false;
-            	}else if(this.telenum == ''){
-            		this.telephone="手机号不能为空"
-            	}else{
-            		this.telephone="请输入正确的手机号"
-            	}
-            	this.bindThing()
-            },
-            //输入备注手机号
-            inputThingfive(){
-            	this.verifyfive=true;
-            	if((/^[1][358][0-9]{9}$/).test(this.standbytelenum) || this.standbytelenum == ''){
-            		this.verifyfive=false;
-            	}else{
-            		this.standbytele="请输入正确的手机号"
-            	}
-            	this.bindThing();
-            },
-            bindThing(){
-            	if(this.message && this.mesthree && !this.verifyfour){
-            		this.butpart=true;
-            	}else{
-            		this.butpart=false;
-            	}
-            },
-            //保存地址
-            async submitThing(){
-                let res = await postAddAddress(this.userInfo.user_id, this.mesthree, this.addAddress, this.geohash, this.message, this.telenum, this.standbytelenum, 0, 1, '公司', 4);
-                if (res.message) {
-                    this.showAlert = true;
-                    this.alertText = res.message;
-                }else if(this.butpart){
-                    //保存的地址存入vuex
-            		this.ADD_ADDRESS({
-                        name: this.message,
-                        address: this.mesthree,
-                        address_detail: this.addAddress,
-                        geohash: 'wtw37r7cxep4',
-                        phone: this.telenum,
-                        phone_bk: this.standbytelenum,
-                        poi: this.addAddress,
-                        poi_type: 0,
-                    });
-            		this.$router.go(-1);
-                }
-            }
+    },
+    components: {
+      headTop,
+      alertTip,
+    },
+    computed: {
+      ...mapState([
+        'userInfo',
+      ]),
+    },
+    methods: {
+      ...mapMutations([
+        'CONFIRM_ADDRESS'
+      ]),
+      //保存地址信息
+      async addAddress(){
+        if (!(this.userInfo && this.userInfo.token)) {
+          this.showAlert = true;
+          this.alertText = '请登录'
+        }else if(!this.name){
+          this.showAlert = true;
+          this.alertText = '请输入姓名'
+        }else if(!this.phone){
+          this.showAlert = true;
+          this.alertText = '请输入电话号码'
+        }else if(!this.province){
+          this.showAlert = true;
+          this.alertText = '请输入省份'
+        }else if(!this.city){
+          this.showAlert = true;
+          this.alertText = '请输入城市'
+        }else if(!this.area){
+          this.showAlert = true;
+          this.alertText = '请输入县区'
+        }else if(!this.street){
+          this.showAlert = true;
+          this.alertText = '请输入街道'
+        }else if(!this.address){
+          this.showAlert = true;
+          this.alertText = '请输入详细地址'
         }
+
+        Request.Post('address', {token:this.userInfo.token, name:this.name, phone:this.phone, province:this.province, city:this.city, area:this.area, street:this.street, address:this.address})
+        .then((res) => {
+          console.log(res);
+          //保存成功返沪上一页，否则弹出提示框
+          if (res.code !== 200) {
+            this.showAlert = true;
+            this.alertText = res.msg;
+          }else {
+            this.CONFIRM_ADDRESS(1);
+            this.$router.go(-1);
+          }
+        })
+      },
     }
+  }
 </script>
-  
+
 <style lang="scss" scoped>
-    @import 'src/style/mixin';
-  	.router-slid-enter-active, .router-slid-leave-active {
-  	    transition: all .4s;
-  	}
-  	.router-slid-enter, .router-slid-leave-active {
-  	    transform: translate3d(2rem, 0, 0);
-        opacity: 0;
-  	}
-    .rating_page{
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #f2f2f2;
-        z-index: 202;
-        padding-top: 1.95rem;
-        p, span{
-            font-family: Helvetica Neue,Tahoma,Arial;
+  @import 'src/style/mixin';
+
+  .address_page{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f5f5f5;
+    z-index: 204;
+    padding-top: 1.95rem;
+    p, span, input{
+      font-family: Helvetica Neue,Tahoma,Arial;
+    }
+  }
+  .page_text_container{
+    background-color: #fff;
+    padding: 0 .7rem;
+  }
+  .section_list{
+    display: flex;
+    border-bottom: 0.025rem solid #f5f5f5;
+    .section_left{
+      @include sc(.7rem, #333);
+      flex: 2;
+      line-height: 2.5rem;
+    }
+    .section_right{
+      flex: 5;
+      .input_style{
+        width: 100%;
+        height: 2.5rem;
+        @include sc(.7rem, #999);
+      }
+      .phone_bk{
+        border-top: 0.025rem solid #f5f5f5;
+      }
+      .phone_add{
+        @include fj;
+        align-items: center;
+      }
+      .choose_sex{
+        display: flex;
+        line-height: 2.5rem;
+        border-top: 0.025rem solid #f5f5f5;
+        .choose_option{
+          @include sc(.7rem, #333);
+          display: flex;
+          align-items: center;
+          margin-right: .8rem;
+          svg{
+            margin-right: .3rem;
+            @include wh(.8rem, .8rem);
+            fill: #ccc;
+          }
+          .choosed{
+            fill: #4cd964;
+          }
         }
+      }
+      .choose_address{
+        @include sc(.7rem, #999);
+        line-height: 2.5rem;
+        border-bottom: 0.025rem solid #f5f5f5;
+      }
     }
-    .adddetail{
-    	margin-top:.4rem;
-    }
-    .ui-padding-block{
-    	background:#fff;
-    	padding-top:.4rem;
-    	.add-detail{display:block;}
-    	.input-new{
-    		padding-bottom:.4rem;
-    		input{
-    			display:block;
-    			width:15rem;
-    			font-size:.6rem;
-    			margin:0 auto;
-    			padding:.3rem;
-    			background:#f2f2f2;
-    			border:1px solid #ddd;
-    			@include borderRadius(3px);
-    		}
-    		.verifies{
-				border-color:#ea3106;
-    		}
-    		p{
-				@include sc(.4rem,#ea3106);
-				padding-left:.5rem;
-				margin-top:.2rem;
-    		}
-    	}
-    	
-    }
-    .addbutton{
-    	margin:.6rem auto;
-    	width:15rem;
-    	background:#4cd964;
-    	@include borderRadius(3px);
-    	button{
-    		width:100%;
-    		@include sc(.6rem,#fff);
-    		line-height:1.6rem;
-    		background:none;
-    		font-weight:700;
-    		opacity:.6;
-    	}
-    	.butopacity{
-    		transition: all .4s;
-    		opacity:1;
-    	}
-    }
+  }
+  .determine{
+    background-color: #4cd964;
+    @include sc(.7rem, #fff);
+    text-align: center;
+    margin: 0 .7rem;
+    line-height: 1.8rem;
+    border-radius: 0.2rem;
+    margin-top: .6rem;
+  }
+  .router-slid-enter-active, .router-slid-leave-active {
+    transition: all .4s;
+  }
+  .router-slid-enter, .router-slid-leave-active {
+    transform: translate3d(2rem, 0, 0);
+    opacity: 0;
+  }
 </style>

@@ -22,7 +22,7 @@
                 <p>
                     <span>评论数 {{rating_count}}</span>
                     <span>好评率 {{satisfy_rate}}%</span>
-                </p>    
+                </p>
             </section>
             <!-- <buy-cart :shopId='shopId'  :foods='foods' @moveInCart="$emit('moveInCart')"></buy-cart> -->
         </section>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-	import headTop from 'src/components/header/head'
+	  import headTop from 'src/components/header/head'
     import {getImgPath} from 'src/components/common/mixin'
     import ratingStar from 'src/components/common/ratingStar'
     import buyCart from 'src/components/common/buyCart'
@@ -70,14 +70,14 @@
         },
         props:[],
         methods: {
-            
+
         }
     }
 </script>
-	
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-	
+
 	.rating_page{
 		position: absolute;
 		top: 0;
