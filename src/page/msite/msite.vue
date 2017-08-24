@@ -1,22 +1,39 @@
 <template>
     <div>
-    	<head-top signin-up='msite'>
-    		<router-link :to="'/search'" class="link_search" slot="search">
-	    		<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
-	    			<circle cx="8" cy="8" r="7" stroke="rgb(255,255,255)" stroke-width="1" fill="none"/>
-	    			<line x1="14" y1="14" x2="20" y2="20" style="stroke:rgb(255,255,255);stroke-width:2"/>
-	    		</svg>
-    		</router-link>
-			<!--<router-link to="/home" slot="msite-title" class="msite_title">-->
-				<!--<span class="title_text ellipsis">{{msietTitle}}</span>-->
-			<!--</router-link>-->
-    	</head-top>
+    	<!--<head-top signin-up='msite'>-->
+    		<!--<router-link :to="'/search'" class="link_search" slot="search">-->
+	    		<!--<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">-->
+	    			<!--<circle cx="8" cy="8" r="7" stroke="rgb(255,255,255)" stroke-width="1" fill="none"/>-->
+	    			<!--<line x1="14" y1="14" x2="20" y2="20" style="stroke:rgb(255,255,255);stroke-width:2"/>-->
+	    		<!--</svg>-->
+    		<!--</router-link>-->
+			<!--&lt;!&ndash;<router-link to="/home" slot="msite-title" class="msite_title">&ndash;&gt;-->
+				<!--&lt;!&ndash;<span class="title_text ellipsis">{{msietTitle}}</span>&ndash;&gt;-->
+			<!--&lt;!&ndash;</router-link>&ndash;&gt;-->
+    	<!--</head-top>-->
+
+      <header class="m_header">
+        <div class="m_header_box" id="my_search">
+          <form action="#">
+            <span class="icon_search"></span>
+            <input type="search" class="search" placeholder="点击搜索" @click="goSearch($event)">
+          </form>
+          <router-link to="/login" class="logo_btn">登录</router-link>
+        </div>
+      </header>
+
 
       <banner></banner>
 
       <nav class="msite_nav">
         <div class="swiper-container" v-if="goodsTypes.length">
             <div class=" food_types_container" >
+              <router-link :to="{path: '/food'}" class="link_to_food">
+                <figure>
+                  <img>
+                  <figcaption>热卖推荐</figcaption>
+                </figure>
+              </router-link>
               <router-link :to="{path: '/food', query: {foodID:foodItem.id,title:foodItem.mobile_name}}" v-for="foodItem in goodsTypes" :key="foodItem.id" class="link_to_food">
                 <figure>
                   <img :src="foodItem.thumb">
@@ -71,6 +88,10 @@ export default {
     computed: {
     },
     methods: {
+      goSearch(event){
+        this.$router.push('/search');
+        window.event? window.event.returnValue = false : event.preventDefault();
+      }
     },
     watch: {
 
@@ -81,6 +102,7 @@ export default {
 
 <style lang="scss" scoped>
     @import 'src/style/mixin';
+
 	.link_search{
 		left: .8rem;
 		@include wh(.9rem, .9rem);
@@ -117,7 +139,7 @@ export default {
 		display:flex;
 		flex-wrap: wrap;
 		.link_to_food{
-			width: 20%;
+			width: 25%;
 			padding: 0.3rem 0rem;
 			@include fj(center);
 			figure{
@@ -163,6 +185,56 @@ export default {
         }
       }
     }
+
+    .m_header {
+      background-color: $blue;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      @include wh(100%, 1.95rem);
+    }
+
+    .m_header .m_header_box {
+      height: 1.95rem;
+      background: $blue;
+    }
+
+    .m_header_box form {
+      width: 80%;
+      height: 1.95rem;
+      margin-left: .6rem;
+      margin-right: .6rem;
+      float: left;
+    }
+
+    .m_header_box form .search {
+      width: 100%;
+      height: 30px;
+      border-radius: 15px;
+      margin-top: 5px;
+      padding-left: 30px;
+    }
+
+    .m_header_box form .icon_search {
+      display: block;
+      width: 37px;
+      height: 40px;
+      position: absolute;
+      left: 85px;
+      top: 10px;
+      background-position: -60px -109px;
+    }
+
+    .m_header_box .logo_btn {
+      width: 10%;
+      height: 1.95rem;
+      color: #fff;
+      font-size: .6rem;
+    }
+
+
+
 
 
 </style>
