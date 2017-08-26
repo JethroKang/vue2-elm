@@ -1,47 +1,34 @@
 <template>
     <div class="food_container">
     	<head-top :head-title="headTitle" goBack="true"></head-top>
-
     	<section class="sort_container">
         <div class="sort_item">
-          <div class="sort_item_container" @click="chooseType('food')">
+          <div class="sort_item_container" @click="chooseType('hot')">
             <div class="sort_item_border" >
-              <span :class="{category_title: sortBy == 'food'}">热卖</span>
-              <!--<svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">-->
-                <!--<polygon points="0,3 10,3 5,8"/>-->
-              <!--</svg>-->
-            </div>
-          </div>
-        </div>
-
-        <div class="sort_item">
-          <div class="sort_item_container" @click="chooseType('sort')">
-            <div class="sort_item_border">
-              <span :class="{category_title: sortBy == 'sort'}">推荐</span>
-              <!--<svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">-->
-                <!--<polygon points="0,3 10,3 5,8"/>-->
-              <!--</svg>-->
+              <span :class="{category_title: sortBy == 'hot'}">热卖</span>
             </div>
           </div>
         </div>
         <div class="sort_item">
-          <div class="sort_item_container" @click="chooseType('activity')">
+          <div class="sort_item_container" @click="chooseType('rec')">
             <div class="sort_item_border">
-              <span :class="{category_title: sortBy == 'activity'}">新品</span>
-              <!--<svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">-->
-              <!--<polygon points="0,3 10,3 5,8"/>-->
-              <!--</svg>-->
+              <span :class="{category_title: sortBy == 'rec'}">推荐</span>
             </div>
           </div>
         </div>
-
+        <div class="sort_item">
+          <div class="sort_item_container" @click="chooseType('new')">
+            <div class="sort_item_border">
+              <span :class="{category_title: sortBy == 'new'}">新品</span>
+            </div>
+          </div>
+        </div>
     	</section>
-    	<!--<transition name="showcover">-->
-    		<!--<div class="back_cover" v-show="sortBy"></div>-->
-    	<!--</transition>-->
+
     	<section class="shop_list_container">
 	    	<shop-list  :foodID="foodID"  :screenType = "screenType"  @DidConfrim="clearAll"></shop-list>
     	</section>
+
     </div>
 </template>
 
@@ -50,8 +37,6 @@
 import {mapState, mapMutations} from 'vuex'
 import headTop from 'src/components/header/head'
 import shopList from 'src/components/common/shoplist'
-import {getImgPath} from 'src/components/common/mixin'
-import {msiteAdress, foodCategory, foodDelivery, foodActivity,goodsTypeRec} from 'src/service/getData'
 
 export default {
 	data(){
@@ -66,7 +51,6 @@ export default {
     created(){
     	this.initData();
     },
-    mixins: [getImgPath],
     components: {
     	headTop,
     	shopList
@@ -96,27 +80,15 @@ export default {
     	async chooseType(type){
             this.screenType = type;
             this.sortBy = type;
-//            console.log(this.screenType);
+//          console.log(this.screenType);
     	},
-
 
 		//点击取消或者确认时，需要清空当前已选的状态值
 		clearAll(){
 			this.delivery_mode = null;
 			// this.support_ids.map(item => item.status = false);
    //          this.filterNum = 0;
-		},
-		//只有点击清空按钮才清空数据，否则一直保持原有状态
-		clearSelect(){
-            this.support_ids.map(item => item.status = false);
-            this.filterNum = 0;
-		},
-		//点击确认时，将需要筛选的id值传递给子组件，并且收回列表
-		confirmSelectFun(){
-			//状态改变时，因为子组件进行了监听，会重新获取数据进行筛选
-			this.confirmStatus = !this.confirmStatus;
-            this.sortBy = '';
-		}
+		  },
     },
 }
 

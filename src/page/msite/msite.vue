@@ -102,7 +102,6 @@ export default {
 
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-
 	.link_search{
 		left: .8rem;
 		@include wh(.9rem, .9rem);
@@ -232,9 +231,6 @@ export default {
       color: #fff;
       font-size: .6rem;
     }
-
-
-
 
 
 </style>

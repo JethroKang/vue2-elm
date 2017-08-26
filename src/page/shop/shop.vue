@@ -1,9 +1,7 @@
  <template>
     <div>
         <section v-if="!showLoading" class="shop_container">
-
           <head-top go-back='true' :head-title="profiletitle"></head-top>
-
           <div id='msite_banner'>
             <div class="swiper-container">
               <div class="swiper-wrapper">
@@ -15,16 +13,11 @@
               <div class="swiper-pagination"></div>
             </div>
           </div>
-
-
-
-
           <section class="food_title">
             <p class="food_price">￥ {{shopDetailData.price}}</p>
             <h3 >{{shopDetailData.name}}</h3>
             <p class="food_secondary_title">{{shopDetailData.outline}}</p>
           </section>
-
           <section class="food_service">
             <!--<p class="food_service_m"><span>包邮</span>全场满200元包邮</p>-->
             <ul>
@@ -34,14 +27,11 @@
             </ul>
             <div style="clear: both"></div>
           </section>
-
           <section class="change_show_type" ref="chooseType">
               <div>
               <span>商品详情</span>
               </div>
           </section>
-
-
           <section class="food_container">
               <div class="food_container_details">
                 <div v-html="shopDetailData.content" class="container_details" ></div>

@@ -1,5 +1,4 @@
 <template>
-
 	<div class="shoplist_container">
 		<ul v-load-more="loaderMore"  type="1">
 			<router-link :to="{path: '/shop', query:{id: item.id}}" v-for="item in shopListArr.data" tag='li' :key="item.id" >
@@ -13,7 +12,6 @@
 			</router-link>
       <div style="clear: both"></div>
 		</ul>
-
 		<!--<ul v-else class="animation_opactiy">-->
 			<!--<li class="list_back_li" v-for="item in 10" :key="item">-->
 				<!--<img src="../../images/shopback.svg" class="list_back_svg">-->
@@ -29,12 +27,10 @@
 		<transition name="loading">
 			<loading v-show="showLoading"></loading>
 		</transition>
-
 	</div>
 </template>
 
 <script>
-
 import {mapState} from 'vuex'
 import {goodsTypeRec,goodsTypeRecHot,goodsTypeRecNew,goodsTypeRecRec} from 'src/service/getData'
 import {imgBaseUrl} from 'src/config/env'
@@ -43,7 +39,6 @@ import {loadMore, getImgPath} from './mixin'
 import loading from './loading'
 import ratingStar from './ratingStar'
 import Request from '../../service/api'
-
 
 export default {
   data(){
@@ -56,23 +51,18 @@ export default {
       touchend: false, //没有更多数据
       current:1,
       size:5,
-      screenType:'',
       type:true,
+      shopListArrData:[],
     }
   },
   mounted(){
     this.initData();
   },
-  created(){
-    this.screenType = this.$route.query.screenType;
-    console.log(this.screenType);
-
-  },
   components: {
     loading,
     ratingStar,
   },
-  props: ['foodID','specsIndex','numCounter'],
+  props: ['foodID','screenType','numCounter'],
   mixins: [loadMore, getImgPath],
   computed: {
     ...mapState([
@@ -80,135 +70,98 @@ export default {
     ]),
   },
   updated(){
-//		 console.log(this.supportIds, this.screenType)
+    //监听父级是否有值传递过来
+		 console.log(this.screenType)
   },
   methods: {
-
     async initData(){
       //获取数据
+//      console.log(this.foodID);
       Request.Get('goods_rec', {classify_id:this.foodID,current:this.current, size:this.size,})
         .then((res) => {
 //          console.log(res)
           this.shopListArr = res;
 //          console.log(this.shopListArr);
+          this.shopListArrData= this.shopListArr.data;
+          console.log(this.shopListArrData);
         });
-        if (this.shopListArr.data.length < 20) {
+        if (this.shopListArrData.length < 20) {
           this.touchend = true;
         }
-      this.hideLoading();
+//      this.hideLoading();
       //开始监听scrollTop的值，达到一定程度后显示返回顶部按钮
       showBack(status => {
         this.showBackStatus = status;
       });
     },
     //到达底部加载更多数据
-//    async loaderMore(){
-//      if (this.touchend) {
-//        return
-//      }
-//      //防止重复请求
-//      if (this.preventRepeatReuqest) {
-//        return
-//      }
-//      this.showLoading = true;
-//      this.preventRepeatReuqest = true;
-//
-//      //数据的定位加20位
-//      this.offset += 20;
-//      let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
+    async loaderMore(){
+      if (this.touchend) {
+        return
+      }
+      //防止重复请求
+      if (this.preventRepeatReuqest) {
+        return
+      }
+      this.showLoading = false;
+      this.preventRepeatReuqest = true;
+      //数据的定位加20位
+      this.offset += 20;
+      let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
 //      this.hideLoading();
-//      this.shopListArr = [...this.shopListArr, ...res];
-//      //当获取数据小于20，说明没有更多数据，不需要再次请求数据
-//      if (res.length < 20) {
-//        this.touchend = true;
-//        return
-//      }
-//      this.preventRepeatReuqest = false;
-//    },
+      this.shopListArr = [...this.shopListArr, ...res];
+      //当获取数据小于20，说明没有更多数据，不需要再次请求数据
+      if (res.length < 20) {
+        this.touchend = true;
+        return
+      }
+      this.preventRepeatReuqest = false;
+    },
     //返回顶部
     backTop(){
       animate(document.body, {scrollTop: '0'}, 400,'ease-out');
     },
     //监听父级传来的数据发生变化时，触发此函数重新根据属性值获取数据
     async listenPropChange(){
-//      this.showLoading = true;
-
-//      if(this.screenType == 'food'){
-//        let res = await goodsTypeRecHot(this.foodID,this.current, this.size,this.type);
-//
-//        this.hideLoading();
-//
-//        //考虑到本地模拟数据是引用类型，所以返回一个新的数组
-//        this.shopListArr = res;
-//
-//      }else if(this.screenType == 'sort'){
-//        let res = await goodsTypeRecRec(this.foodID,this.current, this.size,this.type);
-//
-//        this.hideLoading();
-//
-//        //考虑到本地模拟数据是引用类型，所以返回一个新的数组
-//        this.shopListArr =res;
-//
-//      }else {
-//        let res = await goodsTypeRecNew(this.foodID,this.current, this.size,this.type);
-//
-//        this.hideLoading();
-//
-//        //考虑到本地模拟数据是引用类型，所以返回一个新的数组
-//        this.shopListArr = res;
-//
-//      }
-
-//      console.log(this.shopListArr);
+      this.showLoading = true;
+      if(this.screenType === 'hot'){
+        Request.Get('goods_rec', {classify_id:this.foodID,current:this.current,size:this.size,is_hot:this.type})
+          .then((res) => {
+            console.log(res)
+            this.shopListArr = res;
+          })
+        this.hideLoading();
+      }else if(this.screenType === 'rec'){
+        Request.Get('goods_rec', {classify_id:this.foodID,current:this.current,size:this.size,is_rec:this.type})
+          .then((res) => {
+            console.log(res)
+            this.shopListArr = res;
+          })
+        this.hideLoading();
+      }else {
+        Request.Get('goods_rec', {classify_id:this.foodID,current:this.current,size:this.size,is_new:this.type})
+          .then((res) => {
+            console.log(res)
+            this.shopListArr = res;
+          })
+        this.hideLoading();
+      }
     },
     //开发环境与编译环境loading隐藏方式不同
-//    hideLoading(){
-//      this.showLoading = false;
-//    },
+    hideLoading(){
+      this.showLoading = false;
+    },
   },
   watch: {
-    //监听父级传来的restaurantCategoryIds，当值发生变化的时候重新获取餐馆数据，作用于排序和筛选
-    restaurantCategoryIds: function (value){
-      this.listenPropChange();
-    },
-    //监听父级传来的排序方式
-    sortByType: function (value){
-      this.listenPropChange();
-    },
-
     //监听父级传来的排序方式
     screenType: function (value){
       this.listenPropChange();
     },
-
-
     //监听父级的确认按钮是否被点击，并且返回一个自定义事件通知父级，已经接收到数据，此时父级才可以清除已选状态
     confirmSelect: function (value){
       this.listenPropChange();
       this.$emit('DidConfrim');
     },
-
-    //商品、评论切换状态
-    changeShowType: function (value){
-      if (value === 'rating') {
-        this.$nextTick(() => {
-          this.ratingScroll = new BScroll('#ratingContainer', {
-            probeType: 3,
-            deceleration: 0.003,
-            bounce: false,
-            swipeTime: 2000,
-            click: true,
-          });
-          this.ratingScroll.on('scroll', (pos) => {
-            if (Math.abs(Math.round(pos.y)) >=  Math.abs(Math.round(this.ratingScroll.maxScrollY))) {
-              this.loaderMoreRating();
-              this.ratingScroll.refresh();
-            }
-          })
-        })
-      }
-    }
-
   }
 }
 
