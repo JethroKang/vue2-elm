@@ -98,8 +98,8 @@
                   <i class="iconfont icon" >&#xe502;</i>
                 </div>
               </div>
-              <div class="c" @click="showChooseList">立即购买</div>
-              <div class="r" @click="showChooseList">加入购物车</div>
+              <div class="c" @click="showChooseList">加入购物车</div>
+              <div class="r" @click="showChooseList">立即购买</div>
             </div>
 
 
@@ -196,7 +196,7 @@
                 </ul>
               </section>
 
-              <section class="specs_details_num" style="background-color: #ffffff; height: 18%;border-bottom: 1px solid #f5f5f5">
+              <section class="specs_details_num" style="background-color: #ffffff; height: 22%;border-bottom: 1px solid #f5f5f5">
 
               <div class="shop-arithmetic-t">
                 购买数量：
@@ -210,11 +210,11 @@
 
               </section>
 
-              <section style="background-color: #ffffff; height: 18%">
-                    <div style="width: 50%;height: 100%; text-align: center; background-color: #fea401; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2.5rem"
-                         @click="addToCart(shopId,foodIndex,foodPrice,numCounter)">加入购物车</div>
+              <section style="background-color: #ffffff; height: 15%">
+                    <div style="width: 50%;height: 100%; text-align: center; background-color: #fea401; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2rem"
+                         @click="addToCart(shopId,foodIndex,numCounter)">加入购物车</div>
                     <router-link :to="{path:'/confirmOrder' , query: {foodID:shopId,foodIndex:foodIndex, foodPrice:foodPrice,numCounter:numCounter,title:shopDetailData.name} }">
-                      <div style="width: 50%;height: 100%; text-align: center; background-color: #fd6e01; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2.5rem">立即购买</div>
+                      <div style="width: 50%;height: 100%; text-align: center; background-color: #fd5138; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2rem">立即购买</div>
                     </router-link>
               </section>
 
@@ -267,7 +267,7 @@
     import BScroll from 'better-scroll'
     import 'src/plugins/swiper.min.js'
     import 'src/style/swiper.min.css'
-    import alertTip from 'src/components/common/alertTip'
+    import alertTip from 'src/components/common/alertTip.vue'
     import Request from 'src/service/api'
 
     export default {
@@ -305,7 +305,7 @@
                 numCounter:1,
                 foodPrice:'',
                 foodIndex:null,
-                showAlert: true, //显示提示组件
+                showAlert: false, //显示提示组件
                 alertText: null, //提示的内容
                 showPayWay: false,//显示付款方式
                 sortBy:false,
@@ -331,7 +331,6 @@
             buyCart,
             headTop,
             alertTip,
-
         },
         computed: {
             ...mapState([
@@ -382,11 +381,34 @@
             },
 
             //加入购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
-            addToCart(shopId,foodIndex,foodPrice,numCounter){
-                this.ADD_CART({shopid:shopId, category_id, item_id, food_id, name, price, specs});
+            addToCart(shopId,foodIndex,numCounter){
+
+                //判断用户是否登录
+              if (!(this.userInfo && this.userInfo.token)) {
+                  this.showAlert = true;
+                  this.alertText = '您还没有登录';
+              }
+
+              //将加入购物车的订单set进本地缓存
+              this.ADD_CART({goods_id:shopId, sku_spec_id:foodIndex, num:numCounter});
+              console.log(this.ADD_CART);
+
+              //将加入购物车的订单提交到服务器
+
+              console.log(shopId,foodIndex,numCounter,this.userInfo.token);
+
+              Request.Post('cart', { goods_id:shopId, sku_spec_id:foodIndex, num:numCounter,token:this.userInfo.token})
+                .then((res) => {
+                  console.log(res)
+                  alert(res.msg);
+
+//                this.showAlert = true;
+//                alert(加入购物车成功);
+
+                  this.sortBy = false;
+                  this.showSpecs = false;
+                })
             },
-
-
 
             //移出购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
             removeOutCart(category_id, item_id, food_id, name, price, specs){
@@ -991,7 +1013,7 @@
         background-color: #ffffff;
         bottom: 0;
         left: 0;
-        z-index: 13;
+        z-index: 99;
         display: flex;
         @include wh(100%, 2rem);
         .cart_icon_num{

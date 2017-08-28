@@ -145,6 +145,7 @@
     import Request from '../../service/api'
 
     export default {
+
         data(){
             return {
                 shopId: null, //商店id值
