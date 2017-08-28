@@ -27,11 +27,13 @@
             </ul>
             <div style="clear: both"></div>
           </section>
+
           <section class="change_show_type" ref="chooseType">
               <div>
               <span>商品详情</span>
               </div>
           </section>
+
           <section class="food_container">
               <div class="food_container_details">
                 <div v-html="shopDetailData.content" class="container_details" ></div>
@@ -88,23 +90,40 @@
             <!--</transition>-->
 
           <section class="buy_cart_container">
-            <section class="cart_icon_num">
-              <div class="cart_icon_container" :class="{cart_icon_activity: totalPrice > 0, move_in_cart:receiveInCart}" ref="cartContainer">
-                <span v-if="totalNum" class="cart_list_length">
-                  {{totalNum}}
-                </span>
-                <svg class="cart_icon">
-                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-icon"></use>
-                </svg>
+
+            <div class="bottom-btn">
+              <div class="l l-cart">
+                <div class="box">
+                  <!--<div class="cart-count">6</div>-->
+                  <i class="iconfont icon" >&#xe502;</i>
+                </div>
               </div>
-            </section>
-            <section class="gotopay2">
-              <span class="gotopay_button_style" @click="showPayWayFun">加入购物车</span>
-            </section>
-            <section class="gotopay">
-              <span class="gotopay_button_style" @click="showPayWayFun">立即购买</span>
-              <!--<router-link :to="{path:'/confirmOrder', query:{ id:shopId,orders:orders,}}" class="gotopay_button_style" v-else >立即购买</router-link>-->
-            </section>
+              <div class="c" @click="showChooseList">立即购买</div>
+              <div class="r" @click="showChooseList">加入购物车</div>
+            </div>
+
+
+
+            <!--<section class="cart_icon_num">-->
+              <!--<div class="cart_icon_container" :class="{cart_icon_activity: totalPrice > 0, move_in_cart:receiveInCart}" ref="cartContainer">-->
+                <!--<span v-if="totalNum" class="cart_list_length">-->
+                  <!--{{totalNum}}-->
+                <!--</span>-->
+                <!--&lt;!&ndash;<svg class="cart_icon">&ndash;&gt;-->
+                  <!--&lt;!&ndash;<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-icon"></use>&ndash;&gt;-->
+                <!--&lt;!&ndash;</svg>&ndash;&gt;-->
+              <!--</div>-->
+            <!--</section>-->
+
+            <!--<section class="gotopay2">-->
+              <!--<span class="gotopay_button_style" @click="showChooseList">加入购物车</span>-->
+            <!--</section>-->
+
+            <!--<section class="gotopay">-->
+              <!--<span class="gotopay_button_style" @click="showChooseList">立即购买</span>-->
+              <!--&lt;!&ndash;<router-link :to="{path:'/confirmOrder', query:{ id:shopId,orders:orders,}}" class="gotopay_button_style" v-else >立即购买</router-link>&ndash;&gt;-->
+            <!--</section>-->
+
           </section>
 
           <!--<transition name="toggle-cart">-->
@@ -151,72 +170,75 @@
           <!--</transition>-->
 
 
-          <transition name="fade">
+          <transition name="toggle-cart">
             <section class="activities_details" v-if="showSpecs" >
 
-              <!--<svg width="16" height="16" class="close_activities" xmlns="http://www.w3.org/2000/svg" version="1.1"  @click="showChooseList">-->
-              <!--<line x1="0" y1="0" x2="16" y2="16"  stroke="#666" stroke-width="1.2"/>-->
-              <!--<line x1="0" y1="16" x2="16" y2="0"  stroke="#666" stroke-width="1.2"/>-->
-              <!--</svg>-->
+              <svg width="16" height="16" class="close_activities" xmlns="http://www.w3.org/2000/svg" version="1.1"  @click="showChooseList">
+              <line x1="0" y1="0" x2="16" y2="16"  stroke="#666" stroke-width="1.2"/>
+              <line x1="0" y1="16" x2="16" y2="0"  stroke="#666" stroke-width="1.2"/>
+              </svg>
 
-              <!--<div class="activities_details_img" style="width: 80px;height: 80px; overflow: hidden;border: 2px solid #ffffff;margin-top: -5%; position: absolute; left: 6%;border-radius: 5px;" >-->
-                <!--<img :src="shopDetailData.thumb" style="width: 80px;height: 80px;">-->
-              <!--</div>-->
+              <div class="activities_details_img" style="width: 80px;height: 80px; overflow: hidden;border: 2px solid #ffffff;margin-top: -5%; position: absolute; left: 6%;border-radius: 5px;" >
+                <img :src="shopDetailData.thumb" style="width: 80px;height: 80px;">
+              </div>
 
-              <!--<div style="background-color: #ffffff; height: 24%;border-bottom: 1px solid #e9e9e9">-->
-                <!--<p style="color: #fd5138; position: absolute; left: 30%; top: 6%; font-size: .6rem;font-weight: bold">￥ <span v-if="foodPrice">{{foodPrice}}</span><span v-else>{{shopDetailData.price}}</span></p>-->
-                <!--<p style="color: #000000; position: absolute; left: 30%; top: 12%;font-size: .6rem">商品销量：{{shopDetailData.goods_sales}}</p>-->
-              <!--</div>-->
+              <div style="background-color: #ffffff; height: 24%;border-bottom: 1px solid #e9e9e9">
+                <p style="color: #fd5138; position: absolute; left: 30%; top: 6%; font-size: .6rem;font-weight: bold">￥ <span v-if="foodPrice">{{foodPrice}}</span><span v-else>{{shopDetailData.price}}</span></p>
+                <p style="color: #000000; position: absolute; left: 30%; top: 12%;font-size: .6rem">商品销量：{{shopDetailData.goods_sales}}</p>
+              </div>
 
-              <!--<section class="specs_details" style="background-color: #ffffff; height: 40%;border-bottom: 1px solid #f5f5f5">-->
-                <!--<h5 class="specs_details_title">品种分类</h5>-->
-                <!--<ul>-->
-                  <!--<li v-for="(specsitem,itemIndex) in shopDetailData.sku_spec" :class="{specs_activity: itemIndex == specsIndex}" @click="chooseSpecs(itemIndex,specsitem.id,specsitem.price)">-->
-                    <!--{{specsitem.key_name_arr}}-->
-                  <!--</li>-->
-                <!--</ul>-->
-              <!--</section>-->
+              <section class="specs_details" style="background-color: #ffffff; height: 40%;border-bottom: 1px solid #f5f5f5">
+                <h5 class="specs_details_title">品种分类</h5>
+                <ul>
+                  <li v-for="(specsitem,itemIndex) in shopDetailData.sku_spec" :class="{specs_activity: itemIndex == specsIndex}" @click="chooseSpecs(itemIndex,specsitem.id,specsitem.price)">
+                    {{specsitem.key_name_arr}}
+                  </li>
+                </ul>
+              </section>
 
-              <!--<section class="specs_details_num" style="background-color: #ffffff; height: 18%;border-bottom: 1px solid #f5f5f5">-->
+              <section class="specs_details_num" style="background-color: #ffffff; height: 18%;border-bottom: 1px solid #f5f5f5">
 
-              <!--<div class="shop-arithmetic-t">-->
-                <!--购买数量：-->
-              <!--</div>-->
+              <div class="shop-arithmetic-t">
+                购买数量：
+              </div>
 
-              <!--<div class="shop-arithmetic">-->
-                <!--<div class="minus"  @click="min">-</div>-->
-                <!--<input class="num" name="pricenum"  type="tel" v-model="numCounter"  maxlength="12 " />-->
-                <!--<div href="javascript:void(0)" class="plus" @click="add">+</div>-->
-              <!--</div>-->
+              <div class="shop-arithmetic">
+                <div class="minus"  @click="min">-</div>
+                <input class="num" name="pricenum"  type="tel" v-model="numCounter"  maxlength="12 " />
+                <div href="javascript:void(0)" class="plus" @click="add">+</div>
+              </div>
 
-              <!--</section>-->
+              </section>
 
-              <!--<section style="background-color: #ffffff; height: 18%">-->
-                    <!--<div style="width: 50%;height: 100%; text-align: center; background-color: #fea401; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2.5rem"-->
-                         <!--@click="addToCart">加入购物车</div>-->
-                    <!--<router-link :to="{path:'/confirmOrder' , query: {foodID:shopId,foodIndex:foodIndex, foodPrice:foodPrice,numCounter:numCounter,title:shopDetailData.name} }">-->
-                      <!--<div style="width: 50%;height: 100%; text-align: center; background-color: #fd6e01; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2.5rem">立即购买</div>-->
-                    <!--</router-link>-->
-              <!--</section>-->
-
-
+              <section style="background-color: #ffffff; height: 18%">
+                    <div style="width: 50%;height: 100%; text-align: center; background-color: #fea401; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2.5rem"
+                         @click="addToCart(shopId,foodIndex,foodPrice,numCounter)">加入购物车</div>
+                    <router-link :to="{path:'/confirmOrder' , query: {foodID:shopId,foodIndex:foodIndex, foodPrice:foodPrice,numCounter:numCounter,title:shopDetailData.name} }">
+                      <div style="width: 50%;height: 100%; text-align: center; background-color: #fd6e01; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2.5rem">立即购买</div>
+                    </router-link>
+              </section>
 
             </section>
           </transition>
 
         </section>
 
-
-      <transition name="slid_up">
-        <div class="choose_type_Container" v-if="showPayWay" @click="showPayWayFun" >
-          <header>温馨提示</header>
-          <ul>
-            <li  :class="{choose: payWayId == 1}">
-              <span style="text-align: center;color: black">该功能暂时没开放，敬请期待！</span>
-            </li>
-          </ul>
-        </div>
+      <!--遮罩层-->
+      <transition name="showcover">
+        <div class="back_cover" v-show="sortBy"  @click="showChooseList"></div>
       </transition>
+
+
+      <!--<transition name="slid_up">-->
+        <!--<div class="choose_type_Container" v-if="showPayWay" @click="showPayWayFun" >-->
+          <!--<header>温馨提示</header>-->
+          <!--<ul>-->
+            <!--<li  :class="{choose: payWayId == 1}">-->
+              <!--<span style="text-align: center;color: black">该功能暂时没开放，敬请期待！</span>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
+      <!--</transition>-->
 
 
        <loading v-show="showLoading || loadRatings"></loading>
@@ -285,7 +307,8 @@
                 foodIndex:null,
                 showAlert: true, //显示提示组件
                 alertText: null, //提示的内容
-              showPayWay: false,//显示付款方式
+                showPayWay: false,//显示付款方式
+                sortBy:false,
             }
         },
         created(){
@@ -293,6 +316,7 @@
 //            console.log(this.shopId);
             this.INIT_BUYCART();
         },
+
         mounted(){
             this.initData();
             this.windowHeight = window.innerHeight;
@@ -331,14 +355,10 @@
                 'RECORD_ADDRESS','ADD_CART','REDUCE_CART','INIT_BUYCART','CLEAR_CART','RECORD_SHOPDETAIL'
             ]),
 
-          showPayWayFun(){
-            this.showPayWay = !this.showPayWay;
-          },
+            showPayWayFun(){
+              this.showSpecs = !this.showSpecs;
+            },
 
-          addToCart(){
-            this.showAlert = true;
-            this.alertText = '功能暂不开放';
-          },
             //初始化时获取基本数据
             async initData(){
 
@@ -362,9 +382,9 @@
             },
 
             //加入购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
-//            addToCart(category_id, item_id, food_id, name, price, specs){
-//                this.ADD_CART({shopid: this.shopId, category_id, item_id, food_id, name, price, specs});
-//            },
+            addToCart(shopId,foodIndex,foodPrice,numCounter){
+                this.ADD_CART({shopid:shopId, category_id, item_id, food_id, name, price, specs});
+            },
 
 
 
@@ -458,9 +478,10 @@
             },
             //显示规格列表
             showChooseList(){
-//            this.showSpecs = !this.showSpecs;
-              this.showAlert = true;
-              this.alertText = '功能暂不开放';
+            this.showSpecs = !this.showSpecs;
+            this.sortBy = !this.sortBy;
+//              this.showAlert = true;
+//              this.alertText = '功能暂不开放';
 //              alert('功能暂不开放');
             },
             //记录当前所选规格的索引值
@@ -1548,6 +1569,7 @@
       float: left;
       margin-top: .5rem;
     }
+
     .shop-arithmetic{width:27%;height: 1.2rem;display: inline-block; margin-left: 2rem; float: right}
     .shop-arithmetic .minus{display:inline-block;width:1.2rem;text-align:center;background:#e0e0e0;font-size:.6rem; height: 100%;line-height: 1.2rem}
     .shop-arithmetic .failed{color:#d1d1d1;}
@@ -1617,6 +1639,108 @@
     .router-slid-enter, .router-slid-leave-active {
       transform: translate3d(2rem, 0, 0);
       opacity: 0;
+    }
+
+    .bottom-btn{
+      position: fixed;
+      left:0;
+      bottom:0;
+      z-index: 10;
+      width: 100%;
+      height: 2rem;
+      display: flex;
+      background: #fff;
+    }
+
+    .bottom-btn .l{
+      float: left;
+      /*height: 100rpx;*/
+      /*width: 162rpx;*/
+      border: 1px solid #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .bottom-btn .l.l-collect{
+      border-right: none;
+      border-left: none;
+      text-align: center;
+    }
+
+
+    .bottom-btn .l.l-cart .box{
+      position: relative;
+      /*height:rem;*/
+      width:2.4rem;
+
+    }
+
+    .bottom-btn .l.l-cart .cart-count{
+      height:.8rem;
+      width: .8rem;
+      z-index: 10;
+      position: absolute;
+      top: -.2rem;
+      left: 1.3rem;
+      font-size: .6rem;
+      background: #fd5138;
+      text-align: center;
+      color: #fff;
+      line-height: .8rem;
+      border-radius: 50%;
+    }
+
+    .bottom-btn .l.l-cart .icon{
+      /*position: absolute;*/
+      /*top: 10rpx;*/
+      /*left:0;*/
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+
+    .bottom-btn .l .icon{
+      display: block;
+    }
+
+
+    .bottom-btn .c{
+      float: left;
+      height: 2rem;
+      line-height: 2rem;
+      flex: 1;
+      text-align: center;
+      color: #333;
+      border-top: 1px solid #f4f4f4;
+      border-bottom: 1px solid #f4f4f4;
+      font-size: .8rem;
+    }
+
+    .bottom-btn .r{
+      border:1px solid #fd5138;
+      background: #fd5138;
+      float: left;
+      height: 2rem;
+      line-height: 2rem;
+      flex: 1;
+      text-align: center;
+      color: #fff;
+      font-size: .8rem;
+    }
+
+    .showcover-enter-active, .showcover-leave-active {
+      transition: opacity .3s
+    }
+    .showcover-enter, .showcover-leave-active {
+      opacity: 0
+    }
+    .back_cover{
+      position: fixed;
+      @include wh(100%, 100%);
+      z-index: 10;
+      background-color: rgba(0,0,0,0.3);
     }
 
 
