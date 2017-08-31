@@ -140,12 +140,10 @@
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
     import loading from 'src/components/common/loading'
-    import {checkout, getAddress, placeOrders, getAddressList,createOrder} from 'src/service/getData'
     import {imgBaseUrl} from 'src/config/env'
     import Request from '../../service/api'
 
     export default {
-
         data(){
             return {
                 shopId: null, //商店id值
@@ -162,6 +160,7 @@
                 title: null,
                 orders:null,
                 orderRes:null,
+                getaddress:'',
             }
         },
         props: ['foodID','screenType','numCounter'],
@@ -177,11 +176,13 @@
 
         },
         mounted(){
-
+            //判断当前用户是否登录
             if (!(this.userInfo && this.userInfo.token)) {
                 this.showAlert = true;
                 this.alertText = '您还没有登录';
             }
+
+//            this.$router.push('/login');
 
         },
         components: {
@@ -210,9 +211,17 @@
           //获取地址信息，第一个地址为默认选择地址
             async initAddress(){
                 if (this.userInfo && this.userInfo.token) {
-                    const getaddress = await getaddress(this.current,this.size,this.userInfo.token);
 
-                    console.log(getaddress);
+//                  请求用户的收货地址
+                    Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
+                      .then((res) => {
+                        console.log(res);
+                        this.getaddress= res.data;
+                      })
+
+//                    const getaddress = await getaddress(this.current,this.size,this.userInfo.token);
+//
+//                    console.log(getaddress);
 
                     if (addressRes instanceof Array && addressRes.length) {
                         this.CHOOSE_ADDRESS({address: addressRes[0], index: 0});
@@ -293,7 +302,8 @@
         },
         watch: {
             userInfo: function (value) {
-                if (value && value.token) {
+              console.log(121212123123);
+                if (value) {
                     this.initAddress();
                 }
             },

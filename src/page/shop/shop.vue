@@ -93,36 +93,16 @@
 
             <div class="bottom-btn">
               <div class="l l-cart">
+                <router-link :to="{path:'/shopcart'}">
                 <div class="box">
-                  <!--<div class="cart-count">6</div>-->
+                  <div class="cart-count" v-if="shopCartNum">6</div>
                   <i class="iconfont icon" >&#xe502;</i>
                 </div>
+                </router-link>
               </div>
               <div class="c" @click="showChooseList">加入购物车</div>
               <div class="r" @click="showChooseList">立即购买</div>
             </div>
-
-
-
-            <!--<section class="cart_icon_num">-->
-              <!--<div class="cart_icon_container" :class="{cart_icon_activity: totalPrice > 0, move_in_cart:receiveInCart}" ref="cartContainer">-->
-                <!--<span v-if="totalNum" class="cart_list_length">-->
-                  <!--{{totalNum}}-->
-                <!--</span>-->
-                <!--&lt;!&ndash;<svg class="cart_icon">&ndash;&gt;-->
-                  <!--&lt;!&ndash;<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-icon"></use>&ndash;&gt;-->
-                <!--&lt;!&ndash;</svg>&ndash;&gt;-->
-              <!--</div>-->
-            <!--</section>-->
-
-            <!--<section class="gotopay2">-->
-              <!--<span class="gotopay_button_style" @click="showChooseList">加入购物车</span>-->
-            <!--</section>-->
-
-            <!--<section class="gotopay">-->
-              <!--<span class="gotopay_button_style" @click="showChooseList">立即购买</span>-->
-              <!--&lt;!&ndash;<router-link :to="{path:'/confirmOrder', query:{ id:shopId,orders:orders,}}" class="gotopay_button_style" v-else >立即购买</router-link>&ndash;&gt;-->
-            <!--</section>-->
 
           </section>
 
@@ -228,19 +208,6 @@
         <div class="back_cover" v-show="sortBy"  @click="showChooseList"></div>
       </transition>
 
-
-      <!--<transition name="slid_up">-->
-        <!--<div class="choose_type_Container" v-if="showPayWay" @click="showPayWayFun" >-->
-          <!--<header>温馨提示</header>-->
-          <!--<ul>-->
-            <!--<li  :class="{choose: payWayId == 1}">-->
-              <!--<span style="text-align: center;color: black">该功能暂时没开放，敬请期待！</span>-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</div>-->
-      <!--</transition>-->
-
-
        <loading v-show="showLoading || loadRatings"></loading>
 
        <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
@@ -279,23 +246,17 @@
                 changeShowType: 'food',//切换显示商品或者评价
                 shopDetailData: [], //商铺详情
                 categoryNum: [], //商品类型右上角已加入购物车的数量
-                totalPrice: 0, //总共价格
-                cartFoodList: [], //购物车商品列表
-                showCartList: false,//显示购物车列表
-                receiveInCart: false, //购物车组件下落的圆点是否到达目标位置
+                cartFoodList: '', //购物车商品列表
+                showCartList: '',//显示购物车列表
                 ratingList: null, //评价列表
                 ratingOffset: 0, //评价获取数据offset值
                 ratingScoresData: null, //评价总体分数
                 ratingTagsList: null, //评价分类列表
                 ratingTageIndex: 0, //评价分类索引
                 preventRepeatRequest: false,// 防止多次触发数据请求
-                ratingTagName: '',//评论的类型
                 loadRatings: false, //加载更多评论是显示加载组件
-                foodScroll: null,  //食品列表scroll
                 showSpecs: false,//控制显示食品规格
                 specsIndex: null, //当前选中的规格索引值
-                choosedFoods: null, //当前选中视频数据
-                showDeleteTip: false, //多规格商品点击减按钮，弹出提示框
                 showMoveDot: [], //控制下落的小圆点显示隐藏
                 windowHeight: null, //屏幕的高度
                 elLeft: 0, //当前点击加按钮在网页中的绝对top值
@@ -309,6 +270,9 @@
                 alertText: null, //提示的内容
                 showPayWay: false,//显示付款方式
                 sortBy:false,
+                shopCartNum:false,//是否显示购物的数量
+                current:1,
+                size:20,
             }
         },
         created(){
@@ -328,7 +292,6 @@
         components: {
             loading,
             ratingStar,
-            buyCart,
             headTop,
             alertTip,
         },
@@ -362,7 +325,6 @@
             async initData(){
 
                //获取商店信息
-
               let id = this.shopId;
               Request.Get('goods/'+id)
                 .then((res) => {
@@ -376,11 +338,23 @@
                 });
               });
 
-                //隐藏加载动画
-                this.hideLoading();
+
+              //隐藏加载动画
+              this.hideLoading();
+
+              if (this.userInfo && this.userInfo.token) {
+                //获取购物车的列表
+                Request.Get('cart',{current:this.current,size:this.size,token:this.userInfo.token})
+                  .then((res) => {
+                    this.showCartList = res.data;
+                    console.log(this.showCartList);
+                  })
+
+
+              }
             },
 
-            //加入购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
+            //加入购物车
             addToCart(shopId,foodIndex,numCounter){
 
                 //判断用户是否登录
@@ -391,29 +365,29 @@
 
               //将加入购物车的订单set进本地缓存
               this.ADD_CART({goods_id:shopId, sku_spec_id:foodIndex, num:numCounter});
-              console.log(this.ADD_CART);
+
+//              console.log(this.ADD_CART);
 
               //将加入购物车的订单提交到服务器
 
-              console.log(shopId,foodIndex,numCounter,this.userInfo.token);
+//              console.log(shopId,foodIndex,numCounter,this.userInfo.token);
 
               Request.Post('cart', { goods_id:shopId, sku_spec_id:foodIndex, num:numCounter,token:this.userInfo.token})
                 .then((res) => {
                   console.log(res)
-                  alert(res.msg);
-
+//                  alert(res.msg);
+                  this.cartFoodList = res.data;
 //                this.showAlert = true;
 //                alert(加入购物车成功);
-
                   this.sortBy = false;
                   this.showSpecs = false;
                 })
             },
 
             //移出购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
-            removeOutCart(category_id, item_id, food_id, name, price, specs){
-                this.REDUCE_CART({shopid: this.shopId, category_id, item_id, food_id, name, price, specs});
-            },
+//            removeOutCart(category_id, item_id, food_id, name, price, specs){
+//                this.REDUCE_CART({shopid: this.shopId, category_id, item_id, food_id, name, price, specs});
+//            },
 
 
 
@@ -548,13 +522,11 @@
                     })
                 }
             },
-            shopCart: function (value){
-                this.initCategoryNum();
-            },
-            //购物车列表发生变化，没有商铺时，隐藏
+
+            //商品加入购物车发生变化
             cartFoodList: function (value){
-                if(!value.length){
-                    this.showCartList = false;
+                if(value.length){
+//                    this.showCartList = false;
                 }
             },
             //商品、评论切换状态

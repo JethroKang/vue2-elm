@@ -33,6 +33,7 @@
 </template>
 
 <script>
+
     import headTop from 'src/components/header/head'
     import {getService} from 'src/service/getData'
     import {mapMutations} from 'vuex'
@@ -85,10 +86,10 @@
         }
     }
 </script>
-  
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-  
+
     .rating_page{
         background-color: #fff;
         padding-top: 1.95rem;

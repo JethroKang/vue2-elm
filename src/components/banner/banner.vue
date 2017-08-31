@@ -3,9 +3,9 @@
     <div class="swiper-container">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="item in indexBanner.data">
-          <router-link :to="item.url" tag="a">
-          <img :src="item.mobile_thumb" >
-          </router-link>
+          <!--<router-link :to="item.url" tag="a">-->
+          <img :src="item.thumb" >
+          <!--</router-link>-->
         </div>
       </div>
       <!-- Add Pagination -->
@@ -15,7 +15,6 @@
 </template>
 
 <script>
-  import {indexBanner} from '../../service/getData'
   import 'src/plugins/swiper.min.js'
   import 'src/style/swiper.min.css'
   import Request from '../../service/api';
@@ -24,7 +23,6 @@
     data(){
       return{
         indexBanner:'', //获取当前首页的数据
-        shopId:8,
       }
     },
 

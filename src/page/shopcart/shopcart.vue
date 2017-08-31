@@ -23,22 +23,25 @@
                </div>
              </div>
            </li>
-           <div class="shop-info">
-             <input type="checkbox" class="check goods-check goodsCheck">
-             <div class="shop-info-img"><a href="#"><img src="images/s2.jpg"></a></div>
-             <div class="shop-info-text">
-               <h4>2017夏季新款韩版蕾丝拼接荷叶袖露肩雪纺娃娃衫上衣女短袖雪...</h4>
-               <div class="shop-brief"><span>重量:3.3kg</span><span>颜色:标配版</span></div>
-               <div class="shop-price">
-                 <div class="shop-pices">￥<b class="price">100.00</b></div>
-                 <div class="shop-arithmetic">
-                   <a href="javascript:;" class="minus">-</a>
-                   <span class="num">1</span>
-                   <a href="javascript:;" class="plus">+</a>
+
+           <li>
+             <div class="shop-info">
+               <input type="checkbox" class="check goods-check goodsCheck">
+               <div class="shop-info-img"><a href="#"><img src="images/s1.jpg"></a></div>
+               <div class="shop-info-text">
+                 <h4>2017夏季新款韩版蕾丝拼接荷叶袖露肩雪纺娃娃衫上衣女短袖雪...</h4>
+                 <div class="shop-brief"><span>重量:3.3kg</span><span>颜色:标配版</span></div>
+                 <div class="shop-price">
+                   <div class="shop-pices">￥<b class="price">100.00</b></div>
+                   <div class="shop-arithmetic">
+                     <a href="javascript:;" class="minus">-</a>
+                     <span class="num">1</span>
+                     <a href="javascript:;" class="plus">+</a>
+                   </div>
                  </div>
                </div>
              </div>
-           </div>
+           </li>
 
            <li>
              <div class="shop-info">
@@ -58,6 +61,8 @@
                </div>
              </div>
            </li>
+
+
          </ul>
        </div>
        <div class="payment-bar">
@@ -81,9 +86,10 @@
         <router-link to="/login">
           <p class="no-data-btn">登录购买</p>
         </router-link>
+        <foot-guide></foot-guide>
       </div>
 
-      <foot-guide></foot-guide>
+
 
     </div>
 </template>
@@ -105,7 +111,7 @@ export default {
             searchHistory: [], // 搜索历史记录
             showHistory: true, // 是否显示历史记录，只有在返回搜索结果后隐藏
             emptyResult: false, // 搜索结果为空时显示
-            shopCaft:false,
+            shopCaft:true,
         }
     },
     created(){
