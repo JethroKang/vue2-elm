@@ -95,7 +95,7 @@
               <div class="l l-cart">
                 <router-link :to="{path:'/shopcart'}">
                 <div class="box">
-                  <div class="cart-count" v-if="shopCartNum">6</div>
+                  <div class="cart-count">{{showCartList.length}}</div>
                   <i class="iconfont icon" >&#xe502;</i>
                 </div>
                 </router-link>
@@ -241,10 +241,10 @@
 
         data(){
             return{
-                shopId: null, //商店id值
-                showLoading: true, //显示加载动画
-                changeShowType: 'food',//切换显示商品或者评价
-                shopDetailData: [], //商铺详情
+                  shopId: null, //商店id值
+                  showLoading: true, //显示加载动画
+                  changeShowType: 'food',//切换显示商品或者评价
+                  shopDetailData: [], //商铺详情
                 categoryNum: [], //商品类型右上角已加入购物车的数量
                 cartFoodList: '', //购物车商品列表
                 showCartList: '',//显示购物车列表
@@ -338,19 +338,17 @@
                 });
               });
 
-
               //隐藏加载动画
               this.hideLoading();
 
+              //判断用户是否登录，对登录的用户获取购物车的数量
               if (this.userInfo && this.userInfo.token) {
                 //获取购物车的列表
                 Request.Get('cart',{current:this.current,size:this.size,token:this.userInfo.token})
                   .then((res) => {
                     this.showCartList = res.data;
-                    console.log(this.showCartList);
+//                    console.log(this.showCartList);
                   })
-
-
               }
             },
 
@@ -529,6 +527,15 @@
 //                    this.showCartList = false;
                 }
             },
+
+          //商品加入购物车发生变化
+          showCartList: function (value){
+            if(value.length){
+//                    this.showCartList = false;
+            }
+          },
+
+
             //商品、评论切换状态
             changeShowType: function (value){
                 if (value === 'rating') {

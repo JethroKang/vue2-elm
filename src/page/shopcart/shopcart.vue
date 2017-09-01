@@ -2,73 +2,80 @@
   	<div class="paddingTop search_page">
         <head-top head-title="购物车" goBack="true"></head-top>
 
+
+
+
+      <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <symbol id="icon-add" viewBox="0 0 32 32">
+            <title>add2</title>
+            <path class="path1" d="M15 17h-13.664c-0.554 0-1.002-0.446-1.002-1 0-0.552 0.452-1 1.002-1h13.664v-13.664c0-0.554 0.446-1.002 1-1.002 0.552 0 1 0.452 1 1.002v13.664h13.664c0.554 0 1.002 0.446 1.002 1 0 0.552-0.452 1-1.002 1h-13.664v13.664c0 0.554-0.446 1.002-1 1.002-0.552 0-1-0.452-1-1.002v-13.664z"></path>
+          </symbol>
+          <symbol id="icon-ok" viewBox="0 0 39 32">
+            <title>ok</title>
+            <path class="path1" d="M14.084 20.656l-7.845-9.282c-1.288-1.482-3.534-1.639-5.016-0.351s-1.639 3.534-0.351 5.016l10.697 12.306c1.451 1.669 4.057 1.623 5.448-0.096l18.168-22.456c1.235-1.527 0.999-3.765-0.528-5.001s-3.765-0.999-5.001 0.528l-15.573 19.337z"></path>
+          </symbol>
+          <symbol id="icon-edit" viewBox="0 0 32 32">
+            <title>edit</title>
+            <path class="path1" d="M25.599 11.292l-4.892-4.892 3.825-3.825 4.892 4.892-3.825 3.825zM4.732 23.308l3.959 3.959-5.939 1.98 1.98-5.939zM10.666 26.225l-4.892-4.892 13.425-13.425 4.892 4.892-13.425 13.425zM31.687 6.713l-6.4-6.4c-0.417-0.417-1.091-0.417-1.508 0l-20.267 20.267c-0.114 0.115-0.191 0.25-0.242 0.393-0.003 0.009-0.012 0.015-0.015 0.025l-3.2 9.6c-0.128 0.383-0.029 0.806 0.257 1.091 0.203 0.204 0.476 0.313 0.754 0.313 0.112 0 0.227-0.017 0.337-0.054l9.6-3.2c0.011-0.003 0.017-0.013 0.027-0.016 0.142-0.052 0.276-0.128 0.39-0.242l20.267-20.267c0.417-0.416 0.417-1.091 0-1.508v0z"></path>
+          </symbol>
+          <symbol id="icon-del" viewBox="0 0 26 32">
+            <title>delete</title>
+            <path class="path1" d="M17.723 28c0.543 0 0.984-0.448 0.984-1v-12c0-0.552-0.441-1-0.984-1s-0.985 0.448-0.985 1v12c0 0.552 0.441 1 0.985 1v0zM7.877 28c0.543 0 0.984-0.448 0.984-1v-12c0-0.552-0.441-1-0.984-1s-0.985 0.448-0.985 1v12c0 0.552 0.441 1 0.985 1v0zM12.8 28c0.543 0 0.985-0.448 0.985-1v-12c0-0.552-0.441-1-0.985-1s-0.984 0.448-0.984 1v12c0 0.552 0.441 1 0.984 1v0zM23.631 4h-5.908v-2c0-1.104-0.882-2-1.969-2h-5.908c-1.087 0-1.969 0.896-1.969 2v2h-5.908c-1.087 0-1.969 0.896-1.969 2v2c0 1.104 0.882 2 1.969 2v18c0 2.208 1.765 4 3.939 4h13.784c2.174 0 3.938-1.792 3.938-4v-18c1.087 0 1.969-0.896 1.969-2v-2c0-1.104-0.882-2-1.969-2v0zM9.846 3c0-0.552 0.441-1 0.984-1h3.938c0.544 0 0.985 0.448 0.985 1v1h-5.908v-1zM21.662 28c0 1.104-0.882 2-1.969 2h-13.784c-1.087 0-1.97-0.896-1.97-2v-18h17.723v18zM22.646 8h-19.692c-0.543 0-0.985-0.448-0.985-1s0.441-1 0.985-1h19.692c0.543 0 0.984 0.448 0.984 1s-0.441 1-0.984 1v0z"></path>
+          </symbol>
+          <symbol id="icon-clock" viewBox="0 0 32 32">
+            <title>clock</title>
+            <path class="path1" d="M29.333 16c0-7.364-5.97-13.333-13.333-13.333s-13.333 5.97-13.333 13.333c0 7.364 5.97 13.333 13.333 13.333s13.333-5.97 13.333-13.333v0 0 0 0 0 0zM0 16c0-8.837 7.163-16 16-16s16 7.163 16 16c0 8.837-7.163 16-16 16s-16-7.163-16-16zM14.667 14.667v1.333h2.667v-10.667h-2.667v9.333zM24 18.667h1.333v-2.667h-10.667v2.667h9.333z"></path>
+          </symbol>
+        </defs>
+      </svg>
+
+
+
+
+
      <div v-if="shopCaft">
        <div class="shop-group-item">
          <ul>
-           <li>
+
+           <li v-for="(item,index) in cartList">
              <div class="shop-info">
-               <input type="checkbox" class="check goods-check goodsCheck">
-               <div class="shop-info-img"><a href="#"><img src="images/s1.jpg"></a></div>
+
+
+
+               <div class="cart-item-check">
+                 <a href="javascript:void 0" class="item-check-btn"
+                    v-bind:class="{check:item.isChecked}"
+                    @click="selectGood(item)">
+                   <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
+                 </a>
+               </div>
+
+               <!--<input type="checkbox" class="check goods-check goodsCheck">-->
+
+
+               <div class="shop-info-img"><img :src="item.goods.thumb" /></div>
                <div class="shop-info-text">
-                 <h4>2017夏季新款韩版蕾丝拼接荷叶袖露肩雪纺娃娃衫上衣女短袖雪...</h4>
-                 <div class="shop-brief"><span>重量:3.3kg</span><span>颜色:标配版</span></div>
+                 <h4>{{item.goods.name}}thumb</h4>
+                 <div class="shop-brief"><span>商品种类:{{item.sku_spec.key_name_arr}}</span></div>
                  <div class="shop-price">
-                   <div class="shop-pices">￥<b class="price">100.00</b></div>
+                   <div class="shop-pices">￥<b class="price">{{item.sku_spec.price}}</b></div>
                    <div class="shop-arithmetic">
                      <a href="javascript:;" class="minus">-</a>
-                     <span class="num">1</span>
+                     <span class="num">{{item.num}}</span>
                      <a href="javascript:;" class="plus">+</a>
                    </div>
                  </div>
                </div>
              </div>
            </li>
-
-           <li>
-             <div class="shop-info">
-               <input type="checkbox" class="check goods-check goodsCheck">
-               <div class="shop-info-img"><a href="#"><img src="images/s1.jpg"></a></div>
-               <div class="shop-info-text">
-                 <h4>2017夏季新款韩版蕾丝拼接荷叶袖露肩雪纺娃娃衫上衣女短袖雪...</h4>
-                 <div class="shop-brief"><span>重量:3.3kg</span><span>颜色:标配版</span></div>
-                 <div class="shop-price">
-                   <div class="shop-pices">￥<b class="price">100.00</b></div>
-                   <div class="shop-arithmetic">
-                     <a href="javascript:;" class="minus">-</a>
-                     <span class="num">1</span>
-                     <a href="javascript:;" class="plus">+</a>
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </li>
-
-           <li>
-             <div class="shop-info">
-               <input type="checkbox" class="check goods-check goodsCheck">
-               <div class="shop-info-img"><a href="#"><img src="images/s3.jpg"></a></div>
-               <div class="shop-info-text">
-                 <h4>2017夏季新款韩版蕾丝拼接荷叶袖露肩雪纺娃娃衫上衣女短袖雪...</h4>
-                 <div class="shop-brief"><span>重量:3.3kg</span><span>颜色:标配版</span></div>
-                 <div class="shop-price">
-                   <div class="shop-pices">￥<b class="price">100.00</b></div>
-                   <div class="shop-arithmetic">
-                     <a href="javascript:;" class="minus">-</a>
-                     <span class="num">1</span>
-                     <a href="javascript:;" class="plus">+</a>
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </li>
-
 
          </ul>
        </div>
        <div class="payment-bar">
          <div class="all-checkbox"><input type="checkbox" class="check goods-check" id="AllCheck">全选</div>
          <div class="shop-total">
-           <strong>总价：<i class="total" id="AllTotal">900.00</i></strong>
+           <strong>总价：<i class="total" id="AllTotal">{{totalPrice | Currency}}</i></strong>
          </div>
          <a href="#" class="settlement">结算</a>
        </div>
@@ -100,35 +107,93 @@ import footGuide from '../../components/footer/footGuide'
 import {searchRestaurant} from '../../service/getData'
 import {imgBaseUrl} from '../../config/env'
 import {getStore, setStore} from '../../config/mUtils'
+import Request from 'src/service/api'
+import {mapState} from 'vuex'
 
 export default {
 	data(){
         return {
-            geohash: '', // msite页面传递过来的地址信息
-            searchValue: '', // 搜索内容
-            restaurantList: [], // 搜索返回的结果
-            imgBaseUrl, // 图片域名地址
-            searchHistory: [], // 搜索历史记录
-            showHistory: true, // 是否显示历史记录，只有在返回搜索结果后隐藏
-            emptyResult: false, // 搜索结果为空时显示
             shopCaft:true,
+            current:1,
+            size:20,
+            cartList:'',
         }
     },
     created(){
 
+
     },
     mounted(){
-        this.geohash = this.$route.params.geohash;
-        //获取搜索历史记录
-        if (getStore('searchHistory')) {
-            this.searchHistory = JSON.parse(getStore('searchHistory'));
-        }
+      this.initData();
+      if (!(this.userInfo && this.userInfo.token)) {
+            this.shopCaft = false;
+      }
+
     },
     components:{
-        headTop,
-        footGuide,
+      headTop,
+      footGuide,
+    },
+    computed: {
+      ...mapState([
+        'userInfo',
+      ]),
+      totalPrice:function(){
+        var total = 0;
+        this.cartList.forEach(function(good){
+          if(good.isChecked){
+            total += good.productPrice * good.productQuentity;
+          }
+        });
+        return total;
+      },
+      filters:{
+        Currency:function(val){
+          return val + " 元";
+        },
+      }
     },
     methods:{
+
+//    初始化时获取基本数据
+      async initData(){
+
+        //获取购物车列表
+        Request.Get('cart',{current:this.current,size:this.size,token:this.userInfo.token})
+          .then((res) => {
+          console.log(res);
+            this.cartList = res.data;
+//                    console.log(this.showCartList);
+          })
+
+      },
+
+//    如果产品被选中，同时该产品没有"isChecked"属性，则为其添加该属性，并设为"true"
+      selectGood:function(goodObj,index){
+        if(goodObj.isChecked == void 0){
+          this.$set(goodObj,"isChecked",true)
+        } else {
+          goodObj.isChecked = !goodObj.isChecked;
+        }
+        this.isCheckAll();
+      },
+
+      isCheckAll:function(){
+        var flag = true;
+        this.list.forEach(function(good){
+          if(!good.isChecked){
+            flag = false;
+          }
+        });
+        if(!flag){
+          this.isSelectAll = false;
+        } else {
+          this.isSelectAll = true;
+        }
+      },
+
+
+
         //点击提交按钮，搜索结果并显示，同时将搜索内容存入历史记录
         async searchTarget(historyValue){
             if (historyValue) {
@@ -358,6 +423,32 @@ export default {
     .no-data-div .no-data-img img {
       height: 6.5rem;
     }
+
+    .cart-item-list .cart-item-check {
+      float: left;
+      padding: 28px 0 28px 22px; }
+
+    .item-check-btn {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer; }
+    .item-check-btn .icon-ok {
+      display: none;
+      width: 100%;
+      height: 100%;
+      fill: #fff;
+      -ms-transform: scale(0.8);
+      transform: scale(0.8); }
+    .item-check-btn.check {
+      background: #EE7A23;
+      border-color: #EE7A23; }
+    .item-check-btn.check .icon-ok {
+      display: inline-block; }
 
 
 

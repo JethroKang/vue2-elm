@@ -207,27 +207,45 @@
           //初始化数据
           async initData(){
 
-          },
-          //获取地址信息，第一个地址为默认选择地址
-            async initAddress(){
-                if (this.userInfo && this.userInfo.token) {
+            if (this.userInfo && this.userInfo.token) {
 
 //                  请求用户的收货地址
-                    Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
-                      .then((res) => {
-                        console.log(res);
-                        this.getaddress= res.data;
-                      })
+              Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
+                .then((res) => {
+                  console.log(res);
+                  this.getaddress= res.data;
+                })
 
 //                    const getaddress = await getaddress(this.current,this.size,this.userInfo.token);
 //
 //                    console.log(getaddress);
 
-                    if (addressRes instanceof Array && addressRes.length) {
-                        this.CHOOSE_ADDRESS({address: addressRes[0], index: 0});
-                    }
-                }
-            },
+              if (addressRes instanceof Array && addressRes.length) {
+                this.CHOOSE_ADDRESS({address: addressRes[0], index: 0});
+              }
+            }
+
+          },
+          //获取地址信息，第一个地址为默认选择地址
+//            async initAddress(){
+//                if (this.userInfo && this.userInfo.token) {
+//
+////                  请求用户的收货地址
+//                    Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
+//                      .then((res) => {
+//                        console.log(res);
+//                        this.getaddress= res.data;
+//                      })
+//
+////                    const getaddress = await getaddress(this.current,this.size,this.userInfo.token);
+////
+////                    console.log(getaddress);
+//
+//                    if (addressRes instanceof Array && addressRes.length) {
+//                        this.CHOOSE_ADDRESS({address: addressRes[0], index: 0});
+//                    }
+//                }
+//            },
           //显示付款方式
           showPayWayFun(){
             this.showPayWay = !this.showPayWay;
