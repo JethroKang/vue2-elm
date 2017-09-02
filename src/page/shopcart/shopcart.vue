@@ -37,13 +37,10 @@
      <div v-if="shopCaft">
        <div class="shop-group-item">
          <ul>
-
            <li v-for="(item,index) in cartList">
              <div class="shop-info">
 
-
-
-               <div class="cart-item-check">
+               <div class="shop-info-check">
                  <a href="javascript:void 0" class="item-check-btn"
                     v-bind:class="{check:item.isChecked}"
                     @click="selectGood(item)">
@@ -55,27 +52,45 @@
 
 
                <div class="shop-info-img"><img :src="item.goods.thumb" /></div>
+
                <div class="shop-info-text">
-                 <h4>{{item.goods.name}}thumb</h4>
-                 <div class="shop-brief"><span>商品种类:{{item.sku_spec.key_name_arr}}</span></div>
+                 <h4>{{item.goods.name}}</h4>
+                 <div class="shop-brief"><span>{{item.sku_spec.key_name_arr}}</span></div>
                  <div class="shop-price">
                    <div class="shop-pices">￥<b class="price">{{item.sku_spec.price}}</b></div>
                    <div class="shop-arithmetic">
-                     <a href="javascript:;" class="minus">-</a>
-                     <span class="num">{{item.num}}</span>
-                     <a href="javascript:;" class="plus">+</a>
+                     <a href="javascript:void 0" @click="changeQuentity(item,-1,index)" class="minus">2</a>
+                     <input type="text" :value="item.num" disabled class="num">
+                     <a href="javascript:void 0" @click="changeQuentity(item,1)" class="plus">1</a>
                    </div>
                  </div>
                </div>
+
+               <div class="cart-item-opration">
+                 <a href="javascript:void 0" class="item-edit-btn"
+                    @click="delGood(item,index)">
+                   <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
+                 </a>
+               </div>
+
+
              </div>
            </li>
 
          </ul>
        </div>
        <div class="payment-bar">
-         <div class="all-checkbox"><input type="checkbox" class="check goods-check" id="AllCheck">全选</div>
+         <div class="all-checkbox">
+           <a href="javascript:void 0">
+								<span class="item-check-btn" :class="{check:isSelectAll}">
+									<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
+								</span>
+             <span @click="selectAll" >全选</span>
+             <span @click="unSelectAll">取消全选</span>
+           </a>
+         </div>
          <div class="shop-total">
-           <strong>总价：<i class="total" id="AllTotal">{{totalPrice | Currency}}</i></strong>
+           <strong>总价：<i class="total" id="AllTotal">{{totalPrice}}</i></strong>
          </div>
          <a href="#" class="settlement">结算</a>
        </div>
@@ -97,7 +112,6 @@
       </div>
 
 
-
     </div>
 </template>
 
@@ -109,6 +123,7 @@ import {imgBaseUrl} from '../../config/env'
 import {getStore, setStore} from '../../config/mUtils'
 import Request from 'src/service/api'
 import {mapState} from 'vuex'
+import alertTip from '../../components/common/alertTip'
 
 export default {
 	data(){
@@ -117,10 +132,11 @@ export default {
             current:1,
             size:20,
             cartList:'',
+            isSelectAll:false,//是否全选
+            confirmDelete:false, //是否删除订单
         }
     },
     created(){
-
 
     },
     mounted(){
@@ -133,25 +149,28 @@ export default {
     components:{
       headTop,
       footGuide,
+      alertTip,
     },
     computed: {
       ...mapState([
         'userInfo',
       ]),
       totalPrice:function(){
-        var total = 0;
+        let total = 0;
         this.cartList.forEach(function(good){
+//          console.log(good);
+
           if(good.isChecked){
-            total += good.productPrice * good.productQuentity;
+            total += good.sku_spec.price * good.num;
           }
         });
         return total;
       },
-      filters:{
-        Currency:function(val){
-          return val + " 元";
-        },
-      }
+//      filters:{
+//        Currency:function(val){
+//          return val + " 元";
+//        },
+//      }
     },
     methods:{
 
@@ -163,13 +182,16 @@ export default {
           .then((res) => {
           console.log(res);
             this.cartList = res.data;
-//                    console.log(this.showCartList);
+//           console.log(this.showCartList);
           })
 
       },
 
 //    如果产品被选中，同时该产品没有"isChecked"属性，则为其添加该属性，并设为"true"
       selectGood:function(goodObj,index){
+
+        console.log(goodObj);
+
         if(goodObj.isChecked == void 0){
           this.$set(goodObj,"isChecked",true)
         } else {
@@ -179,8 +201,8 @@ export default {
       },
 
       isCheckAll:function(){
-        var flag = true;
-        this.list.forEach(function(good){
+        let flag = true;
+        this.cartList.forEach(function(good){
           if(!good.isChecked){
             flag = false;
           }
@@ -192,59 +214,35 @@ export default {
         }
       },
 
+//    是否对商品进行全选
 
+      selectAll:function(){
+        this.isSelectAll = true;
+        this.cartList.forEach((good)=>{
+          good.isChecked = true;
+          this.showAlert = true;
+          this.alertText = '用户账号或者密码错误';
+        });
+      },
 
-        //点击提交按钮，搜索结果并显示，同时将搜索内容存入历史记录
-        async searchTarget(historyValue){
-            if (historyValue) {
-                this.searchValue = historyValue;
-            }else if (!this.searchValue) {
-                return
-            }
-            //隐藏历史记录
-            this.showHistory = false;
-            //获取搜索结果
-            this.restaurantList = await searchRestaurant(this.geohash, this.searchValue);
-            this.emptyResult = !this.restaurantList.length;
-            /**
-             * 点击搜索结果进入下一页面时进行判断是否已经有一样的历史记录
-             * 如果没有则新增，如果有则不做重复储存，判断完成后进入下一页
-             */
-            let history = getStore('searchHistory');
-            if (history) {
-                let checkrepeat = false;
-                this.searchHistory = JSON.parse(history);
-                this.searchHistory.forEach(item => {
-                    if (item == this.searchValue) {
-                        checkrepeat = true;
-                    }
-                })
-                if (!checkrepeat) {
-                    this.searchHistory.push(this.searchValue)
-                }
-            }else {
-                this.searchHistory.push(this.searchValue)
-            }
-            setStore('searchHistory',this.searchHistory)
-        },
-        //搜索结束后，删除搜索内容直到为空时清空搜索结果，并显示历史记录
-        checkInput(){
-            if (this.searchValue === '') {
-                this.showHistory = true; //显示历史记录
-                this.restaurantList = []; //清空搜索结果
-                this.emptyResult = false; //隐藏搜索为空提示
-            }
-        },
-        //点击删除按钮，删除当前历史记录
-        deleteHistory(index){
-            this.searchHistory.splice(index, 1);
-            setStore('searchHistory',this.searchHistory);
-        },
-        //清除所有历史记录
-        clearAllHistory(){
-            this.searchHistory = [];
-            setStore('searchHistory',this.searchHistory);
+      unSelectAll:function(){
+        this.isSelectAll = false;
+        this.cartList.forEach((good)=>{
+          good.isChecked = false;
+        })
+      },
+
+//
+      changeQuentity:function(good,val,_index){
+        if(good.num == 1 && val == -1 ){
+
+          this.confirmDelete = true;
+          this.readyToDelIndex = _index;
+        } else {
+          good.num += val;
         }
+      },
+
     }
 }
 
@@ -377,26 +375,130 @@ export default {
 
 
     .shopping{clear:both;overflow:hidden;height:auto;padding-bottom: 60px;}
-    .shop-group-item{margin-bottom:5px; background: #fff;}
-    .shop-group-item ul li{border-bottom:1px solid #fff;}
+    .shop-group-item{margin-bottom:.05rem; background: #fff;}
+
+    .shop-group-item ul li{border-bottom:1px solid #dcdcdc;}
     .shop-group-item ul li:last-child{border-bottom:none;}
-    .shop-info{height:120px;padding:0 15px;position:relative;}
-    .shop-info .checkbox{background:url(../../images/icon_radio3.png) no-repeat left center;background-size:20px 20px;position:absolute;top:50%;left:15px;margin-top:-60px;width:20px;height:120px;}
-    .shop-info .checkbox1{background:url(../../images/icon_radio4.png) no-repeat left center;background-size:20px 20px;position:absolute;top:50%;left:15px;margin-top:-60px;width:20px;height:120px;}
-    .shop-info .shop-info-img{position:absolute;top:15px;left:45px;width:90px;height:90px;}
-    .shop-info .shop-info-img img{width:100%;height:100%;}
-    .shop-info .shop-info-text{margin-left:130px;padding:15px 0;}
-    .shop-info .shop-info-text h4{font-size:14px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow: hidden;}
-    .shop-info .shop-info-text .shop-brief{height:25px;line-height:25px;font-size:12px;color:#81838e;white-space:nowrap;}
-    .shop-info .shop-info-text .shop-brief span{display:inline-block;margin-right:8px;}
-    .shop-info .shop-info-text .shop-price{height:24px;line-height:24px;position:relative;}
-    .shop-info .shop-info-text .shop-price .shop-pices {color:red;font-size:16px;}
-    .shop-info .shop-info-text .shop-arithmetic{position:absolute;right:0px;top:0;width:78px;box-sizing:border-box;white-space:nowrap;height:100%;border:1px solid #e0e0e0;}
-    .shop-info .shop-info-text .shop-arithmetic a{display:inline-block;width:23px;height:22px;line-height:22px;text-align:center;background:#fff;font-size:16px;}
-    .shop-info .shop-info-text .shop-arithmetic .minus{border-right:1px solid #e0e0e0;}
-    .shop-info .shop-info-text .shop-arithmetic .failed{color:#d1d1d1;}
-    .shop-info .shop-info-text .shop-arithmetic .plus{border-left:1px solid #e0e0e0;}
-    .shop-info .shop-info-text .shop-arithmetic .num{width:32px;text-align:center;border:none;display: inline-block;height:100%;box-sizing:border-box;vertical-align:top;margin:0 -6px;font-size: 0.6rem}
+
+
+    .shop-info{
+      height:5rem;
+      padding:0 .3rem;
+      display: flex;
+
+      .shop-info-check{
+        width: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .item-check-btn{
+          width: .9rem;
+          height:.9rem;
+          border: 1px solid #ccc;
+          border-radius: 50%;
+          cursor: pointer;
+          .icon-ok {
+            width: 100%;
+            height: 100%;
+            fill: #fff;
+            -ms-transform: scale(0.8);
+            transform: scale(0.8);
+          }
+          .check {
+            background: #EE7A23;
+            border-color: #EE7A23;
+            /*.icon-ok {*/
+              /*display: inline-block;*/
+            /*}*/
+          }
+        }
+
+      }
+
+      .shop-info-img{
+        width: 4rem;
+        height: 4rem;
+        overflow: hidden;
+        margin-top: .5rem;
+        margin-left: .5rem;
+        margin-right: .5rem;
+
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .shop-info-text{
+        padding: .6rem 0;
+        width: 50%;
+        h4{font-size:.6rem;
+          display:-webkit-box;
+          -webkit-box-orient:vertical;
+          -webkit-line-clamp:2;
+          overflow: hidden;
+        }
+        .shop-brief{
+          height:1rem;
+          line-height:1rem;
+          font-size:.4rem;
+          color:#81838e;
+          white-space:nowrap;
+        }
+        .shop-price{
+          height:1.2rem;
+          line-height:1.2rem;
+          width: 50%;
+          float: left;
+          .shop-pices {
+            color:red;
+            font-size:.6rem;
+          }
+          .price{
+            font-size: .6rem;
+          }
+        }
+        .shop-arithmetic{
+          box-sizing:border-box;
+          white-space:nowrap;
+          height:100%;
+          width: 3.5rem;
+          border:1px solid #e0e0e0;
+          a{
+            display:inline-block;
+            width:1.2rem;
+            height:.99rem;
+            text-align:center;
+            background:#fff;
+            font-size:.6rem;
+          }
+          .minus{
+            border-right:1px solid #e0e0e0;
+          }
+          .failed{
+            color:#d1d1d1;
+          }
+          .plus{
+            border-left:1px solid #e0e0e0;
+          }
+          .num{
+            width:.6rem;
+            text-align:center;
+            border:none;
+            display: inline-block;
+            height:100%;
+            box-sizing:border-box;
+            vertical-align:top;
+            margin:0 -6px;
+            font-size: 0.6rem
+          }
+        }
+
+      }
+
+    }
+
+
     .shopPrice{background:#fff;height:35px;line-height:35px;padding:0 15px;text-align:right;}
     .shopPrice span{color:#f00; font-weight: bold;}
     .payment-bar{clear:both;overflow:hidden;width:100%;height:49px;position:fixed;bottom:0;border-top:1px solid #e0e0e0;background:#fff;}
@@ -428,28 +530,14 @@ export default {
       float: left;
       padding: 28px 0 28px 22px; }
 
-    .item-check-btn {
+
+    .item-edit-btn {
       display: inline-block;
       width: 16px;
-      height: 16px;
-      border: 1px solid #ccc;
-      border-radius: 50%;
-      text-align: center;
-      vertical-align: middle;
-      cursor: pointer; }
-    .item-check-btn .icon-ok {
-      display: none;
+      height: 20px; }
+    .item-edit-btn .icon-del {
       width: 100%;
       height: 100%;
-      fill: #fff;
-      -ms-transform: scale(0.8);
-      transform: scale(0.8); }
-    .item-check-btn.check {
-      background: #EE7A23;
-      border-color: #EE7A23; }
-    .item-check-btn.check .icon-ok {
-      display: inline-block; }
-
-
+      fill: #999; }
 
 </style>
