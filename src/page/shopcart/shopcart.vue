@@ -31,15 +31,11 @@
       </svg>
 
 
-
-
-
      <div v-if="shopCaft">
        <div class="shop-group-item">
          <ul>
            <li v-for="(item,index) in cartList">
              <div class="shop-info">
-
                <div class="shop-info-check">
                  <a href="javascript:void 0" class="item-check-btn"
                     v-bind:class="{check:item.isChecked}"
@@ -47,10 +43,7 @@
                    <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
                  </a>
                </div>
-
                <!--<input type="checkbox" class="check goods-check goodsCheck">-->
-
-
                <div class="shop-info-img"><img :src="item.goods.thumb" /></div>
 
                <div class="shop-info-text">
@@ -59,9 +52,9 @@
                  <div class="shop-price">
                    <div class="shop-pices">￥<b class="price">{{item.sku_spec.price}}</b></div>
                    <div class="shop-arithmetic">
-                     <a href="javascript:void 0" @click="changeQuentity(item,-1,index)" class="minus">2</a>
+                     <a href="javascript:void 0" @click="changeQuentity(item,-1,index)" class="minus">+</a>
                      <input type="text" :value="item.num" disabled class="num">
-                     <a href="javascript:void 0" @click="changeQuentity(item,1)" class="plus">1</a>
+                     <a href="javascript:void 0" @click="changeQuentity(item,1)" class="plus">-</a>
                    </div>
                  </div>
                </div>
@@ -73,7 +66,6 @@
                  </a>
                </div>
 
-
              </div>
            </li>
 
@@ -82,9 +74,9 @@
        <div class="payment-bar">
          <div class="all-checkbox">
            <a href="javascript:void 0">
-								<span class="item-check-btn" :class="{check:isSelectAll}">
-									<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
-								</span>
+								<!--<span class="item-check-btn" :class="{check:isSelectAll}">-->
+									<!--<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>-->
+								<!--</span>-->
              <span @click="selectAll" >全选</span>
              <span @click="unSelectAll">取消全选</span>
            </a>
@@ -110,8 +102,6 @@
         </router-link>
         <foot-guide></foot-guide>
       </div>
-
-
     </div>
 </template>
 
@@ -242,6 +232,9 @@ export default {
           good.num += val;
         }
       },
+
+
+
 
     }
 }
@@ -462,7 +455,7 @@ export default {
           box-sizing:border-box;
           white-space:nowrap;
           height:100%;
-          width: 3.5rem;
+          width: 4.5rem;
           border:1px solid #e0e0e0;
           a{
             display:inline-block;

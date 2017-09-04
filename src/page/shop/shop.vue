@@ -218,6 +218,8 @@
             <router-view></router-view>
         </transition>
 
+      //提示框
+      <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
     </div>
 </template>
 
@@ -329,7 +331,7 @@
               Request.Get('goods/'+id)
                 .then((res) => {
                   this.shopDetailData = res.data;
-                  console.log(this.shopDetailData);
+//                  console.log(this.shopDetailData);
                 }).then(() => {
                 //初始化swiper
                 new Swiper('.swiper-container', {
@@ -337,6 +339,7 @@
                   loop: true
                 });
               });
+
 
               //隐藏加载动画
               this.hideLoading();
@@ -364,21 +367,15 @@
               //将加入购物车的订单set进本地缓存
               this.ADD_CART({goods_id:shopId, sku_spec_id:foodIndex, num:numCounter});
 
-//              console.log(this.ADD_CART);
-
               //将加入购物车的订单提交到服务器
-
-//              console.log(shopId,foodIndex,numCounter,this.userInfo.token);
-
               Request.Post('cart', { goods_id:shopId, sku_spec_id:foodIndex, num:numCounter,token:this.userInfo.token})
                 .then((res) => {
                   console.log(res)
-//                  alert(res.msg);
                   this.cartFoodList = res.data;
-//                this.showAlert = true;
-//                alert(加入购物车成功);
                   this.sortBy = false;
                   this.showSpecs = false;
+                  this.showAlert = true;
+                  this.alertText = '加入购物车成功';
                 })
             },
 
@@ -496,20 +493,11 @@
                 this.numCounter = parseInt(this.numCounter) - 1;
               }
             },
-
-            //显示提示，无法减去商品
-//            showReduceTip(){
-//                this.showDeleteTip = true;
-//                clearTimeout(this.timer);
-//                this.timer = setTimeout(() => {
-//                    clearTimeout(this.timer);
-//                    this.showDeleteTip = false;
-//                }, 3000);
-//            },
-//            goback(){
-//                this.$router.go(-1);
-//            }
+            closeTip(){
+              this.showAlert = false;
+            }
         },
+
         watch: {
             //showLoading变化时说明组件已经获取初始化数据，在下一帧nextTick进行后续操作
             showLoading: function (value){

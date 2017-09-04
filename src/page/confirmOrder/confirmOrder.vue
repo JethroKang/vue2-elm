@@ -58,21 +58,21 @@
                         </div>
                     </li>
                 </ul>
-              <div class="food_item_style">
+              <!--<div class="food_item_style">-->
                 <!--<div class="food_item_style" v-if="checkoutData.cart.extra">-->
-                    <p class="food_name ellipsis">餐盒</p>
-                    <div class="num_price">
-                        <span></span>
-                        <span>¥ 0</span>
-                    </div>
-                </div>
-                <div class="food_item_style">
-                    <p class="food_name ellipsis">配送费</p>
-                    <div class="num_price">
-                        <span></span>
-                        <span>¥ 0</span>
-                    </div>
-                </div>
+                    <!--<p class="food_name ellipsis">餐盒</p>-->
+                    <!--<div class="num_price">-->
+                        <!--<span></span>-->
+                        <!--<span>¥ 0</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="food_item_style">-->
+                    <!--<p class="food_name ellipsis">配送费</p>-->
+                    <!--<div class="num_price">-->
+                        <!--<span></span>-->
+                        <!--<span>¥ 0</span>-->
+                    <!--</div>-->
+                <!--</div>-->
                 <div class="food_item_style total_price">
                     <p class="food_name ellipsis"></p>
                     <div class="num_price">
@@ -160,7 +160,9 @@
                 title: null,
                 orders:null,
                 orderRes:null,
-                getaddress:'',
+                getaddress:[],
+                current:1,
+                size:15,
             }
         },
         props: ['foodID','screenType','numCounter'],
@@ -173,13 +175,18 @@
           this.foodPrice = this.$route.query.foodPrice;
           this.numCounter = this.$route.query.numCounter;
           this.title = this.$route.query.title;
-
         },
         mounted(){
+
+
+
             //判断当前用户是否登录
             if (!(this.userInfo && this.userInfo.token)) {
                 this.showAlert = true;
                 this.alertText = '您还没有登录';
+
+            }else {
+              this.initAddress();
             }
 
 //            this.$router.push('/login');
@@ -205,58 +212,27 @@
           ]),
 
           //初始化数据
-          async initData(){
-
+          async initAddress(){
             if (this.userInfo && this.userInfo.token) {
-
-//                  请求用户的收货地址
+//            请求用户的收货地址
               Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
                 .then((res) => {
-                  console.log(res);
                   this.getaddress= res.data;
-                })
-
-//                    const getaddress = await getaddress(this.current,this.size,this.userInfo.token);
-//
-//                    console.log(getaddress);
-
-              if (addressRes instanceof Array && addressRes.length) {
-                this.CHOOSE_ADDRESS({address: addressRes[0], index: 0});
-              }
+                  this.CHOOSE_ADDRESS({address: this.getaddress[0], index: 0});
+                });
             }
-
           },
-          //获取地址信息，第一个地址为默认选择地址
-//            async initAddress(){
-//                if (this.userInfo && this.userInfo.token) {
-//
-////                  请求用户的收货地址
-//                    Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
-//                      .then((res) => {
-//                        console.log(res);
-//                        this.getaddress= res.data;
-//                      })
-//
-////                    const getaddress = await getaddress(this.current,this.size,this.userInfo.token);
-////
-////                    console.log(getaddress);
-//
-//                    if (addressRes instanceof Array && addressRes.length) {
-//                        this.CHOOSE_ADDRESS({address: addressRes[0], index: 0});
-//                    }
-//                }
-//            },
           //显示付款方式
           showPayWayFun(){
             this.showPayWay = !this.showPayWay;
           },
           //选择付款方式
-          choosePayWay(is_online_payment, id){
-            if (is_online_payment) {
-              this.showPayWay = !this.showPayWay;
-              this.payWayId = id;
-            }
-          },
+//          choosePayWay(is_online_payment, id){
+//            if (is_online_payment) {
+//              this.showPayWay = !this.showPayWay;
+//              this.payWayId = id;
+//            }
+//          },
 //            确认订单
           async confrimOrder(){
             //用户未登录时弹出提示框
@@ -283,10 +259,6 @@
               return
             }
 
-
-
-
-
             //保存订单
             this.SAVE_ORDER_PARAM({
               user_id: this.userInfo.token,
@@ -295,26 +267,17 @@
               orders: {goods_id: this.foodID, sku_spec_id: this.foodIndex, num: this.numCounter},
             });
             //发送订单信息
-
-
-            console.log({token:this.userInfo.token,address_id:this.choosedAddress.id,orders:[{goods_id: this.foodID,sku_spec_id: this.foodIndex,num: this.numCounter}],content:this.remarklist});
-
             Request.Post('order', {token:this.userInfo.token,address_id:this.choosedAddress.id,orders:[{goods_id: this.foodID,sku_spec_id: this.foodIndex,num: this.numCounter}],content:this.remarklist})
             .then((res) => {
-              console.log(res);
               this.orderRes=res;
+              //下单成功，跳转支付
+              if(this.orderRes.code === 200){
+                this.$router.push('/confirmOrder/payment');
+              }else{
+                this.showAlert = true;
+                this.alertText = this.orderRes.msg;
+              }
             })
-
-
-            //第一次下单的手机号需要进行验证，否则直接下单成功
-            console.log(orderRes);
-            if(orderRes.code !== 200){
-              this.showAlert = true;
-              this.alertText = orderRes.msg;
-            }else{
-              this.ORDER_SUCCESS(orderRes);
-              this.$router.push('/confirmOrder/payment');
-            }
 
           }
         },

@@ -8,7 +8,7 @@
                 <footer class="order_detail" v-if="payDetail.resultData">
                     <span>详情</span>
                     <span>¥ {{cartPrice&&cartPrice.toFixed(2) || payDetail.resultData.orderInfo.orderAmount&&(payDetail.resultData.orderInfo.orderAmount/100).toFixed(2)}}</span>
-                </footer>   
+                </footer>
             </section>
         </section>
         <div class="pay_way">选择支付方式</div>
@@ -16,7 +16,7 @@
             <section class="pay_item">
                 <div class="pay_icon_contaienr">
                     <div class="zhifubao">
-                        
+
                     </div>
                     <span>支付宝</span>
                 </div>
@@ -121,7 +121,7 @@
             //确认付款
             confrimPay(){
                 this.showAlert = true;
-                this.alertText = '当前环境无法支付，请打开官方APP进行付款';
+                this.alertText = '功能开发中';
                 this.gotoOrders = true;
             },
             //关闭提示框，跳转到订单列表页
@@ -134,10 +134,10 @@
         }
     }
 </script>
-  
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-  
+
     .rating_page{
         position: fixed;
         top: 0;
@@ -224,5 +224,5 @@
         margin-top: 0.5rem;
         font-weight: bold;
     }
-    
+
 </style>

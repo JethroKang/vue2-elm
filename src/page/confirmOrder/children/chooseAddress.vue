@@ -39,6 +39,7 @@
   import alertTip from 'src/components/common/alertTip'
   import BScroll from 'better-scroll'
   import Request from 'src/service/api'
+
   export default {
     data(){
       return{
@@ -84,20 +85,15 @@
 
         if (this.userInfo && this.userInfo.token) {
           //将当前所有地址访问有效无效两种
-
-
           Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
             .then((res) => {
               console.log(res);
               this.addressList = res;
-              console.log(this.adressList);
             })
-
         }
       },
       //选择地址
       chooseAddress(address, index){
-         console.log(address);
         this.CHOOSE_ADDRESS({address, index});
         this.$router.go(-1);
       },
