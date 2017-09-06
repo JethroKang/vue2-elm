@@ -32,60 +32,59 @@
 
 
      <div v-if="shopCaft">
-       <div class="shop-group-item">
-         <ul>
-           <li v-for="(item,index) in cartList">
-             <div class="shop-info">
-               <div class="shop-info-check">
-                 <a href="javascript:void 0" class="item-check-btn"
-                    v-bind:class="{check:item.isChecked}"
-                    @click="selectGood(item)">
-                   <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
-                 </a>
-               </div>
-               <!--<input type="checkbox" class="check goods-check goodsCheck">-->
-               <div class="shop-info-img"><img :src="item.goods.thumb" /></div>
 
-               <div class="shop-info-text">
+
+       <div class="commodity_box">
+         <div class="commodity_list">
+           <!--商品-->
+           <ul class="commodity_list_term">
+             <li class="select" v-for="(item,index) in cartList">
+               <em aem="0" cart_id="84"></em>
+               <img :src="item.goods.thumb" />
+               <div class="div_center">
                  <h4>{{item.goods.name}}</h4>
-                 <div class="shop-brief"><span>{{item.sku_spec.key_name_arr}}</span></div>
-                 <div class="shop-price">
-                   <div class="shop-pices">￥<b class="price">{{item.sku_spec.price}}</b></div>
-                   <div class="shop-arithmetic">
-                     <a href="javascript:void 0" @click="changeQuentity(item,-1,index)" class="minus">+</a>
-                     <input type="text" :value="item.num" disabled class="num">
-                     <a href="javascript:void 0" @click="changeQuentity(item,1)" class="plus">-</a>
-                   </div>
-                 </div>
+                 <span>{{item.sku_spec.key_name_arr}}</span>
+                 <p class="now_value"><i>￥</i><b class="qu_su">{{item.sku_spec.price}}</b></p>
                </div>
-
-               <div class="cart-item-opration">
-                 <a href="javascript:void 0" class="item-edit-btn"
-                    @click="delGood(item,index)">
-                   <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
-                 </a>
+               <div class="div_right">
+                 <i @click="changeQuentity(item,-1,index)">-</i>
+                 <span class="zi">{{item.num}}</span>
+                 <i @click="changeQuentity(item,1)">+</i>
                </div>
-
-             </div>
-           </li>
-
-         </ul>
-       </div>
-       <div class="payment-bar">
-         <div class="all-checkbox">
-           <a href="javascript:void 0">
-								<!--<span class="item-check-btn" :class="{check:isSelectAll}">-->
-									<!--<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>-->
-								<!--</span>-->
-             <span @click="selectAll" >全选</span>
-             <span @click="unSelectAll">取消全选</span>
-           </a>
+             </li>
+           </ul>
          </div>
-         <div class="shop-total">
-           <strong>总价：<i class="total" id="AllTotal">{{totalPrice}}</i></strong>
-         </div>
-         <a href="#" class="settlement">结算</a>
        </div>
+
+       <!--<div class="payment-bar">-->
+         <!--<div class="all-checkbox">-->
+           <!--<a href="javascript:void 0">-->
+								<!--&lt;!&ndash;<span class="item-check-btn" :class="{check:isSelectAll}">&ndash;&gt;-->
+									<!--&lt;!&ndash;<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>&ndash;&gt;-->
+								<!--&lt;!&ndash;</span>&ndash;&gt;-->
+             <!--<span @click="selectAll" >全选</span>-->
+             <!--<span @click="unSelectAll">取消全选</span>-->
+           <!--</a>-->
+         <!--</div>-->
+         <!--<div class="shop-total">-->
+           <!--<strong>总价：<i class="total" id="AllTotal">{{totalPrice}}</i></strong>-->
+         <!--</div>-->
+         <!--<a href="#" class="settlement">结算</a>-->
+       <!--</div>-->
+
+       <div class="settle_box">
+         <dl class="all_check select">
+           <dt><span id="all_pitch_on"></span><em>全选</em></dt>
+         </dl>
+         <dl class="total_amount">
+           <dt>合计：<p id="total_price">¥<b>{{totalPrice}}</b></p></dt>
+           <dd>不含运费</dd>
+         </dl>
+         <input type="hidden" name="gcs" id="gcs" />
+         <a class="settle_btn" href="javascript:void(0);" id="confirm_cart">结算</a>
+       </div>
+
+
      </div>
 
 
@@ -244,293 +243,44 @@ export default {
 <style lang="scss" scoped>
     @import '../../style/mixin';
 
-    .search_page{
-        margin-bottom: 2rem;
-    }
-    .search_form{
-        background-color: #fff;
-        padding: 0.5rem;
-        display: flex;
-        input{
-            height: 1.5rem;
-        }
-        .search_input{
-            flex: 4;
-            border: 0.025rem solid $bc;
-            @include sc(0.65rem, #333);
-            border-radius: 0.125rem;
-            background-color: #f2f2f2;
-            font-weight: bold;
-            padding: 0 0.25rem;
-        }
-        .search_submit{
-            flex: 1;
-            border: 0.025rem solid $blue;
-            margin-left: .2rem;
-            @include sc(0.65rem, #fff);
-            border-radius: 0.125rem;
-            background-color: $blue;
-            font-weight: bold;
-            padding: 0 0.25rem;
-        }
-    }
-    .title_restaurant{
-        font-size: 0.6rem;
-        line-height: 2rem;
-        text-indent: 0.5rem;
-        font-weight: bold;
-        color: #666;
-    }
-    .list_container{
-        background-color: #fff;
-    }
-    .list_li{
-        display: flex;
-        justify-content: 'center';
-        padding: 0.5rem;
-        border-bottom: 0.025rem solid $bc;
-        .item_left{
-            margin-right: 0.25rem;
-            .restaurant_img{
-                @include wh(1.7rem, 1.7rem);
-            }
-        }
-        .item_right{
-            font-size: 0.55rem;
-            flex: 1;
-            .item_right_text{
-                padding-bottom: 0.25rem;
-                border-bottom: 0.025rem solid $bc;
-                p{
-                    line-height: .9rem;
+
+    .commodity_list { background: #fff; margin-bottom: 10px;
+      .tite_tim em { float: left; width: 20px; height: 20px; border: solid 1px #e6e6e6; border-radius: 50%; margin-right: 10px; }
+        .commodity_list_term { margin-left: 3%;
+          li { border-top: solid 1px #e6e6e6; position: relative; overflow: hidden; padding: 12px 0;
+              em { position: absolute; width: 20px; height: 20px; border: solid 1px #e6e6e6; border-radius: 50%; left: 0; top: 40px; }
+              img { width: 4rem; height: 4rem; max-width: 4rem; max-height: 4rem; float: left; margin-left: 28px; }
+              .div_center { width: 50%; float: left; position: relative; margin-top: 7px; margin-left: 2%;
+                h4 { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; color: #333; margin: 0; font-size: 0.7rem;}
+                span { color: #666; font-size: 0.6rem; }
+                p { font-size: 0.8rem; color: #ff900d; margin-top: 6px; font-family: "-apple-system","Helvetica Neue",Roboto,"Segoe UI",sans-serif; }
                 }
-                .pay_icon{
-                    margin-bottom: -0.08rem;
-                }
-            }
-            .item_right_detail{
-                margin-top: 0.25rem;
-                li{
-                    font-size: 0;
-                    span{
-                        font-size: .5rem;
-                        vertical-align: middle;
-                        display: inline-block;
-                        margin-bottom: 0.2rem;
-                    }
-                    .activities_icon{
-                        @include sc(.5rem, #fff);
-                        font-weight: bold;
-                        padding: .04rem;
-                        border-radius: 0.15rem;
-                        margin-right: 0.125rem;
-                    }
-                    .only_phone{
-                        color: #FF6000;
-                    }
-                }
-            }
-        }
-    }
-    .search_history{
-        .history_list{
-            background-color: #fff;
-            border-bottom: 0.025rem solid $bc;
-            @include font(0.7rem, 2rem);
-            padding: 0 0.3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            .history_text{
-                display: inline-block;
-                width: 80%;
-            }
-            .delete_icon{
-                @include wh(1rem, 1rem);
-            }
-        }
-        .clear_history{
-            background-color: #fff;
-            color: $blue;
-            @include font(.7rem, 2rem);
-            font-weight: bold;
-            text-align: center;
-        }
-    }
-    .search_none{
-        margin: 0 auto;
-        @include font(0.65rem, 1.75rem);
-        color: #333;
-        background-color: #fff;
-        text-align: center;
-        margin-top: 0.125rem;
-    }
+                .div_right { position: absolute; bottom: 10px; right: 4%; border: solid 1px #e6e6e6; border-radius: 4px; width: 82px; overflow: hidden; text-align: center; line-height: 30px;
+                      i { float: left; width: 33%; color: #333; font-size: .8rem  }
+                      span { float: left; width: 33%; border-left: solid 1px #e6e6e6; border-right: solid 1px #e6e6e6; color: #333; font-size: .6rem}
+                      }
 
-
-    .shopping{clear:both;overflow:hidden;height:auto;padding-bottom: 60px;}
-    .shop-group-item{margin-bottom:.05rem; background: #fff;}
-
-    .shop-group-item ul li{border-bottom:1px solid #dcdcdc;}
-    .shop-group-item ul li:last-child{border-bottom:none;}
-
-
-    .shop-info{
-      height:5rem;
-      padding:0 .3rem;
-      display: flex;
-
-      .shop-info-check{
-        width: 1rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .item-check-btn{
-          width: .9rem;
-          height:.9rem;
-          border: 1px solid #ccc;
-          border-radius: 50%;
-          cursor: pointer;
-          .icon-ok {
-            width: 100%;
-            height: 100%;
-            fill: #fff;
-            -ms-transform: scale(0.8);
-            transform: scale(0.8);
-          }
-          .check {
-            background: #EE7A23;
-            border-color: #EE7A23;
-            /*.icon-ok {*/
-              /*display: inline-block;*/
-            /*}*/
           }
         }
-
-      }
-
-      .shop-info-img{
-        width: 4rem;
-        height: 4rem;
-        overflow: hidden;
-        margin-top: .5rem;
-        margin-left: .5rem;
-        margin-right: .5rem;
-
-        img{
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      .shop-info-text{
-        padding: .6rem 0;
-        width: 50%;
-        h4{font-size:.6rem;
-          display:-webkit-box;
-          -webkit-box-orient:vertical;
-          -webkit-line-clamp:2;
-          overflow: hidden;
-        }
-        .shop-brief{
-          height:1rem;
-          line-height:1rem;
-          font-size:.4rem;
-          color:#81838e;
-          white-space:nowrap;
-        }
-        .shop-price{
-          height:1.2rem;
-          line-height:1.2rem;
-          width: 50%;
-          float: left;
-          .shop-pices {
-            color:red;
-            font-size:.6rem;
-          }
-          .price{
-            font-size: .6rem;
-          }
-        }
-        .shop-arithmetic{
-          box-sizing:border-box;
-          white-space:nowrap;
-          height:100%;
-          width: 4.5rem;
-          border:1px solid #e0e0e0;
-          a{
-            display:inline-block;
-            width:1.2rem;
-            height:.99rem;
-            text-align:center;
-            background:#fff;
-            font-size:.6rem;
-          }
-          .minus{
-            border-right:1px solid #e0e0e0;
-          }
-          .failed{
-            color:#d1d1d1;
-          }
-          .plus{
-            border-left:1px solid #e0e0e0;
-          }
-          .num{
-            width:.6rem;
-            text-align:center;
-            border:none;
-            display: inline-block;
-            height:100%;
-            box-sizing:border-box;
-            vertical-align:top;
-            margin:0 -6px;
-            font-size: 0.6rem
-          }
-        }
-
-      }
 
     }
 
 
-    .shopPrice{background:#fff;height:35px;line-height:35px;padding:0 15px;text-align:right;}
-    .shopPrice span{color:#f00; font-weight: bold;}
-    .payment-bar{clear:both;overflow:hidden;width:100%;height:49px;position:fixed;bottom:0;border-top:1px solid #e0e0e0;background:#fff;}
-    .payment-bar .all-checkbox{float:left;line-height:49px;padding-left:40px;}
-    .payment-bar .shop-total{float:left;-webkit-box-flex:1.0;box-flex:1.0;margin:9px 20px 9px 35px;}
-    .payment-bar .shop-total strong{display:block;font-size:16px;}
-    .payment-bar .shop-total span{display:block;font-size:12px;}
-    .payment-bar .settlement{display:inline-block;float:right;width:100px;height:49px;line-height:49px;text-align:center;color:#fff;font-size:16px;background:#f23030;}
-    input[type="checkbox"]{-webkit-appearance:none;outline: none;}
-    input.check{background:url(../../images/icon_radio3.png) no-repeat center left;background-size:20px 20px;position:absolute;top:50%;left:10px;margin-top:-18px;width:20px;height:35px;}
-    input.check:checked{background:url(../../images/icon_radio4.png) no-repeat center left;background-size:20px 20px;}
-    input.goodsCheck:checked{background:url(../../images/icon_radio4.png) no-repeat center left;background-size:20px 20px;}
-    input.check:checked{background:url(../../images/icon_radio4.png) no-repeat center left;background-size:20px 20px;}
-    .checked{background:url(../../images/icon_radio4.png) no-repeat left center;background-size:20px 20px;position:absolute;top:50%;left:15px;margin-top:-18px;width:20px;height:35px;}
 
-    .no-data-div{ width:90%; margin:0rem auto 0; text-align:center;}
-    .no-data-div .no-data-icon { height: 5rem;width: 5rem;line-height: 12rem;text-align: center;display: block;background: #DFE0E8;border-radius: 100%;margin: 0 auto;}
-    .no-data-div .no-data-img { margin: 0 auto; }
-    .no-data-div .no-data-icon i { display: block; color: #fff; line-height:5rem; font-size:3rem; }
-    .no-data-div dl { margin: 0.15rem auto; text-align:center; }
-    .no-data-div dl dt { display: block; color: #777; font-size: .8rem}
-    .no-data-div dl dd { display: block; margin-bottom: 0.15rem;  color: #999; font-size: .6rem}
-    .no-data-div .no-data-btn { background: #f23030; display:block !important; margin: 1rem auto 0 auto; color: #fff !important; line-height: 1.5rem; text-align: center;border-radius: 0.15rem; height: 1.5rem;width: 6rem;font-size: 0.7rem ;}
-    .no-data-div .no-data-img img {
-      height: 6.5rem;
-    }
+    .settle_box_h{ height:60px;}
+    .settle_box{ background:#fff; position:fixed; left:0px; bottom:0px; overflow:hidden; z-index:2;width: 100%;padding:0 0 0 4%;border-top: solid 1px #e6e6e6;}
+    .settle_box .all_check,.settle_box .total_amount{ float:left;}
+    .settle_box .all_check{ width:17%;margin-bottom:0;margin-top: 15px}
+    .settle_box .all_check dd{ color:#999999; font-size:12px;}
+    .settle_box .all_check dt em{ font-size: .8rem}
+    .settle_box .all_check span{ width:20px; height:20px; border:solid 1px #a2a2a2; vertical-align:middle; border-radius:50%;float: left;}
+    .settle_box .all_check .disabled{ background:#e1e1e1;border:solid 1px #e1e1e1;}
 
-    .cart-item-list .cart-item-check {
-      float: left;
-      padding: 28px 0 28px 22px; }
-
-
-    .item-edit-btn {
-      display: inline-block;
-      width: 16px;
-      height: 20px; }
-    .item-edit-btn .icon-del {
-      width: 100%;
-      height: 100%;
-      fill: #999; }
+    .settle_box .total_amount {color: #999;font-size: 14px;margin: 0;width: 50%;text-align: right;margin-top: 5px;padding-right: 2%;}
+    .settle_box .total_amount dd{ margin-top:1px;clear: both;font-size: 0.6rem;}
+    .settle_box .total_amount dt p {color: #ff900d;font-size: 0.8rem;float: right;line-height: 20px;}
+    .settle_box .total_amount dt p:first-letter{ font-size:0.6rem}
+    .settle_box .total_amount dt {font-weight: initial;}
+    .settle_box .settle_btn{ float:right; width:33%; background:#ff900d; color:#fff; padding:17px 0; text-align:center;font-size: 0.7rem;}
 
 </style>

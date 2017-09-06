@@ -268,7 +268,7 @@
                 showLoading: false, //显示加载动画
                 imgBaseUrl,
                 current:1,
-                size:2,
+                size:25,
             }
         },
         mounted(){
