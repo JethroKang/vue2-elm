@@ -15,14 +15,19 @@
         <ul v-load-more="loaderMore" v-if="shopListArr.length" type="1">
           <router-link :to="{path: 'shop', query:{id: item.id}}" v-for="item in shopListArr" tag='li' :key="item.id" class="shop_li">
             <section class="goods_hot">
-              <div class="goods_hot_img">
-                <img :src="item.thumb" >
+              <div class="grid">
+                <div class="goods_hot_img">
+                  <img :src="item.thumb" >
+                </div>
               </div>
+
               <div class="goods_hot_content">
                 <div class="goods_hot_content_inner">
                   <p class="goods_hot_title">{{item.name}}</p>
                   <p class="goods_hot_p">{{item.outline}}</p>
-                  <p class="goods_hot_price">￥ {{item.price}}</p>
+                </div>
+                <div class="goods_hot_content_price">
+                  <div class="goods_hot_price">￥ {{item.price}}</div>
                 </div>
               </div>
             </section>
@@ -49,6 +54,7 @@
                   <p class="goods_hot_p">{{item.outline}}</p>
                   <p class="goods_hot_price">￥ {{item.price}}</p>
                 </div>
+                <div></div>
               </div>
             </section>
           </router-link>
@@ -538,8 +544,11 @@ export default {
   .goods_hot{
     background-color: #ffffff;
     width: 100%;
+    .grid{
+      display: flex;
+    }
     .goods_hot_img{
-      width: 100%;
+      flex: 1;
       height: 8.5rem;
       overflow: hidden;
       img{
@@ -548,11 +557,11 @@ export default {
       }
     }
     .goods_hot_content{
-      width: 100%;
+      display: flex;
       padding: .3rem 0rem;
       .goods_hot_content_inner{
+        flex: 3;
         padding: 0rem .3rem;
-        position: relative;
         .goods_hot_title{
           font-size: .6rem;
           font-weight: bold;
@@ -561,10 +570,14 @@ export default {
           font-size: .6rem;
           color: #333333;
         }
+
+      }
+      .goods_hot_content_price{
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         .goods_hot_price{
-          position: absolute;
-          top: .3rem;
-          right: .3rem;
           color: #fd5138;
           font-size: .6rem;
           font-weight: bold;

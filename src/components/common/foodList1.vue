@@ -38,7 +38,6 @@
           </ul>
         </div>
 
-
       </section>
     </transition>
     <transition name="fade-choose">

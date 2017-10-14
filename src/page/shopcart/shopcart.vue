@@ -241,27 +241,97 @@ export default {
     @import '../../style/mixin';
 
 
-    .commodity_list { background: #fff; margin-bottom: 10px;
-      .tite_tim em { float: left; width: 20px; height: 20px; border: solid 1px #e6e6e6; border-radius: 50%; margin-right: 10px; }
-        .commodity_list_term { margin-left: 3%;
-          li { border-top: solid 1px #e6e6e6; position: relative; overflow: hidden; padding: 12px 0;
-              em { position: absolute; width: 20px; height: 20px; border: solid 1px #e6e6e6; border-radius: 50%; left: 0; top: 40px; }
-              img { width: 4rem; height: 4rem; max-width: 4rem; max-height: 4rem; float: left; margin-left: 28px; }
-              .div_center { width: 50%; float: left; position: relative; margin-top: 7px; margin-left: 2%;
-                h4 { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; color: #333; margin: 0; font-size: 0.7rem;}
-                span { color: #666; font-size: 0.6rem; }
-                p { font-size: 0.8rem; color: #ff900d; margin-top: 6px; font-family: "-apple-system","Helvetica Neue",Roboto,"Segoe UI",sans-serif; }
+    .commodity_list {
+      background: #fff;
+      margin-bottom: 10px;
+        .tite_tim em {
+          float: left;
+          width: 20px;
+          height: 20px;
+          border: solid 1px #e6e6e6;
+          border-radius: 50%;
+          margin-right: 10px;
+        }
+        .commodity_list_term {
+          margin-left: 3%;
+          li {
+            border-top: solid 1px #e6e6e6;
+            position: relative;
+            overflow: hidden;
+            padding: 12px 0;
+              em {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border: solid 1px #e6e6e6;
+                border-radius: 50%;
+                left: 0;
+                top: 40px;
+              }
+              img {
+                width: 4rem;
+                height: 4rem;
+                max-width: 4rem;
+                max-height: 4rem;
+                float: left;
+                margin-left: 28px;
+              }
+              .div_center {
+                width: 50%;
+                float: left;
+                position: relative;
+                margin-top: 7px;
+                margin-left: 2%;
+                h4 {
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  color: #333;
+                  margin: 0;
+                  font-size: 0.7rem;
                 }
-                .div_right { position: absolute; bottom: 10px; right: 4%; border: solid 1px #e6e6e6; border-radius: 4px; width: 82px; overflow: hidden; text-align: center; line-height: 30px;
-                      i { float: left; width: 33%; color: #333; font-size: .8rem  }
-                      span { float: left; width: 33%; border-left: solid 1px #e6e6e6; border-right: solid 1px #e6e6e6; color: #333; font-size: .6rem}
+                span {
+                  color: #666;
+                  font-size: 0.6rem;
+                }
+                p {
+                  font-size: 0.8rem;
+                  color: #ff900d;
+                  margin-top: 6px;
+                  font-family: "-apple-system","Helvetica Neue",Roboto,"Segoe UI",sans-serif;
+                }
+              }
+                .div_right {
+                  position: absolute;
+                  bottom: 10px;
+                  right: 4%;
+                  border: solid 1px #e6e6e6;
+                  border-radius: 4px;
+                  width: 82px;
+                  overflow: hidden;
+                  text-align: center;
+                  line-height: 30px;
+                      i {
+                        float: left;
+                        width: 33%;
+                        color: #333;
+                        font-size: .8rem
                       }
-
+                      span {
+                        float: left;
+                        width: 33%;
+                        border-left: solid 1px #e6e6e6;
+                        border-right: solid 1px #e6e6e6;
+                        color: #333;
+                        font-size: .6rem
+                      }
+                }
           }
         }
 
     }
-
 
     .no-data-div{
         width:90%;
