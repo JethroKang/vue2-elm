@@ -57,8 +57,8 @@ export default [{
     children: [ //二级路由。对应App.vue
         //地址为空时跳转home页面
         {
-            path: '',
-            //redirect: '/home'
+          path: '',
+          //redirect: '/home'
           redirect: '/msite'
         },
         //首页城市列表页

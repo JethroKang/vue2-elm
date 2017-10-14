@@ -62,7 +62,7 @@
     props:[],
     computed: {
       ...mapState([
-        'userInfo', 'addressIndex', 'newAddress'
+        'userInfo', 'addressIndex', 'newAddress','userToken'
       ]),
       //选择地址
       defaultIndex: function (){
@@ -83,13 +83,16 @@
         this.deliverable = [];
         this.deliverdisable = [];
 
-        if (this.userInfo && this.userInfo.token) {
+        if (this.userToken) {
           //将当前所有地址访问有效无效两种
-          Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
+          Request.Get('address', {current:this.current,size:this.size,token:this.userToken})
             .then((res) => {
               console.log(res);
               this.addressList = res;
             })
+        }else {
+          this.showAlert = true;
+          this.alertText = '您还没有登录';
         }
       },
       //选择地址

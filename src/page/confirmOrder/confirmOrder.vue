@@ -76,7 +76,7 @@
                 <div class="food_item_style total_price">
                     <p class="food_name ellipsis"></p>
                     <div class="num_price">
-                        <span>待支付 ¥{{foodPrice*numCounter}}</span>
+                        <span>待支付 ¥{{foodPrice * numCounter}}</span>
                     </div>
                 </div>
             </section>
@@ -102,7 +102,7 @@
             </section>
             <section class="confrim_order">
                 <p>待支付 ¥{{foodPrice * numCounter}}</p>
-                <p @click="confrimOrder">确认下单</p>
+                <p @click="confrimOrder" id="confrimOrder">确认下单</p>
             </section>
             <transition name="fade">
                 <div class="cover" v-if="showPayWay" @click="showPayWayFun"></div>
@@ -142,6 +142,7 @@
     import loading from 'src/components/common/loading'
     import {imgBaseUrl} from 'src/config/env'
     import Request from '../../service/api'
+    import wx from 'weixin-js-sdk'
 
     export default {
         data(){
@@ -159,28 +160,28 @@
                 numCounter: null,
                 title: null,
                 orders:null,
-                orderRes:null,
                 getaddress:[],
                 current:1,
                 size:15,
+                appId:'',
+
             }
         },
-        props: ['foodID','screenType','numCounter'],
         created(){
-//            this.SAVE_SHOPID(this.shopId);
-            //获取当前商铺购物车信息
-//            this.shopCart = this.cartList[this.shopId];
+//        this.SAVE_SHOPID(this.shopId);
+//        获取当前商铺购物车信息
+//        this.shopCart = this.cartList[this.shopId];
           this.foodID = this.$route.query.foodID;
           this.foodIndex = this.$route.query.foodIndex;
           this.foodPrice = this.$route.query.foodPrice;
           this.numCounter = this.$route.query.numCounter;
           this.title = this.$route.query.title;
+
         },
         mounted(){
 
-
             //判断当前用户是否登录
-            if (!(this.userInfo && this.userInfo.token)) {
+            if (!(this.userToken)) {
                 this.showAlert = true;
                 this.alertText = '您还没有登录';
 
@@ -190,6 +191,8 @@
 
 //            this.$router.push('/login');
 
+
+
         },
         components: {
             headTop,
@@ -198,7 +201,7 @@
         },
         computed: {
             ...mapState([
-                'cartList', 'remarkText', 'inputText', 'invoice', 'choosedAddress', 'userInfo'
+                'cartList', 'remarkText', 'inputText', 'invoice', 'choosedAddress', 'userInfo','userToken'
             ]),
             //备注页返回的信息进行处理
             remarklist: function (){
@@ -212,14 +215,15 @@
 
           //初始化数据
           async initAddress(){
-            if (this.userInfo && this.userInfo.token) {
+            if (this.userToken) {
 //            请求用户的收货地址
-              Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
+              Request.Get('address', {current:this.current,size:this.size,token:this.userToken})
                 .then((res) => {
                   this.getaddress= res.data;
                   this.CHOOSE_ADDRESS({address: this.getaddress[0], index: 0});
                 });
             }
+
           },
           //显示付款方式
           showPayWayFun(){
@@ -235,7 +239,7 @@
 //            确认订单
           async confrimOrder(){
             //用户未登录时弹出提示框
-            if (!(this.userInfo && this.userInfo.token)) {
+            if (!(this.userToken)) {
               this.showAlert = true;
               this.alertText = '请登录';
               return
@@ -260,43 +264,34 @@
 
             //保存订单
             this.SAVE_ORDER_PARAM({
-              user_id: this.userInfo.token,
+              user_id: this.userToken,
               address_id: this.choosedAddress.id,
               description: this.remarklist,
               orders: {goods_id: this.foodID, sku_spec_id: this.foodIndex, num: this.numCounter},
             });
-            //发送订单信息
-            Request.Post('order', {token:this.userInfo.token,address_id:this.choosedAddress.id,orders:[{goods_id: this.foodID,sku_spec_id: this.foodIndex,num: this.numCounter}],content:this.remarklist})
+
+//            发送订单信息
+            Request.Post('order', {token:this.userToken,address_id:this.choosedAddress.id,orders:[{goods_id: this.foodID,sku_spec_id: this.foodIndex,num: this.numCounter}],content:this.remarklist})
             .then((res) => {
-              this.orderRes=res.data.jsapi;
-              //下单成功，跳转支付
-//              if(this.orderRes.code === 200){
-//                this.$router.push('/confirmOrder/payment');
-//              }else{
-//                this.showAlert = true;
-//                this.alertText = this.orderRes.msg;
-//              }
-              console.log(this.orderRes);
+            if(res.code === 200){
+                WeixinJSBridge.invoke(
+                  'getBrandWCPayRequest',JSON.parse(res.data.jsapi),
+                  function(result){
+                    console.log(result);
+                    if(result.err_msg == "get_brand_wcpay_request:ok" ) {
 
-              wx.chooseWXPay({
-                timestamp: this.orderRes.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-                nonceStr: this.orderRes.nonceStr, // 支付签名随机串，不长于 32 位
-                package: this.orderRes.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
-                signType: this.orderRes.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-                paySign: this.orderRes.paySign, // 支付签名
-                success: function (res) {
-                  // 支付成功后的回调函数
-                  alert("sssss");
-                  this.$router.push('/confirmOrder/payment');
+                    }else {
 
-                }
-              });
-
-
-
-            })
-
+                    }
+                  }
+                );
+            }else if(res.code === 404){
+              this.showAlert = true;
+              this.alertText =res.msg;
+              }
+            });
           }
+
         },
         watch: {
             userInfo: function (value) {
@@ -309,7 +304,8 @@
           compiled: function() {
             console.info(this.msg,this.msg.mes,121231231);
           },
-        }
+        },
+
     }
 
 </script>

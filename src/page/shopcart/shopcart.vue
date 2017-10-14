@@ -2,9 +2,6 @@
   	<div class="paddingTop search_page">
         <head-top head-title="购物车" goBack="true"></head-top>
 
-
-
-
       <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
           <symbol id="icon-add" viewBox="0 0 32 32">
@@ -130,7 +127,7 @@ export default {
     },
     mounted(){
       this.initData();
-      if (!(this.userInfo && this.userInfo.token)) {
+      if (!(this.userToken)) {
             this.shopCaft = false;
       }
 
@@ -142,7 +139,7 @@ export default {
     },
     computed: {
       ...mapState([
-        'userInfo',
+        'userToken',
       ]),
       totalPrice:function(){
         let total = 0;
@@ -167,7 +164,7 @@ export default {
       async initData(){
 
         //获取购物车列表
-        Request.Get('cart',{current:this.current,size:this.size,token:this.userInfo.token})
+        Request.Get('cart',{current:this.current,size:this.size,token:this.userToken})
           .then((res) => {
           console.log(res);
             this.cartList = res.data;
@@ -266,6 +263,60 @@ export default {
     }
 
 
+    .no-data-div{
+        width:90%;
+        margin:0rem auto 0;
+        text-align:center;
+        .no-data-icon {
+            height: 5rem;
+            width: 5rem;
+            line-height: 12rem;
+            text-align: center;
+            display: block;
+            background: #DFE0E8;
+            border-radius: 100%;
+            margin: 0 auto;
+        }
+        .no-data-img {
+            margin: 0 auto;
+        }
+        .no-data-icon i {
+            display: block;
+            color: #fff;
+            line-height:5rem;
+            font-size:3rem;
+        }
+        dl {
+          margin: 0.15rem auto;
+          text-align:center;
+        }
+        dl dt {
+          display: block;
+          color: #777;
+          font-size: .8rem
+        }
+        dl dd {
+          display: block;
+          margin-bottom: 0.15rem;
+          color: #999;
+          font-size: .6rem
+        }
+        .no-data-btn {
+          background: #f23030;
+          display:block !important;
+          margin: 1rem auto 0 auto;
+          color: #fff !important;
+          line-height: 1.5rem;
+          text-align: center;
+          border-radius: 0.15rem;
+          height: 1.5rem;
+          width: 6rem;
+          font-size: 0.7rem ;
+        }
+        .no-data-img img {
+          height: 6.5rem;
+        }
+    }
 
     .settle_box_h{ height:60px;}
     .settle_box{ background:#fff; position:fixed; left:0px; bottom:0px; overflow:hidden; z-index:2;width: 100%;padding:0 0 0 4%;border-top: solid 1px #e6e6e6;}

@@ -95,7 +95,7 @@
               <div class="l l-cart">
                 <router-link :to="{path:'/shopcart'}">
                 <div class="box">
-                  <div class="cart-count">{{showCartList.length}}</div>
+                  <div class="cart-count">{{shopCartNum}}</div>
                   <i class="iconfont icon" >&#xe502;</i>
                 </div>
                 </router-link>
@@ -243,10 +243,10 @@
 
         data(){
             return{
-                  shopId: null, //商店id值
-                  showLoading: true, //显示加载动画
-                  changeShowType: 'food',//切换显示商品或者评价
-                  shopDetailData: [], //商铺详情
+                shopId: null, //商店id值
+                showLoading: true, //显示加载动画
+                changeShowType: 'food',//切换显示商品或者评价
+                shopDetailData: [], //商铺详情
                 categoryNum: [], //商品类型右上角已加入购物车的数量
                 cartFoodList: '', //购物车商品列表
                 showCartList: '',//显示购物车列表
@@ -272,7 +272,7 @@
                 alertText: null, //提示的内容
                 showPayWay: false,//显示付款方式
                 sortBy:false,
-                shopCartNum:false,//是否显示购物的数量
+                shopCartNum:'0',//是否显示购物的数量
                 current:1,
                 size:20,
             }
@@ -299,11 +299,8 @@
         },
         computed: {
             ...mapState([
-                'latitude','longitude','cartList'
+              'userInfo', 'addressIndex','userToken','latitude','longitude','cartList'
             ]),
-          ...mapState([
-            'userInfo', 'addressIndex',
-          ]),
 
             //购物车中总共商品的数量
             totalNum: function (){
@@ -326,6 +323,8 @@
             //初始化时获取基本数据
             async initData(){
 
+              console.log(this.userToken);
+
                //获取商店信息
               let id = this.shopId;
               Request.Get('goods/'+id)
@@ -340,17 +339,17 @@
                 });
               });
 
-
               //隐藏加载动画
               this.hideLoading();
 
               //判断用户是否登录，对登录的用户获取购物车的数量
-              if (this.userInfo && this.userInfo.token) {
+              if (this.userToken) {
                 //获取购物车的列表
-                Request.Get('cart',{current:this.current,size:this.size,token:this.userInfo.token})
+                Request.Get('cart',{current:this.current,size:this.size,token:this.userToken})
                   .then((res) => {
                     this.showCartList = res.data;
-//                    console.log(this.showCartList);
+                    this.shopCartNum = this.showCartList.length;
+                    console.log(this.showCartList);
                   })
               }
             },
@@ -359,7 +358,7 @@
             addToCart(shopId,foodIndex,numCounter){
 
                 //判断用户是否登录
-              if (!(this.userInfo && this.userInfo.token)) {
+              if (!(this.userToken)) {
                   this.showAlert = true;
                   this.alertText = '您还没有登录';
               }
@@ -368,10 +367,11 @@
               this.ADD_CART({goods_id:shopId, sku_spec_id:foodIndex, num:numCounter});
 
               //将加入购物车的订单提交到服务器
-              Request.Post('cart', { goods_id:shopId, sku_spec_id:foodIndex, num:numCounter,token:this.userInfo.token})
+              Request.Post('cart', { goods_id:shopId, sku_spec_id:foodIndex, num:numCounter,token:this.userToken})
                 .then((res) => {
                   console.log(res)
                   this.cartFoodList = res.data;
+                  this.shopCartNum = this.shopCartNum + 1;
                   this.sortBy = false;
                   this.showSpecs = false;
                   this.showAlert = true;

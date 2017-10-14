@@ -3,13 +3,16 @@
         <head-top go-back='true' :head-title="profiletitle"></head-top>
         <section>
             <section class="profile-number">
-                <router-link :to="userInfo? '/profile/info' : '/login'" class="profile-link">
+                <!--<router-link :to="userInfo? '/profile/info' : '/login'" class="profile-link">-->
+
+               <div  class="profile-link" @click="profileLink">
                     <!--<img  class="privateImage" v-if="userInfo">-->
                     <span class="privateImage">
                         <svg class="privateImage-svg">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#avatar-default"></use>
                         </svg>
                     </span>
+
                     <div class="user-info">
                         <p>{{username}}</p>
                         <p>
@@ -21,61 +24,49 @@
                             <span class="icon-mobile-number">{{mobile}}</span>
                         </p>
                     </div>
+
                     <span class="arrow">
                         <svg class="arrow-svg" fill="#fff">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                         </svg>
                     </span>
-                </router-link>
+                </div>
+                <!--</router-link>-->
             </section>
 
           <div class="user-order-box">
-            <dl>
-              <router-link :to="userInfo? '/order' : '/login'"  class="myorder">
+            <dl @click="allOrder">
                 <dt>
                   <strong>全部订单</strong>
                   <span>查看全部订单</span>
                 </dt>
-              </router-link>
             </dl>
             <ul>
-              <li>
-                <router-link :to="userInfo? '/order' : '/login'" class="myorder">
+              <li @click="allOrder">
                   <div class="user_order">
                     <i class="iconfont">&#xe605;</i>
                   </div>
                   <span>待付款</span>
-                </router-link>
               </li>
-              <li>
-                <router-link :to="userInfo? '/order' : '/login'" class="myorder">
+              <li @click="allOrder">
                   <div class="user_order">
                     <i class="iconfont">&#xe61f;</i>
                   </div>
                   <span>待发货</span>
-                </router-link>
               </li>
-              <li>
-                <router-link :to="userInfo? '/order' : '/login'" class="myorder">
+              <li @click="allOrder">
                   <div class="user_order">
                     <i class="iconfont">&#xe70b;</i>
                   </div>
                   <span>待收货</span>
-                </router-link>
               </li>
-
             </ul>
           </div>
 
 
           <!--zx我的订单-->
-
-
-
-
-
-
             <section class="profile-1reTe">
+
                 <!-- 我的订单 -->
                 <!--<router-link to='/order' class="myorder">-->
                     <!--<aside>-->
@@ -93,6 +84,7 @@
                     <!--</div>-->
                 <!--</router-link>-->
                 <!-- 优惠券 -->
+
               <li class="myorder">
                     <aside>
                         <svg fill="#fc7b53">
@@ -144,7 +136,7 @@
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                             </svg>
                         </span>
-                </div>
+                  </div>
               </router-link>
             </section>
 
@@ -202,10 +194,10 @@ export default {
     data(){
         return{
             profiletitle: '我的',
-            username: '登录/注册',           //用户名
+            username: '登录/注册',    //用户名
             resetname: '',
-            mobile: '暂无绑定手机号',             //电话号码
-            avatar: '',             //头像地址
+            mobile: '暂无绑定手机号',  //电话号码
+            avatar: '',              //头像地址
             imgBaseUrl,
         }
     },
@@ -221,6 +213,8 @@ export default {
     computed:{
         ...mapState([
             'userInfo',
+            'token',
+            'userToken'
         ]),
         //后台会返回两种头像地址格式，分别处理
 //        imgpath:function () {
@@ -239,26 +233,41 @@ export default {
         ...mapMutations([
             'SAVE_AVANDER'
         ]),
+
+        profileLink(){
+          if (this.userToken) {
+            this.$router.push('/profile/info');
+          }else{
+            window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/register');
+          }
+        },
+
+        allOrder(){
+          if (this.userToken) {
+            this.$router.push('/order');
+          }else{
+            window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/register');
+          }
+        },
+
         initData(){
-          console.log(this.userInfo);
-            if (this.userInfo) {
-                this.avatar = this.userInfo.avatar;
-                this.username = this.userInfo.username;
-                this.mobile = this.userInfo.username || '暂无绑定手机号';
-                this.balance = this.userInfo.balance;
-                this.count = this.userInfo.gift_amount;
-                this.pointNumber = this.userInfo.point;
+          console.log(this.userToken);
+            if (this.userToken) {
+//                this.avatar = this.userInfo.avatar;
+//                this.username = this.userInfo.username;
+//                this.mobile = this.userInfo.username || '暂无绑定手机号';
+//                this.balance = this.userInfo.balance;
+//                this.count = this.userInfo.gift_amount;
+//                this.pointNumber = this.userInfo.point;
+              this.username = '已登录';
+              this.mobile = 'XXXXXXXXXXX';
             }else{
                 this.username = '登录/注册';
                 this.mobile = '暂无绑定手机号';
             }
         },
     },
-    watch: {
-        userInfo: function (value){
-            this.initData()
-        }
-    }
+
 }
 
 </script>

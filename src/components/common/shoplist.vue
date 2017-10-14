@@ -50,7 +50,7 @@ export default {
       showLoading: false, //显示加载动画
       touchend: false, //没有更多数据
       current:1,
-      size:5,
+      size:15,
       type:true,
       shopListArrData:[],
     }
@@ -76,8 +76,8 @@ export default {
   methods: {
     async initData(){
       //获取数据
-//      console.log(this.foodID);
-      Request.Get('goods_rec', {classify_id:this.foodID,current:this.current, size:this.size,})
+      console.log(this.foodID);
+      Request.Get('goods', {classify_id:this.foodID,current:this.current, size:this.size})
         .then((res) => {
 //          console.log(res)
           this.shopListArr = res;
@@ -125,21 +125,21 @@ export default {
     async listenPropChange(){
       this.showLoading = true;
       if(this.screenType === 'hot'){
-        Request.Get('goods_rec', {classify_id:this.foodID,current:this.current,size:this.size,is_hot:this.type})
+        Request.Get('goods', {classify_id:this.foodID,current:this.current,size:this.size,type:"is_hot"})
           .then((res) => {
             console.log(res)
             this.shopListArr = res;
           })
         this.hideLoading();
       }else if(this.screenType === 'rec'){
-        Request.Get('goods_rec', {classify_id:this.foodID,current:this.current,size:this.size,is_rec:this.type})
+        Request.Get('goods', {classify_id:this.foodID,current:this.current,size:this.size,type:"is_rec"})
           .then((res) => {
             console.log(res)
             this.shopListArr = res;
           })
         this.hideLoading();
-      }else {
-        Request.Get('goods_rec', {classify_id:this.foodID,current:this.current,size:this.size,is_new:this.type})
+      }else if(this.screenType === 'new') {
+        Request.Get('goods', {classify_id:this.foodID,current:this.current,size:this.size,type:"is_new"})
           .then((res) => {
             console.log(res)
             this.shopListArr = res;

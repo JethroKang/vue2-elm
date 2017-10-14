@@ -6,6 +6,8 @@ import {
 	CLEAR_CART,
 	RECORD_SHOPDETAIL,
 	RECORD_USERINFO,
+  RECORD_WETOKEN,
+  RECORD_USERTOKEN,
 	GET_USERINFO,
 	CONFIRM_REMARK,
 	CONFIRM_INVOICE,
@@ -115,8 +117,19 @@ export default {
 	[RECORD_USERINFO](state, info) {
 		state.userInfo = info;
 		state.login = true;
-		setStore('user_id', info.user_id);
 	},
+
+  // 记录微信授权获取的token
+  [RECORD_USERTOKEN](state, token) {
+    state.userToken = token;
+    // setStore('user_token', token);
+  },
+
+  // 记录微信授权注册获取的token
+  [RECORD_WETOKEN](state, token) {
+    state.weToken = token;
+  },
+
 	//获取用户信息存入vuex
 	[GET_USERINFO](state, info) {
 		if (state.userInfo && (state.userInfo.username !== info.username)) {

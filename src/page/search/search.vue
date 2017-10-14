@@ -87,8 +87,8 @@ export default {
              Request.Get('goods', {search_key:this.searchValue,current:this.current, size:this.size})
                 .then((res) => {
                   this.restaurantList = res;
-//                  console.log(res);
-                  if(this.restaurantList.code == '200'){
+                  console.log(res);
+                  if(this.restaurantList.code === '200'){
                     this.emptyResult = false;
                   }else {
                     this.emptyResult = true;

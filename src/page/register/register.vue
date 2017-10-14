@@ -44,7 +44,7 @@
       <!--注册过的用户可凭账号密码登录-->
     </p>
     <div class="login_container" @click="mobileLogin">登录</div>
-    <router-link to="/login" class="to_forget" >已有账号？立刻登录</router-link>
+    <router-link to="/login" class="to_forget"  >已有账号？立刻登录</router-link>
     <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
   </div>
 </template>
@@ -75,10 +75,33 @@
         codeNumber: null, //验证码
         showAlert: false, //显示提示组件
         alertText: null, //提示的内容
+        token:null,
       }
     },
     created(){
-//      this.getCaptchaCode();
+                this.token = this.$route.query.token;
+
+      //        自动添加问号(?)
+      //        自动把分隔符由#!变成#
+      //        分隔符后面，自动判断是否为斜杠(/)，没有则添加上
+//                let paths = window.location.href.split('#')
+//                paths[1] = paths[1] || '/'
+//                // 老式的#!分隔跳转
+//                if (paths[0].charAt(paths[0].length - 1) !== '?') {
+//                  paths[0] = `${paths[0]}?`
+//                }
+//                if (paths[1].charAt(0) === '!') {
+//                  paths[1] = paths[1].substr(1)
+//                }
+//                let url = `${paths[0]}#${paths[1]}`
+//                if (window.location.href !== url) {
+//          //            window.location.replace(url);
+//                  window.location.href = url
+//                }
+      //        唯一不好的是会对页面进行强行刷新，该代码放在页面渲染完后，所有的数据set进本地缓存，确保数据能加载
+
+                this.initData();
+
     },
     components: {
       headTop,
@@ -92,13 +115,29 @@
     },
     methods: {
       ...mapMutations([
-        'RECORD_USERINFO',
+        'RECORD_USERINFO','RECORD_USERTOKEN','RECORD_WETOKEN'
       ]),
+
+      async initData(){
+        // 对授权的token进行验证
+//        alert(this.token);
+        Request.Post('check_token', {token:this.token })
+          .then((res) => {
+//          console.log(res);
+            if(res.msg == 'Ok'){
+              this.userTkoen = this.token;
+              this.RECORD_USERTOKEN(this.userTkoen);
+              this.$router.push('/profile');
+            }else {
+              this.RECORD_WETOKEN(this.token);
+            }
+          })
+      },
+
       //改变登录方式
 //      changeLoginWay(){
 //        this.loginWay = !this.loginWay;
 //      },
-      //是否显示密码
       //是否显示密码
       changePassWordType(){
         this.showPassword = !this.showPassword;
@@ -185,16 +224,15 @@
 
 //        console.log(this.phoneNumber,this.passWord,this.repassWord,this.mobileCode);
 
-        Request.Post('reg', {username:this.phoneNumber,password:this.passWord,repassword:this.repassWord,sms_code:this.mobileCode})
+        Request.Post('reg', {username:this.phoneNumber,password:this.passWord,repassword:this.repassWord,sms_code:this.mobileCode,token:this.token})
           .then((res) => {
 //            console.log(res)
-
-
+            alert(res.msg);
             if(res.code === 200){
               this.$router.push('/login');
             }else {
               this.showAlert = true;
-              this.alertText = '信息有误';
+              this.alertText = res.msg;
             }
 
           })

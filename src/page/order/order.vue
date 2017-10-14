@@ -257,7 +257,6 @@
     import {imgBaseUrl} from 'src/config/env'
     import Request from '../../service/api'
 
-
     export default {
       data(){
             return{
@@ -283,7 +282,7 @@
         },
         computed: {
             ...mapState([
-                'userInfo', 'geohash'
+                'userInfo','userToken'
             ]),
         },
         methods: {
@@ -293,12 +292,11 @@
             //初始化获取信息
             async initData(){
 
-                if (this.userInfo && this.userInfo.token) {
+                if (this.userToken) {
 
-                  console.log(this.userInfo.token);
+                  console.log(this.userToken);
 
-
-                  Request.Get('order', {current:this.current, size:this.size,token:this.userInfo.token,})
+                  Request.Get('order', {current:this.current, size:this.size,token:this.userToken,})
                     .then((res) => {
                       this.orderList = res;
                       console.log(this.orderList);

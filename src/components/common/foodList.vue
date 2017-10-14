@@ -87,7 +87,7 @@ import Request from 'src/service/api';
 export default {
 	data(){
 		return {
-			offset: 0, // 批次加载店铺列表，每次加载20个 limit = 20
+			offset: 1, // 批次加载店铺列表，每次加载20个 limit = 20
       changeShowType: 'food',
 			shopListArr:[], // 列表数据
       goodsRecArr:[],// 列表数据
@@ -96,7 +96,7 @@ export default {
 			showLoading: true, //显示加载动画
 			touchend: false, //没有更多数据
       current:1,
-      size:10,
+      size:15,
 		}
 	},
 	mounted(){
@@ -117,23 +117,20 @@ export default {
 	},
 	methods: {
 		async initData(){
-
-			//获取数据
-//      吃货最爱
+      //吃货最爱
       Request.Get('goods_hot', {current:this.current,size:this.size})
         .then((res) => {
           this.shopListArr  = res.data;
-//          console.log(this.shopListArr);
-        })
-//      小编推荐
+        });
+      //小编推荐
       Request.Get('goods_rec', {current:this.current,size:this.size})
         .then((res) => {
           this.goodsRecArr  = res.data;
 //          console.log(this.goodsRecArr);
-        })
+        });
 
       //判断数据的长度，控制下拉加载
-			if (this.shopListArr.length < 20) {
+			if (this.shopListArr.length < 2) {
 				this.touchend = true;
 			}
 			this.hideLoading();
@@ -145,6 +142,7 @@ export default {
 		//到达底部加载更多数据
 		async loaderMore(){
 			if (this.touchend) {
+        console.log("------end-------");
 				return
 			}
 			//防止重复请求
@@ -155,16 +153,23 @@ export default {
 			this.preventRepeatReuqest = true;
 
 			//数据的定位加20位
-			this.offset += 20;
-			let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
-			this.hideLoading();
-			this.shopListArr = [...this.shopListArr, ...res];
+			this.offset += 1;
+      Request.Get('goods_hot', {current:this.offset,size:this.size})
+        .then((res) => {
+          this.shopListArr = [...this.shopListArr, ...res];
+        });
+
+//			let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
+//			this.hideLoading();
+//			this.shopListArr = [...this.shopListArr, ...res];
 			//当获取数据小于20，说明没有更多数据，不需要再次请求数据
 			if (res.length < 20) {
 				this.touchend = true;
 				return
 			}
+
 			this.preventRepeatReuqest = false;
+
 		},
 		//返回顶部
 		backTop(){

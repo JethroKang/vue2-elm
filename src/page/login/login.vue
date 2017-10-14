@@ -57,16 +57,20 @@
                 codeNumber: null, //验证码
                 showAlert: false, //显示提示组件
                 alertText: null, //提示的内容
+                token:null,//微信授权token
             }
         },
         created(){
-//            this.getCaptchaCode();
+
         },
         components: {
             headTop,
             alertTip,
         },
         computed: {
+            ...mapState([
+              'weToken'
+            ]),
             //判断手机号码
             rightPhoneNumber: function (){
                 return /^1\d{10}$/gi.test(this.phoneNumber)
@@ -74,7 +78,7 @@
         },
         methods: {
             ...mapMutations([
-                'RECORD_USERINFO',
+                'RECORD_USERINFO','RECORD_USERTOKEN',
             ]),
 
             //是否显示密码
@@ -93,10 +97,13 @@
                         this.alertText = '请输入密码';
                         return
                     }
+
+//              weToken 的值是从微信授权后获取token然后set进本地中
+
                     //用户名登录
-                    Request.Post('login', { username:this.username, password: this.passWord })
+                    Request.Post('login', { username:this.username, password: this.passWord,token:this.weToken })
                     .then((res) => {
-//                      console.log(res);
+//                    console.log(res);
                       this.UserInfo = res;
                       if(this.UserInfo === false){
                         this.showAlert = true;
@@ -104,9 +111,11 @@
                       }else {
                         this.userInfo  = res.data;
                         this.RECORD_USERINFO(this.userInfo);
+                        this.RECORD_USERTOKEN(this.userInfo.token);
                         this.$router.push('/profile');
                       }
                     })
+
             },
             closeTip(){
                 this.showAlert = false;

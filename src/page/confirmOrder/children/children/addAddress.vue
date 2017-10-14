@@ -90,7 +90,7 @@
     },
     computed: {
       ...mapState([
-        'userInfo',
+        'userInfo','userToken'
       ]),
     },
     methods: {
@@ -99,7 +99,7 @@
       ]),
       //保存地址信息
       async addAddress(){
-        if (!(this.userInfo && this.userInfo.token)) {
+        if (!(this.userToken)) {
           this.showAlert = true;
           this.alertText = '请登录'
         }else if(!this.name){
@@ -125,7 +125,7 @@
           this.alertText = '请输入详细地址'
         }
 
-        Request.Post('address', {token:this.userInfo.token, name:this.name, phone:this.phone, province:this.province, city:this.city, area:this.area, street:this.street, address:this.address})
+        Request.Post('address', {token:this.userToken, name:this.name, phone:this.phone, province:this.province, city:this.city, area:this.area, street:this.street, address:this.address})
           .then((res) => {
             console.log(res);
             //保存成功返沪上一页，否则弹出提示框
