@@ -60,7 +60,7 @@
         },
         computed:{
              ...mapState([
-                'userInfo','removeAddress'
+                'userInfo','removeAddress','userToken'
             ]),
 
         },
@@ -71,10 +71,8 @@
             ]),
             //初始化信息
           async initData(){
-
-                if (this.userInfo && this.userInfo.token) {
-
-                  Request.Get('address', {current:this.current,size:this.size,token:this.userInfo.token})
+                if (this.userToken) {
+                  Request.Get('address', {current:this.current,size:this.size,token:this.userToken})
                     .then((res) => {
                       console.log(res);
                       this.adressList = res;
@@ -101,10 +99,10 @@
 //                console.log(id);
 //                console.log(this.userInfo.token);
 //
-//                console.log(index)
+                console.log(index);
 
-                if (this.userInfo && this.userInfo.token) {
-                    Request.Delete('address/' + id, { token: this.userInfo.token })
+                if (this.userToken) {
+                    Request.Delete('address/' + id, { token: this.userToken })
                     .then((res) => {
 //                      console.log(res);
                       if(res.code === 200){

@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
 import headTop from 'src/components/header/head'
 import banner from 'src/components/banner/banner'
 import footGuide from 'src/components/footer/footGuide'
@@ -51,17 +51,16 @@ export default {
         return {
             msietTitle: '请选择地址...', // msiet页面头部标题
             goodsTypes: '',// 食品分类列表
+            token:null,
         }
     },
     created(){
-
+      if (!(this.userToken)) {
+        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/profile');
+      }
     },
     mounted(){
-      Request.Get('speed', {})
-        .then((res) => {
-          this.goodsTypes = res.data;
-          console.log(this.goodsTypes);
-        })
+      this.initData();
     },
     components: {
     	headTop,
@@ -70,8 +69,29 @@ export default {
       banner
     },
     computed: {
+      ...mapState([,,
+        'userInfo',
+        'token',
+        'userToken'
+      ]),
+
+
     },
     methods: {
+
+      ...mapMutations([
+        'RECORD_USERINFO','RECORD_USERTOKEN','RECORD_WETOKEN'
+      ]),
+
+      async initData(){
+
+        Request.Get('speed', {})
+          .then((res) => {
+            this.goodsTypes = res.data;
+//            console.log(this.goodsTypes);
+          })
+      },
+
       goSearch(event){
         this.$router.push('/search');
         window.event? window.event.returnValue = false : event.preventDefault();
@@ -182,6 +202,9 @@ export default {
     .m_header .m_header_box {
       height: 1.95rem;
       background: $blue;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .m_header_box form {
@@ -190,6 +213,7 @@ export default {
       margin-left: .6rem;
       margin-right: .6rem;
       float: left;
+
     }
 
     .m_header_box form .search {

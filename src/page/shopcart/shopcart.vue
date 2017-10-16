@@ -29,8 +29,6 @@
 
 
      <div v-if="shopCaft">
-
-
        <div class="commodity_box">
          <div class="commodity_list">
            <!--商品-->
@@ -141,17 +139,17 @@ export default {
       ...mapState([
         'userToken',
       ]),
-      totalPrice:function(){
-        let total = 0;
-        this.cartList.forEach(function(good){
-//          console.log(good);
-
-          if(good.isChecked){
-            total += good.sku_spec.price * good.num;
-          }
-        });
-        return total;
-      },
+//      totalPrice:function(){
+//        let total = 0;
+//        this.cartList.forEach(function(good){
+////          console.log(good);
+//
+//          if(good.isChecked){
+//            total += good.sku_spec.price * good.num;
+//          }
+//        });
+//        return total;
+//      },
 //      filters:{
 //        Currency:function(val){
 //          return val + " 元";

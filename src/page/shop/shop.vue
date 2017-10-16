@@ -357,6 +357,7 @@
             //加入购物车
             addToCart(shopId,foodIndex,numCounter){
 
+              console.log(shopId,foodIndex,numCounter);
                 //判断用户是否登录
               if (!(this.userToken)) {
                   this.showAlert = true;

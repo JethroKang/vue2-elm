@@ -6,8 +6,8 @@
                 <!--<router-link :to="userInfo? '/profile/info' : '/login'" class="profile-link">-->
 
                <div  class="profile-link" @click="profileLink">
-                    <!--<img  class="privateImage" v-if="userInfo">-->
-                    <span class="privateImage">
+                    <img :src="avatar" class="privateImage" v-if="userToken">
+                    <span class="privateImage" v-else>
                         <svg class="privateImage-svg">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#avatar-default"></use>
                         </svg>
@@ -15,21 +15,13 @@
 
                     <div class="user-info">
                         <p>{{username}}</p>
-                        <p>
-                            <span class="user-icon">
-                                <svg class="icon-mobile" fill="#fff">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#mobile"></use>
-                                </svg>
-                            </span>
-                            <span class="icon-mobile-number">{{mobile}}</span>
-                        </p>
                     </div>
 
-                    <span class="arrow">
-                        <svg class="arrow-svg" fill="#fff">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                        </svg>
-                    </span>
+                    <!--<span class="arrow">-->
+                        <!--<svg class="arrow-svg" fill="#fff">-->
+                            <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>-->
+                        <!--</svg>-->
+                    <!--</span>-->
                 </div>
                 <!--</router-link>-->
             </section>
@@ -113,10 +105,10 @@
                 <div class="myorder-div">
                   <span>收货地址</span>
                   <span class="myorder-divsvg">
-                            <svg fill="#bbb">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
+                    <svg fill="#bbb">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                    </svg>
+                  </span>
                 </div>
               </router-link>
 
@@ -189,25 +181,33 @@ import footGuide from 'src/components/footer/footGuide'
 import {mapState, mapMutations} from 'vuex'
 import {imgBaseUrl} from 'src/config/env'
 import {getImgPath} from 'src/components/common/mixin'
+import Request from '../../service/api'
 
 export default {
     data(){
         return{
             profiletitle: '我的',
             username: '登录/注册',    //用户名
-            resetname: '',
-            mobile: '暂无绑定手机号',  //电话号码
             avatar: '',              //头像地址
             imgBaseUrl,
+            token:null,
         }
     },
     mounted(){
+      if(!(this.userInfo)){
         this.initData();
+      }else {
+        this.userData();
+      }
     },
     mixins: [getImgPath],
     components:{
         headTop,
         footGuide,
+    },
+
+    created(){
+      this.token = this.$route.query.token;
     },
 
     computed:{
@@ -231,42 +231,52 @@ export default {
 
     methods:{
         ...mapMutations([
-            'SAVE_AVANDER'
+          'RECORD_USERINFO','RECORD_USERTOKEN','RECORD_WETOKEN','SAVE_AVANDER'
         ]),
 
-        profileLink(){
-          if (this.userToken) {
-            this.$router.push('/profile/info');
-          }else{
-            window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/register');
-          }
+        async initData(){
+          // 对授权的token进行验证
+  //        alert(this.token);
+          Request.Post('check_token', {token:this.token })
+            .then((res) => {
+//              console.log(res);
+              if(res.msg === 'Ok'){
+                this.userTkoen = this.token;
+                this.RECORD_USERINFO(res.data);
+                this.RECORD_USERTOKEN(this.userTkoen);
+//                console.log(res.data);
+                this.avatar = res.data.headimgurl;
+                this.username = res.data.nickname;
+              }else {
+                console.log("======token验证失败======")
+              }
+            });
+
         },
+
+        userData(){
+          this.avatar = this.userInfo.headimgurl;
+          this.username = this.userInfo.nickname;
+        },
+
+//        profileLink(){
+//          if (this.userToken) {
+//            this.$router.push('/profile/info');
+//          }else{
+//            window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/register');
+//          }
+//        },
 
         allOrder(){
           if (this.userToken) {
             this.$router.push('/order');
           }else{
-            window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/register');
+            alert("用户没登录");
           }
         },
 
-        initData(){
-          console.log(this.userToken);
-            if (this.userToken) {
-//                this.avatar = this.userInfo.avatar;
-//                this.username = this.userInfo.username;
-//                this.mobile = this.userInfo.username || '暂无绑定手机号';
-//                this.balance = this.userInfo.balance;
-//                this.count = this.userInfo.gift_amount;
-//                this.pointNumber = this.userInfo.point;
-              this.username = '已登录';
-              this.mobile = 'XXXXXXXXXXX';
-            }else{
-                this.username = '登录/注册';
-                this.mobile = '暂无绑定手机号';
-            }
-        },
     },
+
 
 }
 

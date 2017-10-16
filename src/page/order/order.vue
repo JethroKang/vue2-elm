@@ -30,7 +30,7 @@
                   <img :src="goods.thumb" class="restaurant_image">
                 </span>
                 <section class="order_item_right">
-                  <section @click="showDetail(item.id)">
+                  <router-link :to="{path:'/confirmOrder' , query: {id:item.id} }">
                     <header class="order_item_right_header" v-for="goodDE in item.goods ">
                       <section class="order_header">
                         <h4>
@@ -49,7 +49,7 @@
                       <!--<p class="order_name ellipsis">44444444</p>-->
                       <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
                     </section>
-                  </section>
+                  </router-link>
                   <div class="order_again">
                     <!--<compute-time>46465456</compute-time>-->
                     <router-link :to="{path: '/shop', query: {geohash, id: item.id}}" tag="span" class="buy_again" >再来一单</router-link>
