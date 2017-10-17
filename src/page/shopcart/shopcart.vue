@@ -34,12 +34,14 @@
            <!--商品-->
            <ul class="commodity_list_term">
              <li class="select" v-for="(item,index) in cartList">
-               <em aem="0" cart_id="84"></em>
+               <a href="javascript:void 0" class="em" v-bind:class="{check:item.isChecked}" @click="selectGood(item)">
+                 <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
+               </a>
                <img :src="item.goods.thumb" />
                <div class="div_center">
                  <h4>{{item.goods.name}}</h4>
                  <span>{{item.sku_spec.key_name_arr}}</span>
-                 <p class="now_value"><i>￥</i><b class="qu_su">{{item.sku_spec.price}}</b></p>
+                 <p class="now_value"><i style="color: red">￥</i><b class="qu_su" style="color: red">{{item.sku_spec.price}}</b></p>
                </div>
                <div class="div_right">
                  <i @click="changeQuentity(item,-1,index)">-</i>
@@ -69,7 +71,7 @@
 
        <div class="settle_box">
          <dl class="all_check select">
-           <dt><span id="all_pitch_on"></span><em>全选</em></dt>
+           <dt><span id="all_pitch_on" @click="selectAll"></span><em>全选</em></dt>
          </dl>
          <dl class="total_amount">
            <dt>合计：<p id="total_price">¥<b>{{totalPrice}}</b></p></dt>
@@ -139,22 +141,23 @@ export default {
       ...mapState([
         'userToken',
       ]),
-//      totalPrice:function(){
-//        let total = 0;
-//        this.cartList.forEach(function(good){
-////          console.log(good);
-//
-//          if(good.isChecked){
-//            total += good.sku_spec.price * good.num;
-//          }
-//        });
-//        return total;
-//      },
-//      filters:{
-//        Currency:function(val){
-//          return val + " 元";
-//        },
-//      }
+      totalPrice:function(){
+        let total = 0;
+        this.cartList.forEach(function(good){
+//          console.log(good);
+          if(good.isChecked){
+            console.log(good);
+
+            total += good.sku_spec.price * good.num;
+          }
+        });
+        return total;
+      },
+      filters:{
+        Currency:function(val){
+          return val + " 元";
+        },
+      }
     },
     methods:{
 
@@ -182,6 +185,7 @@ export default {
           goodObj.isChecked = !goodObj.isChecked;
         }
         this.isCheckAll();
+
       },
 
       isCheckAll:function(){
@@ -204,8 +208,6 @@ export default {
         this.isSelectAll = true;
         this.cartList.forEach((good)=>{
           good.isChecked = true;
-          this.showAlert = true;
-          this.alertText = '用户账号或者密码错误';
         });
       },
 
@@ -218,16 +220,23 @@ export default {
 
 //
       changeQuentity:function(good,val,_index){
-        if(good.num == 1 && val == -1 ){
+        if(good.num === 1 && val === -1 ){
 
           this.confirmDelete = true;
           this.readyToDelIndex = _index;
         } else {
           good.num += val;
         }
+
+        let id=good.id;
+        let num=good.num;
+        if (this.userToken) {
+          Request.Put('cart/' + id, {token:this.userToken,num:num})
+            .then((res) => {
+              console.log(res.msg)
+            })
+        }
       },
-
-
 
 
     }
@@ -242,7 +251,7 @@ export default {
     .commodity_list {
       background: #fff;
       margin-bottom: 10px;
-        .tite_tim em {
+        .tite_tim .em {
           float: left;
           width: 20px;
           height: 20px;
@@ -257,7 +266,7 @@ export default {
             position: relative;
             overflow: hidden;
             padding: 12px 0;
-              em {
+              .em {
                 position: absolute;
                 width: 20px;
                 height: 20px;
@@ -294,9 +303,8 @@ export default {
                   color: #666;
                   font-size: 0.6rem;
                 }
-                p {
+                .now_value{
                   font-size: 0.8rem;
-                  color: #ff900d;
                   margin-top: 6px;
                   font-family: "-apple-system","Helvetica Neue",Roboto,"Segoe UI",sans-serif;
                 }

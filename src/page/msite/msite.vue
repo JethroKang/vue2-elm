@@ -55,9 +55,9 @@ export default {
         }
     },
     created(){
-      if (!(this.userToken)) {
-        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/profile');
-      }
+//      if (!(this.userToken)) {
+//        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/profile');
+//      }
     },
     mounted(){
       this.initData();

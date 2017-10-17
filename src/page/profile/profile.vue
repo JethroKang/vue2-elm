@@ -5,7 +5,8 @@
             <section class="profile-number">
                 <!--<router-link :to="userInfo? '/profile/info' : '/login'" class="profile-link">-->
 
-               <div  class="profile-link" @click="profileLink">
+               <!--<div  class="profile-link" @click="profileLink">-->
+                 <div  class="profile-link">
                     <img :src="avatar" class="privateImage" v-if="userToken">
                     <span class="privateImage" v-else>
                         <svg class="privateImage-svg">
@@ -207,7 +208,7 @@ export default {
     },
 
     created(){
-      this.token = this.$route.query.token;
+      this.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhdHpjbCIsImlhdCI6MTUwODIyOTA1OCwibmJmIjoxNTA4MjI5MDU4LCJleHAiOjE1MDgyMzYyNTgsInJlZl90dGwiOjE1MTAwNDM0NTgsInN1YiI6eyJpZCI6NCwib3BlbmlkIjoib0RRU1kwb2sydnh2YzlCVml5TEFiTW1aU1ZEQSIsIm5pY2tuYW1lIjoiXHU1ZWI3XHU1ZmQ3XHU3OTY1Iiwic2V4IjoxLCJwcm92aW5jZSI6Ilx1NWU3Zlx1NGUxYyIsImNpdHkiOiJcdTRmNWJcdTVjNzEiLCJoZWFkaW1ndXJsIjoiaHR0cDpcL1wvd3gucWxvZ28uY25cL21tb3BlblwvdmlfMzJcL0RZQUlPZ3E4M2VxbkZDQXhLcUVpYTFhd2xWREJib3FsQmlhZG9iVFJqSG41SEFBdkNKYzB6Sm5nSU9WVDI1SG1WUUlyelNpYTBEdzVNcFZ0bTg3Z281S3VBXC8wIiwibWVtYmVyIjpudWxsfX0.DJfXUOQCpbzIxN2LfUza1BncNYLr8Nbz7tIepz_phdyfxz2ZJ8yJh4xhO6_xn4zCrIWK9wAVIytc_mfeoFKcIcILHjx0hDIMa5FzuFvrs_bLaejlIwQEkTD39XxxtQdcjblhXoB3rcOwdDbaLNRH_pOeZRorR6zqu9ZO_2vQtWg";
     },
 
     computed:{
