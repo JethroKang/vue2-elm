@@ -8,7 +8,7 @@
     <section id="scroll_section" class="scroll_container">
       <section class="list_cotainer">
         <ul class="deliverable_address">
-          <li v-for="(item,index) in addressList.data" @click.prevent.stop="chooseAddress(item, index)">
+          <li v-for="(item,index) in addressList" @click.prevent.stop="chooseAddress(item, index)">
             <svg class="choosed_address" :class="{default_address: defaultIndex == index}">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select"></use>
             </svg>
@@ -39,11 +39,11 @@
   import alertTip from 'src/components/common/alertTip'
   import BScroll from 'better-scroll'
   import Request from 'src/service/api'
-
   export default {
     data(){
       return{
         addressList: [], //地址列表
+        deliverable:null,
         showAlert: false,
         alertText: null,
         current:1,
@@ -51,9 +51,11 @@
       }
     },
     created(){
+      this.initData();
     },
     mounted(){
-      this.initData();
+//      this.initData();
+
     },
     components: {
       headTop,
@@ -79,17 +81,13 @@
       ]),
       //初始化信息
       async initData(){
-        this.addressList = [];
-        this.deliverable = [];
-        this.deliverdisable = [];
-
+//        this.addressList = [];
+//        this.deliverable = [];
+//        this.deliverdisable = [];
         if (this.userToken) {
-          //将当前所有地址访问有效无效两种
-          Request.Get('address', {current:this.current,size:this.size,token:this.userToken})
-            .then((res) => {
-              console.log(res);
-              this.addressList = res;
-            })
+          Request.Get('address', {current:this.current,size:this.size,token:this.userToken}).then((res) => {
+          this.addressList = res.data;
+        })
         }else {
           this.showAlert = true;
           this.alertText = '您还没有登录';
@@ -102,10 +100,8 @@
       },
     },
     watch: {
-      userInfo: function (value) {
-        if (value && value.token) {
-          this.initData();
-        }
+      newAddress: function (value) {
+        this.initData();
       },
     }
   }
@@ -113,7 +109,6 @@
 
 <style lang="scss" scoped>
   @import 'src/style/mixin';
-
   .rating_page{
     position: fixed;
     top: 0;

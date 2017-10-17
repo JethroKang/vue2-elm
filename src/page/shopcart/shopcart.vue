@@ -34,9 +34,9 @@
            <!--商品-->
            <ul class="commodity_list_term">
              <li class="select" v-for="(item,index) in cartList">
-               <a href="javascript:void 0" class="em" v-bind:class="{check:item.isChecked}" @click="selectGood(item)">
-                 <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
-               </a>
+               <!--<a href="javascript:void 0" class="em" v-bind:class="{check:item.isChecked}" @click="selectGood(item)">-->
+                 <!--<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>-->
+               <!--</a>-->
                <img :src="item.goods.thumb" />
                <div class="div_center">
                  <h4>{{item.goods.name}}</h4>
