@@ -1,6 +1,8 @@
 <template>
   	<div class="paddingTop search_page">
-        <head-top head-title="购物车" goBack="true"></head-top>
+        <head-top head-title="购物车" goBack="true">
+          <span slot="edit" class="edit" @click="editThing">{{editText}}</span>
+        </head-top>
 
       <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
@@ -34,9 +36,9 @@
            <!--商品-->
            <ul class="commodity_list_term">
              <li class="select" v-for="(item,index) in cartList">
-               <!--<a href="javascript:void 0" class="em" v-bind:class="{check:item.isChecked}" @click="selectGood(item)">-->
-                 <!--<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>-->
-               <!--</a>-->
+               <a href="javascript:void 0" class="em" v-bind:class="{check:item.isChecked}" @click="selectGood(item)">
+                 <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
+               </a>
                <img :src="item.goods.thumb" />
                <div class="div_center">
                  <h4>{{item.goods.name}}</h4>
@@ -71,14 +73,30 @@
 
        <div class="settle_box">
          <dl class="all_check select">
-           <dt><span id="all_pitch_on" @click="selectAll"></span><em>全选</em></dt>
+           <dt v-if="!isSelectAll">
+             <div @click="selectAll">
+             <a href="javascript:void 0" class="span ">
+               <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
+             </a>
+             <span class="span-p">全选</span>
+             </div>
+           </dt>
+           <dt v-else>
+           <div @click="unSelectAll">
+             <a href="javascript:void 0" class="span check">
+               <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
+             </a>
+             <span class="span-p">取消</span>
+           </div>
+           </dt>
          </dl>
          <dl class="total_amount">
-           <dt>合计：<p id="total_price">¥<b>{{totalPrice}}</b></p></dt>
+           <dt>合计：<p id="total_price">¥<b>{{totalPrice}}元</b></p></dt>
            <dd>不含运费</dd>
          </dl>
-         <input type="hidden" name="gcs" id="gcs" />
-         <a class="settle_btn" href="javascript:void(0);" id="confirm_cart">结算</a>
+
+         <a class="settle_btn" href="javascript:void(0);" id="confirm_cart" v-if="!deletesite">结算</a>
+         <a class="settle_btn" href="javascript:void(0);"  v-else @click="deleteOrder">删除</a>
        </div>
 
 
@@ -120,6 +138,9 @@ export default {
             cartList:'',
             isSelectAll:false,//是否全选
             confirmDelete:false, //是否删除订单
+            editText:'删除',
+            deletesite:false, //是否编辑状态
+            goodsid:null
         }
     },
     created(){
@@ -143,21 +164,25 @@ export default {
       ]),
       totalPrice:function(){
         let total = 0;
+        var _this = this;
+        this.goodsid = [];
         this.cartList.forEach(function(good){
 //          console.log(good);
           if(good.isChecked){
-            console.log(good);
-
             total += good.sku_spec.price * good.num;
+            _this.goodsid.push(good.id);
           }
+
         });
+
         return total;
+
       },
-      filters:{
-        Currency:function(val){
-          return val + " 元";
-        },
-      }
+//      filters:{
+//        Currency:function(val){
+//          return val + " 元";
+//        },
+//      }
     },
     methods:{
 
@@ -173,6 +198,36 @@ export default {
           })
 
       },
+
+      //编辑
+      editThing(){
+        if(this.editText == '删除'){
+          this.editText='完成';
+          this.deletesite=true;
+        }else{
+          this.editText='删除';
+          this.deletesite=false;
+        }
+      },
+
+      deleteOrder(){
+        if (this.goodsid.length) {
+          let  id =  this.goodsid[0];
+          console.log(id);
+          Request.Delete('cart/' + id, { token: this.userToken, delete_all: "true",ids:this.goodsid})
+            .then((res) => {
+//                      console.log(res);
+              if(res.code === 200){
+                this.showAlert = true;
+                this.alertText = res.msg;
+                console.log(res.msg);
+              }
+            })
+        }else {
+            alert("请选择商品");
+        }
+      },
+
 
 //    如果产品被选中，同时该产品没有"isChecked"属性，则为其添加该属性，并设为"true"
       selectGood:function(goodObj,index){
@@ -247,7 +302,11 @@ export default {
 <style lang="scss" scoped>
     @import '../../style/mixin';
 
-
+    .edit{
+      right: 0.4rem;
+    @include sc(0.7rem, #fff);
+    @include ct;
+    }
     .commodity_list {
       background: #fff;
       margin-bottom: 10px;
@@ -274,7 +333,23 @@ export default {
                 border-radius: 50%;
                 left: 0;
                 top: 40px;
+                .icon-ok{
+                  width: 18px;
+                  height: 18px;
+                  display: inline-block;
+                  position: absolute;
+                  top: 2px;
+                  fill: #fff;
+                  -ms-transform: scale(0.8);
+                  transform: scale(0.8);
+                }
+
               }
+              .check{
+                background: #EE7A23;
+                border-color: #EE7A23;
+              }
+
               img {
                 width: 4rem;
                 height: 4rem;
@@ -398,9 +473,29 @@ export default {
     .settle_box{ background:#fff; position:fixed; left:0px; bottom:0px; overflow:hidden; z-index:2;width: 100%;padding:0 0 0 4%;border-top: solid 1px #e6e6e6;}
     .settle_box .all_check,.settle_box .total_amount{ float:left;}
     .settle_box .all_check{ width:17%;margin-bottom:0;margin-top: 15px}
-    .settle_box .all_check dd{ color:#999999; font-size:12px;}
+    .settle_box .all_check dd{ color:#999999; font-size:12px; width: 100%}
     .settle_box .all_check dt em{ font-size: .8rem}
-    .settle_box .all_check span{ width:20px; height:20px; border:solid 1px #a2a2a2; vertical-align:middle; border-radius:50%;float: left;}
+    .settle_box .all_check .span{ width:20px; height:20px; border:solid 1px #a2a2a2; vertical-align:middle; border-radius:50%;float: left;}
+    .settle_box .all_check .span .icon-ok{
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      position: absolute;
+      top: 18px;
+      fill: #fff;
+      -ms-transform: scale(0.8);
+      transform: scale(0.8);
+    }
+    .settle_box .all_check .span-p{
+      font-size: 14px;
+      display: block;
+      padding-left: 5px;
+      float: left;
+    }
+     .check{
+      background: #EE7A23;
+      border-color: #EE7A23;
+    }
     .settle_box .all_check .disabled{ background:#e1e1e1;border:solid 1px #e1e1e1;}
 
     .settle_box .total_amount {color: #999;font-size: 14px;margin: 0;width: 50%;text-align: right;margin-top: 5px;padding-right: 2%;}
