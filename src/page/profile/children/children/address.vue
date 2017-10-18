@@ -49,6 +49,8 @@
               showAlert: false, //显示提示组件
               current:1,
               size:5,
+              deleteList:null
+
             }
         },
         mounted(){
@@ -108,6 +110,7 @@
                       if(res.code === 200){
                         this.showAlert = true;
                         this.alertText = res.msg;
+                        this.deleteList = res.data;
                       }
                     })
                 }
@@ -117,10 +120,8 @@
           }
         },
         watch: {
-            userInfo: function (value) {
-                if (value && value.userInfo.token) {
-                    this.initData();
-                }
+          deleteList: function (value) {
+            this.initData();
             }
         }
     }

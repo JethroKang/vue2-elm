@@ -193,7 +193,7 @@
               <section style="background-color: #ffffff; height: 15%">
                     <div style="width: 50%;height: 100%; text-align: center; background-color: #fea401; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2rem"
                          @click="addToCart(shopId,foodIndex,numCounter)">加入购物车</div>
-                    <router-link :to="{path:'/confirmOrder' , query: {foodID:shopId,foodIndex:foodIndex, foodPrice:foodPrice,numCounter:numCounter,title:shopDetailData.name} }">
+                    <router-link :to="{path:'/confirmOrder' , query: {data: [{goods_id:shopId,num:numCounter,sku_spec_id:foodIndex}],details:[{title:shopDetailData.name,num:numCounter,price:foodPrice}]} }">
                       <div style="width: 50%;height: 100%; text-align: center; background-color: #fd5138; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2rem">立即购买</div>
                     </router-link>
               </section>
@@ -279,7 +279,6 @@
         },
         created(){
             this.shopId = this.$route.query.id;
-//            console.log(this.shopId);
             this.INIT_BUYCART();
         },
 
@@ -330,7 +329,7 @@
               Request.Get('goods/'+id)
                 .then((res) => {
                   this.shopDetailData = res.data;
-//                  console.log(this.shopDetailData);
+                  console.log(this.shopDetailData);
                 }).then(() => {
                 //初始化swiper
                 new Swiper('.swiper-container', {
@@ -430,40 +429,6 @@
 //            },
 
 
-            //清除购物车
-//            clearCart(){
-//                this.toggleCartList();
-//                this.CLEAR_CART(this.shopId);
-//            },
-
-
-            //获取不同类型的评论列表
-//            async changeTgeIndex(index, name){
-//                this.ratingTageIndex = index;
-//                this.ratingOffset = 0;
-//                this.ratingTagName = name;
-//                let res = await getRatingList(this.shopId, this.ratingOffset, name);
-//                this.ratingList = [...res];
-//                this.$nextTick(() => {
-//                    this.ratingScroll.refresh();
-//                })
-//            },
-
-            //加载更多评论
-//            async loaderMoreRating(){
-//                if (this.preventRepeatRequest) {
-//                    return
-//                }
-//                this.loadRatings = true;
-//                this.preventRepeatRequest = true;
-//                this.ratingOffset += 10;
-//                let ratingDate = await getRatingList(this.shopId, this.ratingOffset, this.ratingTagName);
-//                this.ratingList = [...this.ratingList,...ratingDate];
-//                this.loadRatings = false;
-//                if (ratingDate.length >= 10) {
-//                    this.preventRepeatRequest = false;
-//                }
-//            },
             //隐藏动画
             hideLoading(){
                 this.showLoading = false;

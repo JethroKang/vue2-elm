@@ -28,30 +28,38 @@
       </section>
 
       <div class="user-order-box">
-        <dl @click="allOrder">
+        <router-link :to='{path: "/order" , query: {changeShowType: "order_all"}}'>
+        <dl >
           <dt>
             <strong>全部订单</strong>
             <span>查看全部订单</span>
           </dt>
         </dl>
+        </router-link>
         <ul>
-          <li @click="allOrder">
+          <li>
+            <router-link :to='{path: "/order" , query: {changeShowType: "order_unpayed"}}'>
             <div class="user_order">
               <i class="iconfont">&#xe605;</i>
             </div>
             <span>待付款</span>
+            </router-link>
           </li>
-          <li @click="allOrder">
+          <li>
+            <router-link :to='{path: "/order" , query: {changeShowType: "order_unshipped"}}'>
             <div class="user_order">
               <i class="iconfont">&#xe61f;</i>
             </div>
             <span>待发货</span>
+            </router-link>
           </li>
-          <li @click="allOrder">
+          <li>
+            <router-link :to='{path: "/order" , query: {changeShowType: "order_shipped"}}'>
             <div class="user_order">
               <i class="iconfont">&#xe70b;</i>
             </div>
-            <span>待收货</span>
+            <span>已收货</span>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -206,8 +214,7 @@
       footGuide,
     },
     created(){
-//      this.token = this.$route.query.token;
-      this.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhdHpjbCIsImlhdCI6MTUwODI2MTI2NywibmJmIjoxNTA4MjYxMjY3LCJleHAiOjE1MDgyNjg0NjcsInJlZl90dGwiOjE1MTAwNzU2NjcsInN1YiI6eyJpZCI6NCwib3BlbmlkIjoib0RRU1kwb2sydnh2YzlCVml5TEFiTW1aU1ZEQSIsIm5pY2tuYW1lIjoiXHU1ZWI3XHU1ZmQ3XHU3OTY1Iiwic2V4IjoxLCJwcm92aW5jZSI6Ilx1NWU3Zlx1NGUxYyIsImNpdHkiOiJcdTRmNWJcdTVjNzEiLCJoZWFkaW1ndXJsIjoiaHR0cDpcL1wvd3gucWxvZ28uY25cL21tb3BlblwvdmlfMzJcL0RZQUlPZ3E4M2VxbkZDQXhLcUVpYTFhd2xWREJib3FsQmlhZG9iVFJqSG41SEFBdkNKYzB6Sm5nSU9WVDI1SG1WUUlyelNpYTBEdzVNcFZ0bTg3Z281S3VBXC8wIiwibWVtYmVyIjpudWxsfX0.OE-3ELGHEVNyn48SK2yUAiz5MlWPJ7O6IxiRCWzZj_glQIN5y881NEVSQ_sNFzfrlP9btnkMYk3yA-6IVIhRHkD_ZoSSASRiFQtTO7gmMY6_lH2tunCufF-1X7OGx94EV_s6ldoPvZu2rAvLeBjWHqwcWRK95XM5379joLZnlyQ";
+      this.token = this.$route.query.token;
     },
     computed:{
       ...mapState([

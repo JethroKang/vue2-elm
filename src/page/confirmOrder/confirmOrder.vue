@@ -50,11 +50,11 @@
           <span>订单信息</span>
         </header>
         <ul class="food_list_ul" >
-          <li class="food_item_style">
-            <p class="food_name ellipsis">{{title}}</p>
+          <li class="food_item_style" v-for="item in details">
+            <p class="food_name ellipsis">{{item.title}}</p>
             <div class="num_price">
-              <span>x {{numCounter}}</span>
-              <span>¥ {{foodPrice}}</span>
+              <span>x {{item.num}}</span>
+              <span>¥ {{item.price}}</span>
             </div>
           </li>
         </ul>
@@ -76,7 +76,7 @@
         <div class="food_item_style total_price">
           <p class="food_name ellipsis"></p>
           <div class="num_price">
-            <span>待支付 ¥{{foodPrice * numCounter}}</span>
+            <span>支付 ¥{{totalPrice}}</span>
           </div>
         </div>
       </section>
@@ -101,7 +101,7 @@
         </router-link>
       </section>
       <section class="confrim_order">
-        <p>待支付 ¥{{foodPrice * numCounter}}</p>
+        <p>待支付 ¥{{totalPrice}}</p>
         <p @click="confrimOrder" id="confrimOrder">确认下单</p>
       </section>
       <transition name="fade">
@@ -162,6 +162,9 @@
         current:1,
         size:15,
         appId:'',
+        details:null,
+        goodsOrder:null,
+        totalPrice:0,
       }
     },
     created(){
@@ -172,7 +175,20 @@
       this.foodIndex = this.$route.query.foodIndex;
       this.foodPrice = this.$route.query.foodPrice;
       this.numCounter = this.$route.query.numCounter;
-      this.title = this.$route.query.title;
+      this.goodsOrder = this.$route.query.data;
+      this.details=this.$route.query.details;
+
+      let total = 0;
+      var _this = this;
+      this.details.forEach(function(good){
+        total += good.price * good.num;
+        _this.totalPrice = total;
+      });
+      return total;
+
+      if(!(this.userToken)) {
+        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/profile');
+      }
     },
     mounted(){
       //判断当前用户是否登录
@@ -236,19 +252,20 @@
           this.showAlert = true;
           this.alertText = '请添加一个收获地址';
           return
-        }else if(!this.foodID){
-          this.showAlert = true;
-          this.alertText = '订单信息有误，请返回重新下单';
-          return
-        }else if(!this.foodIndex){
-          this.showAlert = true;
-          this.alertText = '订单信息有误，请返回重新下单';
-          return
-        }else if(!this.foodPrice){
-          this.showAlert = true;
-          this.alertText = '订单信息有误，请返回重新下单';
-          return
         }
+//        else if(!this.foodID){
+//          this.showAlert = true;
+//          this.alertText = '订单信息有误，请返回重新下单';
+//          return
+//        }else if(!this.foodIndex){
+//          this.showAlert = true;
+//          this.alertText = '订单信息有误，请返回重新下单';
+//          return
+//        }else if(!this.foodPrice){
+//          this.showAlert = true;
+//          this.alertText = '订单信息有误，请返回重新下单';
+//          return
+//        }
         //保存订单
         this.SAVE_ORDER_PARAM({
           user_id: this.userToken,
@@ -257,7 +274,7 @@
           orders: {goods_id: this.foodID, sku_spec_id: this.foodIndex, num: this.numCounter},
         });
 //            发送订单信息
-        Request.Post('order', {token:this.userToken,address_id:this.choosedAddress.id,orders:[{goods_id: this.foodID,sku_spec_id: this.foodIndex,num: this.numCounter}],content:this.remarklist})
+        Request.Post('order', {token:this.userToken,address_id:this.choosedAddress.id,orders:this.goodsOrder,content:this.remarklist})
           .then((res) => {
             if(res.code === 200){
               WeixinJSBridge.invoke(

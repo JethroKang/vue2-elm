@@ -8,14 +8,14 @@
         <p>{{orderData.status}}</p>
         </section>
         <section class="food_list">
-          <router-link class="food_list_header" :to="{path: '/shop', query: {id: orderDetail.restaurant_id}}">
+          <div class="food_list_header" @click="payOrder" >
             <div class="shop_name">
               <span>{{orderData.pay_status}}</span>
             </div>
             <svg fill="#333" class="arrow_right">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
             </svg>
-          </router-link>
+          </div>
           <ul class="food_list_ul">
             <li v-for="item in orderData.goods">
               <p class="food_name ellipsis">{{item.name}}</p>
@@ -116,6 +116,28 @@
           this.showLoading = false;
         }
       },
+      payOrder(){
+        if (this.userToken) {
+          let id = this.orderDetail;
+          Request.Post('order_afresh_pay/'+id, {token:this.userToken})
+            .then((res) => {
+              if(res.code === 200){
+                WeixinJSBridge.invoke(
+                  'getBrandWCPayRequest',JSON.parse(res.data.jsapi),
+                  function(result){
+                    console.log(result);
+                    if(result.err_msg == "get_brand_wcpay_request:ok" ) {
+                    }else {
+                    }
+                  }
+                );
+              }else if(res.code === 404){
+                this.showAlert = true;
+                this.alertText =res.msg;
+              }
+            });
+        }
+      }
     }
   }
 </script>
@@ -142,6 +164,7 @@
     right: 0;
     bottom: 0;
     padding-top: 1.95rem;
+    height: 100%;
   }
   .scroll_insert{
     padding-bottom: 3rem;

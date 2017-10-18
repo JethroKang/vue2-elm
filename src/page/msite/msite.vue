@@ -55,9 +55,9 @@ export default {
         }
     },
     created(){
-//      if (!(this.userToken)) {
-//        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/profile');
-//      }
+      if (!(this.userToken)) {
+        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/profile');
+      }
     },
     mounted(){
       this.initData();
@@ -222,6 +222,7 @@ export default {
       border-radius: 1rem;
       font-size: 0.4rem;
       padding-left: 0.6rem;
+      margin-top: 0.375rem;
     }
 
     .m_header_box form .icon_search {

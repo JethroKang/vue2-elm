@@ -54,48 +54,31 @@
            </ul>
          </div>
        </div>
-
-       <!--<div class="payment-bar">-->
-         <!--<div class="all-checkbox">-->
-           <!--<a href="javascript:void 0">-->
-								<!--&lt;!&ndash;<span class="item-check-btn" :class="{check:isSelectAll}">&ndash;&gt;-->
-									<!--&lt;!&ndash;<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>&ndash;&gt;-->
-								<!--&lt;!&ndash;</span>&ndash;&gt;-->
-             <!--<span @click="selectAll" >全选</span>-->
-             <!--<span @click="unSelectAll">取消全选</span>-->
-           <!--</a>-->
-         <!--</div>-->
-         <!--<div class="shop-total">-->
-           <!--<strong>总价：<i class="total" id="AllTotal">{{totalPrice}}</i></strong>-->
-         <!--</div>-->
-         <!--<a href="#" class="settlement">结算</a>-->
-       <!--</div>-->
-
        <div class="settle_box">
-         <dl class="all_check select">
-           <dt v-if="!isSelectAll">
-             <div @click="selectAll">
-             <a href="javascript:void 0" class="span ">
-               <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
-             </a>
-             <span class="span-p">全选</span>
-             </div>
-           </dt>
-           <dt v-else>
-           <div @click="unSelectAll">
-             <a href="javascript:void 0" class="span check">
-               <svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>
-             </a>
-             <span class="span-p">取消</span>
-           </div>
-           </dt>
-         </dl>
+         <!--<dl class="all_check select">-->
+           <!--<dt v-if="!isSelectAll">-->
+             <!--<div @click="selectAll">-->
+             <!--<a href="javascript:void 0" class="span ">-->
+               <!--<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>-->
+             <!--</a>-->
+             <!--<span class="span-p">全选</span>-->
+             <!--</div>-->
+           <!--</dt>-->
+           <!--<dt v-else>-->
+           <!--<div @click="unSelectAll">-->
+             <!--<a href="javascript:void 0" class="span check">-->
+               <!--<svg class="icon icon-ok"><use xlink:href="#icon-ok"></use></svg>-->
+             <!--</a>-->
+             <!--<span class="span-p">取消</span>-->
+           <!--</div>-->
+           <!--</dt>-->
+         <!--</dl>-->
          <dl class="total_amount">
            <dt>合计：<p id="total_price">¥<b>{{totalPrice}}元</b></p></dt>
            <dd>不含运费</dd>
          </dl>
 
-         <a class="settle_btn" href="javascript:void(0);" id="confirm_cart" v-if="!deletesite">结算</a>
+         <router-link class="settle_btn" href="javascript:void(0);" id="confirm_cart" v-if="!deletesite" @click="payOrder" :to="{path: '/confirmOrder', query: {data: goodsOrder,details:goodsDetails}}">结算</router-link>
          <a class="settle_btn" href="javascript:void(0);"  v-else @click="deleteOrder">删除</a>
        </div>
 
@@ -134,17 +117,23 @@ export default {
         return {
             shopCaft:true,
             current:1,
-            size:20,
+            size:50,
             cartList:'',
             isSelectAll:false,//是否全选
             confirmDelete:false, //是否删除订单
             editText:'删除',
             deletesite:false, //是否编辑状态
-            goodsid:null
+            goodsid:null,
+            goodsOrder:null,
+            goodsDetails:null,
+            deletenum:null,
+            cartListnum:0,
         }
     },
     created(){
-
+      if (!(this.userToken)) {
+        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/profile');
+      }
     },
     mounted(){
       this.initData();
@@ -162,19 +151,32 @@ export default {
       ...mapState([
         'userToken',
       ]),
+
+
       totalPrice:function(){
         let total = 0;
         var _this = this;
         this.goodsid = [];
-        this.cartList.forEach(function(good){
+        this.goodsOrder = [];
+        this.goodsDetails = [];
+        if(this.cartList){
+          this.cartList.forEach(function(good){
 //          console.log(good);
-          if(good.isChecked){
-            total += good.sku_spec.price * good.num;
-            _this.goodsid.push(good.id);
-          }
+            if(good.isChecked){
+              console.log(good);
+              total += good.sku_spec.price * good.num;
+              let title = good.goods.name;
+              let goods_id = good.goods.id;
+              let num = good.num;
+              let sku_spec_id = good.sku_spec.id;
+              let price = good.sku_spec.price;
+              _this.goodsid.push(good.id);
+              _this.goodsOrder.push({goods_id:goods_id,num:num,sku_spec_id:sku_spec_id});
+              _this.goodsDetails.push({title:title,num:num,price:price});
+            }
 
-        });
-
+          });
+        }
         return total;
 
       },
@@ -195,6 +197,7 @@ export default {
           console.log(res);
             this.cartList = res.data;
 //           console.log(this.showCartList);
+            this.cartListnum =this.cartList.length;
           })
 
       },
@@ -218,14 +221,22 @@ export default {
             .then((res) => {
 //                      console.log(res);
               if(res.code === 200){
+                this.deletenum = res.data;
                 this.showAlert = true;
                 this.alertText = res.msg;
                 console.log(res.msg);
+              }else if(res.msg==="暂无数据"){
+                this.shopCaft=false;
               }
+
             })
         }else {
             alert("请选择商品");
         }
+      },
+
+      payOrder(){
+        console.log(this.goodsOrder);
       },
 
 
@@ -294,6 +305,11 @@ export default {
       },
 
 
+    },
+    watch: {
+      deletenum: function (value) {
+        this.initData();
+      },
     }
 }
 
@@ -498,7 +514,7 @@ export default {
     }
     .settle_box .all_check .disabled{ background:#e1e1e1;border:solid 1px #e1e1e1;}
 
-    .settle_box .total_amount {color: #999;font-size: 14px;margin: 0;width: 50%;text-align: right;margin-top: 5px;padding-right: 2%;}
+    .settle_box .total_amount {color: #999;font-size: 14px;margin: 0;width: 50%;text-align: right;margin-top: 10px;padding-right: 2%;}
     .settle_box .total_amount dd{ margin-top:1px;clear: both;font-size: 0.6rem;}
     .settle_box .total_amount dt p {color: #ff900d;font-size: 0.8rem;float: right;line-height: 20px;}
     .settle_box .total_amount dt p:first-letter{ font-size:0.6rem}

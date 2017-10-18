@@ -102,7 +102,7 @@ export default {
 			showLoading: true, //显示加载动画
 			touchend: false, //没有更多数据
       current:1,
-      size:15,
+      size:50,
 		}
 	},
 	mounted(){

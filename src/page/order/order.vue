@@ -18,37 +18,44 @@
           <span :class='{ordero_on: changeShowType =="order_unshipped"}' @click="changeShowType='order_unshipped'">待发货</span>
         </li>
         <li>
-          <span :class='{ordero_on: changeShowType =="order_shipped"}' @click="changeShowType='order_shipped'">待收货</span>
+          <span :class='{ordero_on: changeShowType =="order_shipped"}' @click="changeShowType='order_shipped'">已收货</span>
         </li>
       </ul>
 
       <transition name="fade-choose">
         <section v-show="changeShowType =='order_all'" class="order-center-content">
           <ul class="order_list_ul" v-load-more="loaderMore">
-            <li class="order_list_li" v-for="item in orderList.data" :key="item.id">
-                <span v-for="goods in item.goods">
+            <li class="order_list_li" v-for="item in orderList" :key="item.id" style="display: flex;flex-direction:column" @click="showDetail(item.id)">
+              <ul class="order_list_ul" >
+                <li class="order_list_li2" v-for="goods in item.goods" :key="item.id">
+                <span>
                   <img :src="goods.thumb" class="restaurant_image">
                 </span>
-              <section class="order_item_right">
-                <section @click="showDetail(item.id)">
-                  <header class="order_item_right_header" v-for="goodDE in item.goods ">
-                    <section class="order_header">
-                      <h4>
-                        <span class="ellipsis">{{goodDE.name}}</span>
-                      </h4>
-                    </section>
-                    <p class="order_status">
-                      交易成功
-                    </p>
-                  </header>
+                  <section class="order_item_right">
+                      <header class="order_item_right_header">
+                        <section class="order_header">
+                          <h4>
+                            <span class="ellipsis">{{goods.name}}</span>
+                          </h4>
+                        </section>
+                        <!--<p class="order_status">-->
+                          <!--交易成功-->
+                        <!--</p>-->
+                      </header>
+                      <section class="order_basket">
+                        <div>
+                          <p class="order_name ellipsis">{{goods.outline}}</p>
+                        </div>
+                      </section>
+                  </section>
+                </li>
+              </ul>
+              <section class="order_item_bottom">
                   <section class="order_basket">
-                    <div v-for="items in item.goods">
-                    <p class="order_name ellipsis">{{items.outline}}</p>
-                    </div>
                     <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
                   </section>
-                </section>
               </section>
+
             </li>
           </ul>
 
@@ -72,32 +79,40 @@
       <transition name="fade-choose">
         <section v-show="changeShowType =='order_unpayed'" class="order-center-content">
           <ul class="order_list_ul" v-load-more="loaderMore">
-            <li class="order_list_li" v-for="item in orderList.data" :key="item.id">
-                <span v-for="goods in item.goods">
+            <li class="order_list_li" v-for="item in unpaidList" :key="item.id" style="display: flex;flex-direction:column">
+              <ul class="order_list_ul" >
+                <li class="order_list_li2" v-for="goods in item.goods" :key="item.id">
+                <span>
                   <img :src="goods.thumb" class="restaurant_image">
                 </span>
-              <section class="order_item_right">
-                <section @click="showDetail(item.id)">
-                  <header class="order_item_right_header" v-for="goodDE in item.goods ">
-                    <section class="order_header">
-                      <h4>
-                        <span class="ellipsis">{{goodDE.name}}</span>
-                      </h4>
+                  <section class="order_item_right">
+                    <header class="order_item_right_header">
+                      <section class="order_header">
+                        <h4>
+                          <span class="ellipsis">{{goods.name}}</span>
+                        </h4>
+                      </section>
+                      <!--<p class="order_status">-->
+                      <!--交易成功-->
+                      <!--</p>-->
+                    </header>
+                    <section class="order_basket">
+                      <div>
+                        <p class="order_name ellipsis">{{goods.outline}}</p>
+                      </div>
                     </section>
-                    <p class="order_status">
-                      交易成功
-                    </p>
-                  </header>
-                  <section class="order_basket">
-                    <div v-for="items in item.goods">
-                      <p class="order_name ellipsis">{{items.outline}}</p>
-                    </div>
-                    <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
                   </section>
+                </li>
+              </ul>
+              <section class="order_item_bottom">
+                <section class="order_basket">
+                  <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
                 </section>
               </section>
+
             </li>
           </ul>
+
 
           <!--<div class="no-data-div" v-else>-->
           <!--<div class="no-data-img">-->
@@ -118,30 +133,37 @@
       <transition name="fade-choose">
         <section v-show="changeShowType =='order_unshipped'" class="order-center-content">
           <ul class="order_list_ul" v-load-more="loaderMore">
-            <li class="order_list_li" v-for="item in orderList.data" :key="item.id">
-                <span v-for="goods in item.goods">
+            <li class="order_list_li" v-for="item in unfilledList" :key="item.id" style="display: flex;flex-direction:column">
+              <ul class="order_list_ul" >
+                <li class="order_list_li2" v-for="goods in item.goods" :key="item.id">
+                <span>
                   <img :src="goods.thumb" class="restaurant_image">
                 </span>
-              <section class="order_item_right">
-                <section @click="showDetail(item.id)">
-                  <header class="order_item_right_header" v-for="goodDE in item.goods ">
-                    <section class="order_header">
-                      <h4>
-                        <span class="ellipsis">{{goodDE.name}}</span>
-                      </h4>
+                  <section class="order_item_right">
+                    <header class="order_item_right_header">
+                      <section class="order_header">
+                        <h4>
+                          <span class="ellipsis">{{goods.name}}</span>
+                        </h4>
+                      </section>
+                      <!--<p class="order_status">-->
+                      <!--交易成功-->
+                      <!--</p>-->
+                    </header>
+                    <section class="order_basket">
+                      <div>
+                        <p class="order_name ellipsis">{{goods.outline}}</p>
+                      </div>
                     </section>
-                    <p class="order_status">
-                      交易成功
-                    </p>
-                  </header>
-                  <section class="order_basket">
-                    <div v-for="items in item.goods">
-                      <p class="order_name ellipsis">{{items.outline}}</p>
-                    </div>
-                    <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
                   </section>
+                </li>
+              </ul>
+              <section class="order_item_bottom">
+                <section class="order_basket">
+                  <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
                 </section>
               </section>
+
             </li>
           </ul>
 
@@ -164,32 +186,40 @@
       <transition name="fade-choose">
         <section v-show="changeShowType =='order_shipped'" class="order-center-content">
           <ul class="order_list_ul" v-load-more="loaderMore">
-            <li class="order_list_li" v-for="item in orderList.data" :key="item.id">
-                <span v-for="goods in item.goods">
+            <li class="order_list_li" v-for="item in confirmList" :key="item.id" style="display: flex;flex-direction:column">
+              <ul class="order_list_ul" >
+                <li class="order_list_li2" v-for="goods in item.goods" :key="item.id">
+                <span>
                   <img :src="goods.thumb" class="restaurant_image">
                 </span>
-              <section class="order_item_right">
-                <section @click="showDetail(item.id)">
-                  <header class="order_item_right_header" v-for="goodDE in item.goods ">
-                    <section class="order_header">
-                      <h4>
-                        <span class="ellipsis">{{goodDE.name}}</span>
-                      </h4>
+                  <section class="order_item_right">
+                    <header class="order_item_right_header">
+                      <section class="order_header">
+                        <h4>
+                          <span class="ellipsis">{{goods.name}}</span>
+                        </h4>
+                      </section>
+                      <!--<p class="order_status">-->
+                      <!--交易成功-->
+                      <!--</p>-->
+                    </header>
+                    <section class="order_basket">
+                      <div>
+                        <p class="order_name ellipsis">{{goods.outline}}</p>
+                      </div>
                     </section>
-                    <p class="order_status">
-                      交易成功
-                    </p>
-                  </header>
-                  <section class="order_basket">
-                    <div v-for="items in item.goods">
-                      <p class="order_name ellipsis">{{items.outline}}</p>
-                    </div>
-                    <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
                   </section>
+                </li>
+              </ul>
+              <section class="order_item_bottom">
+                <section class="order_basket">
+                  <p class="order_amount" style="float: right">¥{{item.real_payment}}</p>
                 </section>
               </section>
+
             </li>
           </ul>
+
 
           <!--<div class="no-data-div" v-else>-->
           <!--<div class="no-data-img">-->
@@ -242,7 +272,17 @@
         showLoading: false, //显示加载动画
         imgBaseUrl,
         current:1,
-        size:25,
+        size:50,
+        unpaidList:null,
+        unfilledList:null,
+        confirmList:null
+
+      }
+    },
+    created(){
+      this.changeShowType = this.$route.query.changeShowType;
+      if (!(this.userToken)) {
+        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/profile');
       }
     },
     mounted(){
@@ -270,15 +310,28 @@
           console.log(this.userToken);
           Request.Get('order', {current:this.current, size:this.size,token:this.userToken,})
             .then((res) => {
-              this.orderList = res;
+              this.orderList = res.data;
               console.log(this.orderList);
-            })
-//                    let res = await listOrder(this.current, this.size,this.userInfo.token,);
-//
-////                    let res2 = await getOrderList(this.userInfo.user_id, this.offset);
-//
-//                    this.orderList = [...res];
-//                    console.log(res);
+            });
+
+          Request.Get('order', {current:this.current, size:this.size,token:this.userToken,query:"unpaid"})
+            .then((res) => {
+              this.unpaidList = res.data;
+              console.log(this.unpaidList);
+            });
+
+          Request.Get('order', {current:this.current, size:this.size,token:this.userToken,query:"unfilled"})
+            .then((res) => {
+              this.unfilledList = res.data;
+              console.log(this.unfilledList);
+            });
+
+          Request.Get('order', {current:this.current, size:this.size,token:this.userToken,query:"confirm"})
+            .then((res) => {
+              this.confirmList = res.data;
+              console.log(this.unfilledList);
+            });
+
         }else{
           this.hideLoading();
         }
@@ -305,6 +358,7 @@
         this.SAVE_ORDER(item);
         this.preventRepeat = false;
         this.$router.push('/order/orderDetail');
+        console.log(item);
       },
       //生产环境与发布环境隐藏loading方式不同
       hideLoading(){
@@ -336,7 +390,7 @@
       background-color: #fff;
       display: flex;
       margin-bottom: 0.5rem;
-      padding: .6rem .6rem 0;
+      /*padding: .6rem .6rem 0;*/
       .restaurant_image{
         @include wh(3rem, 3rem);
         margin-right: 0.4rem;
@@ -426,5 +480,57 @@
   .no-data-div .no-data-btn { background: #f23030; display:block !important; margin: 1rem auto 0 auto; color: #fff !important; line-height: 1.5rem; text-align: center;border-radius: 0.15rem; height: 1.5rem;width: 6rem;font-size: 0.7rem ;}
   .no-data-div .no-data-img img {
     height: 6.5rem;
+  }
+
+  .order_item_bottom{
+    width: 100%;
+    .order_basket{
+      line-height: 2rem;
+      /*border-bottom: 0.025rem solid #f5f5f5;*/
+      .order_name{
+        @include sc(.6rem, #666);
+        width: 10rem;
+      }
+      .order_amount{
+        @include sc(.6rem, #f60);
+        font-weight: bold;
+        padding: 0 1.3rem;
+      }
+    }
+  }
+  .order_list_li2{
+    background-color: #fff;
+    display: flex;
+    margin-bottom: 0.5rem;
+    padding: .6rem 1.3rem 0;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-active {
+    opacity: 0;
+  }
+  .fade-choose-enter-active, .fade-choose-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-choose-leave, .fade-choose-leave-active {
+    display: none;
+  }
+  .fade-choose-enter, .fade-choose-leave-active {
+    opacity: 0;
+  }
+  .router-slid-enter-active, .router-slid-leave-active {
+    transition: all .4s;
+  }
+  .router-slid-enter, .router-slid-leave-active {
+    transform: translate3d(2rem, 0, 0);
+    opacity: 0;
+  }
+  .toggle-cart-enter-active, .toggle-cart-leave-active {
+    transition: all .3s ease-out;
+  }
+  .toggle-cart-enter, .toggle-cart-leave-active {
+    transform: translateY(100%);
   }
 </style>
