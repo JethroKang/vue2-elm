@@ -215,6 +215,7 @@
     },
     created(){
       this.token = this.$route.query.token;
+//      this.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhdHpjbCIsImlhdCI6MTUwODMzNjk5MiwibmJmIjoxNTA4MzM2OTkyLCJleHAiOjE1MDgzNDQxOTIsInJlZl90dGwiOjE1MTAxNTEzOTIsInN1YiI6eyJpZCI6NCwib3BlbmlkIjoib0RRU1kwb2sydnh2YzlCVml5TEFiTW1aU1ZEQSIsIm5pY2tuYW1lIjoiXHU1ZWI3XHU1ZmQ3XHU3OTY1Iiwic2V4IjoxLCJwcm92aW5jZSI6Ilx1NWU3Zlx1NGUxYyIsImNpdHkiOiJcdTRmNWJcdTVjNzEiLCJoZWFkaW1ndXJsIjoiaHR0cDpcL1wvd3gucWxvZ28uY25cL21tb3BlblwvdmlfMzJcL0RZQUlPZ3E4M2VxbkZDQXhLcUVpYTFhd2xWREJib3FsQmlhZG9iVFJqSG41SEFBdkNKYzB6Sm5nSU9WVDI1SG1WUUlyelNpYTBEdzVNcFZ0bTg3Z281S3VBXC8wIiwibWVtYmVyIjpudWxsfX0.wh4Ypa-TMbX_GeMpGk80QZotXdJX75zTuiNZNWpv4MzqzsZRhRVMa2-3PNpNzRnSR0sro_SQMhN4Lihp2tbMcV_qjtgMYucEB_q-HdqRwAKa7qYCZ7N8tQXY8b7JPYd8LMcAONuzTrjuRSdi_8JV417py-WFknUtdkEcT7jxXtU";
     },
     computed:{
       ...mapState([

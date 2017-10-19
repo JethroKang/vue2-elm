@@ -70,9 +70,8 @@
       defaultIndex: function (){
         if (this.addressIndex) {
           return this.addressIndex;
-        }else{
-          return 0;
         }
+
       }
     },
     methods: {

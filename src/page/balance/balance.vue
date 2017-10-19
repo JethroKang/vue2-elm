@@ -1,135 +1,280 @@
- <template>
-  <div class="page">
-        <head-top head-title="我的余额" go-back='true'></head-top>
-        <section class="content_container">
-            <section class="content">
-                <header class="content_header">
-                    <span class="content_title_style">当前余额</span>
-                    <section class="contetn_description">
-                        <img src="../../images/description.png" height="24" width="24">
-                        <router-link to="/balance/detail" class="content_title_style">余额说明</router-link>
-                    </section>
-                </header>
-                <p class="content_num">
-                    <span>0.00</span>
-                    <span>元</span>
-                </p>
-                <div class="promit_button">提现</div>
-            </section>
+<template>
+  <div class="order_detail_page">
+    <head-top head-title="订单详情" go-back='true'></head-top>
+    <section v-if="!showLoading" id="scroll_section" class="scroll_container">
+      <section class="scroll_insert">
+        <section class="order_titel">
+          <p>{{orderData.order_no}}</p>
+          <p>{{orderData.status}}</p>
         </section>
-        <p class="deal_detail">交易明细</p>
-        <div class="no_log">
-            <img src="../../images/no-log.png">
-            <p>暂无明细记录</p>
-        </div>
-        <alert-tip v-if="showAlert" @closeTip="showAlert = false" :alertText="alertText"></alert-tip>
-        <transition name="router-slid" mode="out-in">
-            <router-view></router-view>
-        </transition>
-    </div>
+        <section class="food_list">
+          <div class="food_list_header" @click="payOrder" >
+            <div class="shop_name">
+              <span>{{orderData.pay_status}}</span>
+            </div>
+            <svg fill="#333" class="arrow_right">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+            </svg>
+          </div>
+          <ul class="food_list_ul">
+            <li v-for="item in orderData.goods">
+              <p class="food_name ellipsis">{{item.name}}</p>
+              <div class="quantity_price">
+                <span>X{{item.goods_num}}</span>
+                <span>¥{{item.price}}</span>
+              </div>
+            </li>
+          </ul>
+          <div class="deliver_fee">
+            <span>配送费</span>
+            <span>{{orderData.shipping_price}}</span>
+          </div>
+          <div class="pay_ment">实付{{orderData.real_payment}}</div>
+        </section>
+        <section class="order_detail_style">
+          <header>配送信息</header>
+          <section class="item_style">
+            <p class="item_left">送货地址：</p>
+            <div class="item_right">
+              <p>{{orderData.address.name}}</p>
+              <p>{{orderData.address.phone}}</p>
+              <p>{{orderData.address.province}}{{orderData.address.city}}{{orderData.address.area}}{{orderData.address.street}}{{orderData.address.address}}</p>
+            </div>
+          </section>
+          <section class="item_style">
+            <p class="item_left">配送方式：</p>
+            <div class="item_right">
+              <p>商家派送</p>
+            </div>
+          </section>
+        </section>
+        <section class="order_detail_style">
+          <header>订单信息</header>
+          <section class="item_style">
+            <p class="item_left">订单号：</p>
+            <div class="item_right">
+              <p>{{orderData.order_no}}</p>
+            </div>
+          </section>
+          <section class="item_style">
+            <p class="item_left">支付方式：</p>
+            <div class="item_right">
+              <p>在线支付</p>
+            </div>
+          </section>
+          <section class="item_style">
+            <p class="item_left">下单时间：</p>
+            <div class="item_right">
+              <p>{{orderData.create_time}}</p>
+            </div>
+          </section>
+        </section>
+      </section>
+    </section>
+    <transition name="loading">
+      <loading v-if="showLoading"></loading>
+    </transition>
+  </div>
 </template>
 
 <script>
-    import headTop from 'src/components/header/head'
-    import alertTip from 'src/components/common/alertTip'
-    
-    export default {
-      data(){
-            return{
-                showAlert: false,
-                alertText: null,
-            }
-        },
-        mounted(){
-          
-        },
-        components: {
-            headTop,
-            alertTip,
-        },
-        computed: {
-           
-        },
-        methods: {
-            
+  import {mapState, mapMutations} from 'vuex'
+  import headTop from 'src/components/header/head'
+  import {getImgPath} from 'src/components/common/mixin'
+  import loading from 'src/components/common/loading'
+  import Request from 'src/service/api'
+  export default {
+    data(){
+      return{
+        showLoading: true, //显示加载动画
+        orderData: null,
+        id:null
+      }
+    },
+    mounted(){
+      this.initData();
+    },
+    mixins: [getImgPath],
+    components: {
+      headTop,
+      loading,
+    },
+    computed: {
+      ...mapState([
+        'orderDetail', 'userInfo','userToken'
+      ]),
+    },
+    methods: {
+      async initData(){
+        let id = this.orderDetail;
+        if (this.userToken) {
+          Request.Get('order/'+id, {token:this.userToken})
+            .then((res) => {
+              this.orderData = res.data;
+              console.log(this.orderData);
+            });
+          this.showLoading = false;
         }
+      },
+      payOrder(){
+        if (this.userToken) {
+          let id = this.orderDetail;
+          Request.Post('order_afresh_pay/'+id, {token:this.userToken})
+            .then((res) => {
+              if(res.code === 200){
+                WeixinJSBridge.invoke(
+                  'getBrandWCPayRequest',JSON.parse(res.data.jsapi),
+                  function(result){
+                    console.log(result);
+                    if(result.err_msg == "get_brand_wcpay_request:ok" ) {
+                    }else {
+                    }
+                  }
+                );
+              }else if(res.code === 404){
+                this.showAlert = true;
+                this.alertText =res.msg;
+              }
+            });
+        }
+      }
     }
+  }
 </script>
-  
+
 <style lang="scss" scoped>
-    @import 'src/style/mixin';
-  
-    .page{
-        padding-top: 1.95rem;
-        p, span{
-            font-family: Helvetica Neue,Tahoma,Arial;
-        }
-    }
-    .content_container{
-        padding: .3rem;
-        background-color: $blue;
-        .content{
-            padding: .4rem;
-            background-color: #fff;
-            border-radius: .15rem;
-            .content_header{
-                @include fj;
-                font-size: .55rem;
-                .contetn_description{
-                    display: flex;
-                    align-items: center;
-                    img{
-                        @include wh(.6rem, .6rem);
-                        margin-right: .2rem;
-                    }
-                    .content_title_style{
-                        color: $blue;
-                    }
-                }
-                .content_title_style{
-                    color: #666;
-                }
-            }
-            .content_num{
-                span:nth-of-type(1){
-                    @include sc(1.8rem, #333);
-                }
-                span:nth-of-type(2){
-                    @include sc(.7rem, #333);
-                }
-            }
-            .promit_button{
-                @include wh(100%, 2rem);
-                @include sc(.8rem, #fff);
-                border-radius: 0.15rem;
-                line-height: 2rem;
-                margin-top: 1rem;
-                text-align: center;
-                background-color: #ccc;
-            }
-        }
-    }
-    .deal_detail{
-        @include sc(.6rem, #999);
-        line-height: 2rem;
-        padding-left: .5rem;
-    }
-    .no_log{
-        text-align: center;
-        margin-top: 1rem;
-        img{
-            @include wh(8rem, 5rem);
-        }
-        p{
-            margin-top: .5rem;
-            @include sc(.7rem, #666);
-        }
-    }
-    .router-slid-enter-active, .router-slid-leave-active {
-        transition: all .4s;
-    }
-    .router-slid-enter, .router-slid-leave-active {
-        transform: translate3d(2rem, 0, 0);
-        opacity: 0;
-    }
+  @import 'src/style/mixin';
+  .order_detail_page{
+    background-color: #f1f1f1;
+    padding-top: 1.95rem;
+  p, span{
+    font-family: Helvetica Neue,Tahoma,Arial;
+  }
+  }
+  .scroll_container{
+    height: 100%;
+  }
+  .scroll_insert{
+    padding-bottom: 3rem;
+  }
+  .order_titel{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: .7rem;
+    background-color: #fff;
+    margin-bottom: 0.5rem;
+  img{
+    border: 0.05rem solid $blue;
+    border-radius: 50%;
+  @include wh(3rem, 3rem);
+  }
+
+  p:nth-of-type(1){
+  @include sc(.9rem, #333);
+    font-weight: bold;
+    margin-top: .4rem;
+  }
+  p:nth-of-type(2){
+  @include sc(.55rem, #999);
+    width: 10rem;
+    margin-top: .3rem;
+    text-align: center;
+  }
+  .order_again{
+  @include sc(.6rem, $blue);
+    margin-top: .5rem;
+    border: 0.025rem solid $blue;
+    padding: .15rem .4rem;
+    border-radius: .1rem;
+  }
+  }
+  .food_list{
+    background-color: #fff;
+  .food_list_header{
+  @include fj;
+    align-items: center;
+    padding: .2rem .5rem;
+    border-bottom: 1px solid #f5f5f5;
+  .shop_name{
+  img{
+  @include wh(1.2rem, 1.2rem);
+    vertical-align: middle;
+    margin-right: .2rem;
+  }
+  span{
+  @include sc(.75rem, #333);
+    font-weight: bold;
+  }
+  }
+  svg{
+  @include wh(.6rem, .6rem);
+    fill: #666;
+  }
+  }
+  .food_list_ul{
+  li{
+  @include fj;
+    align-items: center;
+    padding: 0 .5rem;
+    line-height: 2rem;
+  .food_name{
+  @include sc(.6rem, #666);
+    flex: 4;
+  }
+  .quantity_price{
+    flex: 1;
+  @include fj;
+    align-items: center;
+  span:nth-of-type(1){
+  @include sc(.6rem, #ccc);
+  }
+  span:nth-of-type(2){
+  @include sc(.6rem, #666);
+  }
+  }
+  }
+  }
+  .deliver_fee{
+  @include fj;
+    align-items: center;
+    padding: 0 .5rem;
+    line-height: 2rem;
+    border-top: 1px solid #f5f5f5;
+  span{
+  @include sc(.6rem, #666);
+  }
+  }
+  .pay_ment{
+  @include sc(.6rem, #fb6b23);
+    border-top: 1px solid #f5f5f5;
+    font-weight: bold;
+    line-height: 2rem;
+    text-align: right;
+    padding-right: .5rem;
+  }
+  }
+  .order_detail_style{
+    background-color: #fff;
+    margin-top: 0.5rem;
+  header{
+  @include sc(.75rem, #333);
+    padding: .5rem;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .item_style{
+    display: flex;
+    padding: .5rem;
+  p{
+  @include sc(.65rem, #666);
+    line-height: 1rem;
+  }
+  }
+  }
+  .loading-enter-active, .loading-leave-active {
+    transition: opacity .7s
+  }
+  .loading-enter, .loading-leave-active {
+    opacity: 0
+  }
 </style>

@@ -79,7 +79,7 @@
       <transition name="fade-choose">
         <section v-show="changeShowType =='order_unpayed'" class="order-center-content">
           <ul class="order_list_ul" v-load-more="loaderMore">
-            <li class="order_list_li" v-for="item in unpaidList" :key="item.id" style="display: flex;flex-direction:column">
+            <li class="order_list_li" v-for="item in unpaidList" :key="item.id" style="display: flex;flex-direction:column" @click="showDetail(item.id)">
               <ul class="order_list_ul" >
                 <li class="order_list_li2" v-for="goods in item.goods" :key="item.id">
                 <span>
@@ -133,7 +133,7 @@
       <transition name="fade-choose">
         <section v-show="changeShowType =='order_unshipped'" class="order-center-content">
           <ul class="order_list_ul" v-load-more="loaderMore">
-            <li class="order_list_li" v-for="item in unfilledList" :key="item.id" style="display: flex;flex-direction:column">
+            <li class="order_list_li" v-for="item in unfilledList" :key="item.id" style="display: flex;flex-direction:column" @click="showDetail(item.id)">
               <ul class="order_list_ul" >
                 <li class="order_list_li2" v-for="goods in item.goods" :key="item.id">
                 <span>
@@ -186,7 +186,7 @@
       <transition name="fade-choose">
         <section v-show="changeShowType =='order_shipped'" class="order-center-content">
           <ul class="order_list_ul" v-load-more="loaderMore">
-            <li class="order_list_li" v-for="item in confirmList" :key="item.id" style="display: flex;flex-direction:column">
+            <li class="order_list_li" v-for="item in confirmList" :key="item.id" style="display: flex;flex-direction:column" @click="showDetail(item.id)">
               <ul class="order_list_ul" >
                 <li class="order_list_li2" v-for="goods in item.goods" :key="item.id">
                 <span>
@@ -241,9 +241,9 @@
     </div>
 
     <foot-guide></foot-guide>
-    <transition name="loading">
-      <loading v-show="showLoading"></loading>
-    </transition>
+    <!--<transition name="loading">-->
+      <!--<loading v-show="showLoading"></loading>-->
+    <!--</transition>-->
     <transition name="router-slid" mode="out-in">
       <router-view></router-view>
     </transition>
@@ -258,7 +258,7 @@
   import loading from 'src/components/common/loading'
   import {getImgPath} from 'src/components/common/mixin'
   import footGuide from 'src/components/footer/footGuide'
-  import {getOrderList,listOrder} from 'src/service/getData'
+//  import {getOrderList,listOrder} from 'src/service/getData'
   import {loadMore} from 'src/components/common/mixin'
   import {imgBaseUrl} from 'src/config/env'
   import Request from '../../service/api'
@@ -307,29 +307,29 @@
       //初始化获取信息
       async initData(){
         if (this.userToken) {
-          console.log(this.userToken);
+//          console.log(this.userToken);
           Request.Get('order', {current:this.current, size:this.size,token:this.userToken,})
             .then((res) => {
               this.orderList = res.data;
-              console.log(this.orderList);
+//              console.log(this.orderList);
             });
 
           Request.Get('order', {current:this.current, size:this.size,token:this.userToken,query:"unpaid"})
             .then((res) => {
               this.unpaidList = res.data;
-              console.log(this.unpaidList);
+//              console.log(this.unpaidList);
             });
 
           Request.Get('order', {current:this.current, size:this.size,token:this.userToken,query:"unfilled"})
             .then((res) => {
               this.unfilledList = res.data;
-              console.log(this.unfilledList);
+//              console.log(this.unfilledList);
             });
 
           Request.Get('order', {current:this.current, size:this.size,token:this.userToken,query:"confirm"})
             .then((res) => {
               this.confirmList = res.data;
-              console.log(this.unfilledList);
+//              console.log(this.unfilledList);
             });
 
         }else{
@@ -357,7 +357,7 @@
       showDetail(item){
         this.SAVE_ORDER(item);
         this.preventRepeat = false;
-        this.$router.push('/order/orderDetail');
+        this.$router.push('/balance');
         console.log(item);
       },
       //生产环境与发布环境隐藏loading方式不同

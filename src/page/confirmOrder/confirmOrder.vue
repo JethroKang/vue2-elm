@@ -207,7 +207,7 @@
     },
     computed: {
       ...mapState([
-        'cartList', 'remarkText', 'inputText', 'invoice', 'choosedAddress', 'userInfo','userToken'
+        'cartList', 'remarkText', 'inputText', 'invoice', 'choosedAddress', 'userInfo','userToken','newAddress'
       ]),
       //备注页返回的信息进行处理
       remarklist: function (){
@@ -300,9 +300,11 @@
           this.initAddress();
         }
       },
-      compiled: function() {
-        console.info(this.msg,this.msg.mes,121231231);
-      },
+
+    newAddress: function (value) {
+      this.initAddress();
+    },
+
     },
   }
 </script>
