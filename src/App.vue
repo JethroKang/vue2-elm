@@ -22,11 +22,12 @@
 
 </script>
 
-<style lang="css">
-  @import './images/iconfont.css';
-</style>
+<!--<style lang="css">-->
+  <!--@import './images/iconfont.css';-->
+<!--</style>-->
 <style lang="scss">
   	@import './style/common';
+    @import './images/iconfont.css';
 
     /*@import '../elm/static/css/iconfont.css';*/
 	.router-fade-enter-active, .router-fade-leave-active {

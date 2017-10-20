@@ -35,59 +35,11 @@
           </section>
 
           <section class="food_container">
-              <div class="food_container_details">
-                <div v-html="shopDetailData.content" class="container_details" ></div>
-              </div>
+            <div class="food_container_details">
+              <div v-html="shopDetailData.content" class="container_details" ></div>
+              <!--<img src="../../images/WechatIMG6.jpeg"/>-->
+            </div>
           </section>
-
-
-            <!--<section class="change_show_type" ref="chooseType">-->
-                <!--<div>-->
-                    <!--<span :class='{activity_show: changeShowType =="food"}' @click="changeShowType='food'">商品</span>-->
-                <!--</div>-->
-                <!--<div>-->
-                    <!--<span :class='{activity_show: changeShowType =="rating"}' @click="changeShowType='rating'">评价</span>-->
-                <!--</div>-->
-            <!--</section>-->
-
-            <!--<transition name="fade-choose">-->
-                <!--<section v-show="changeShowType =='food'" class="food_container">-->
-                  <!--<div class="food_container_details">-->
-                    <!--{{shopDetailData.content}}-->
-                  <!--</div>-->
-                <!--</section>-->
-            <!--</transition>-->
-
-            <!--<transition name="fade-choose">-->
-                <!--<section class="rating_container" id="ratingContainer" v-show="changeShowType =='rating'">-->
-                    <!--<section v-load-more="loaderMoreRating" type="2">-->
-                        <!--<section>-->
-                          <!--<ul class="rating_list_ul">-->
-                                <!--<li v-for="(item, index) in ratingList" :key="index" class="rating_list_li">-->
-                                    <!--<img :src="getImgPath(item.avatar)" class="user_avatar">-->
-                                    <!--<section class="rating_list_details">-->
-                                        <!--<header>-->
-                                            <!--<section class="username_star">-->
-                                                <!--<p class="username">{{item.username}}</p>-->
-                                            <!--</section>-->
-                                            <!--<time class="rated_at">{{item.rated_at}}</time>-->
-                                        <!--</header>-->
-
-                                        <!--<div class="rating_comment">-->
-                                          <!--<p class="comment">大个有肉不错</p>-->
-                                        <!--</div>-->
-                                        <!--<ul class="food_img_ul">-->
-                                            <!--<li v-for="(item, index) in item.item_ratings" :key="index">-->
-                                                <!--<img :src="getImgPath(item.image_hash)" v-if="item.image_hash">-->
-                                            <!--</li>-->
-                                        <!--</ul>-->
-                                    <!--</section>-->
-                                <!--</li>-->
-                            <!--</ul>-->
-                        <!--</section>-->
-                    <!--</section>-->
-                <!--</section>-->
-            <!--</transition>-->
 
           <section class="buy_cart_container">
 
@@ -105,50 +57,6 @@
             </div>
 
           </section>
-
-          <!--<transition name="toggle-cart">-->
-            <!--<section class="cart_food_list" v-show="showCartList&&cartFoodList.length">-->
-              <!--<header>-->
-                <!--<h4>购物车</h4>-->
-                <!--<div @click="clearCart">-->
-                  <!--<svg>-->
-                    <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-remove"></use>-->
-                  <!--</svg>-->
-                  <!--<span class="clear_cart">清空</span>-->
-                <!--</div>-->
-              <!--</header>-->
-              <!--<section class="cart_food_details" id="cartFood">-->
-                <!--<ul>-->
-                  <!--<li v-for="(item, index) in cartFoodList" :key="index" class="cart_food_li">-->
-                    <!--<div class="cart_list_num">-->
-                      <!--<p class="ellipsis">{{item.name}}</p>-->
-                      <!--<p class="ellipsis">{{item.specs}}</p>-->
-                    <!--</div>-->
-                    <!--<div class="cart_list_price">-->
-                      <!--<span>¥</span>-->
-                      <!--<span>{{item.price}}</span>-->
-                    <!--</div>-->
-                    <!--<section class="cart_list_control">-->
-                                            <!--<span @click="removeOutCart(item.category_id, item.item_id, item.food_id, item.name, item.price, item.specs)">-->
-                                                <!--<svg>-->
-                                                    <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-minus"></use>-->
-                                                <!--</svg>-->
-                                            <!--</span>-->
-                      <!--<span class="cart_num">{{item.num}}</span>-->
-                      <!--<svg class="cart_add" @click="addToCart(item.category_id, item.item_id, item.food_id, item.name, item.price, item.specs)">-->
-                        <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-add"></use>-->
-                      <!--</svg>-->
-                    <!--</section>-->
-                  <!--</li>-->
-                <!--</ul>-->
-              <!--</section>-->
-            <!--</section>-->
-          <!--</transition>-->
-          <!---->
-          <!--<transition name="fade">-->
-            <!--<div class="screen_cover" v-show="showCartList&&cartFoodList.length" @click="toggleCartList"></div>-->
-          <!--</transition>-->
-
 
           <transition name="toggle-cart">
             <section class="activities_details" v-if="showSpecs" >
@@ -218,7 +126,6 @@
             <router-view></router-view>
         </transition>
 
-      //提示框
       <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
     </div>
 </template>
@@ -285,6 +192,9 @@
         mounted(){
             this.initData();
             this.windowHeight = window.innerHeight;
+//          document.body.scrollTop =0
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
         },
         beforeDestroy(){
             // this.foodScroll.removeEventListener('scroll', )
@@ -322,7 +232,8 @@
             //初始化时获取基本数据
             async initData(){
 
-              console.log(this.userToken);
+//              document.body.scrollTop ;
+//              console.log(this.userToken);
 
                //获取商店信息
               let id = this.shopId;
@@ -366,7 +277,8 @@
               //将加入购物车的订单set进本地缓存
               this.ADD_CART({goods_id:shopId, sku_spec_id:foodIndex, num:numCounter});
 
-              //将加入购物车的订单提交到服务器
+              if(shopId&&foodIndex&&numCounter){
+//                将加入购物车的订单提交到服务器
               Request.Post('cart', { goods_id:shopId, sku_spec_id:foodIndex, num:numCounter,token:this.userToken})
                 .then((res) => {
                   console.log(res)
@@ -377,6 +289,12 @@
                   this.showAlert = true;
                   this.alertText = '加入购物车成功';
                 })
+              }else {
+                this.showAlert = true;
+                this.alertText = '请选择品种分类';
+              }
+
+
             },
 
             //移出购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
@@ -554,19 +472,10 @@
     .shop_container{
         display: flex;
         flex-direction: column;
-        position: absolute;
-        right: 0;
-        left: 0;
-    }
-    .goback{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2rem;
-        z-index: 11;
-        padding-top: 0.2rem;
-        padding-left: 0.2rem;
+        /*position: relative;*/
+        /*right: 0;*/
+        /*left: 0;*/
+        /*height: auto;*/
     }
     .shop_detail_header{
         overflow: hidden;
@@ -1529,7 +1438,7 @@
     .shop-arithmetic .minus{display:inline-block;width:1.2rem;text-align:center;background:#e0e0e0;font-size:.6rem; height: 100%;line-height: 1.2rem}
     .shop-arithmetic .failed{color:#d1d1d1;}
     .shop-arithmetic .plus{display:inline-block;width:1.2rem;text-align:center;background:#e0e0e0;font-size:.6rem; height: 100%; line-height: 1.2rem}
-    .shop-arithmetic .num{width:32px;text-align:center;border:none;display: inline-block;height:100%;box-sizing:border-box;vertical-align:top;margin:0 -6px;font-size: 0.6rem ;padding-top: .7rem}
+    .shop-arithmetic .num{width:32px;text-align:center;border:none;display: inline-block;height:100%;box-sizing:border-box;vertical-align:top;margin:0 -6px;font-size: 0.6rem ;padding-top: .5rem}
 
     img{
       width: auto;

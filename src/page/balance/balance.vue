@@ -68,12 +68,16 @@
               <p>{{orderData.create_time}}</p>
             </div>
           </section>
+
         </section>
+
+        <div class="determine" @click="addAddress" v-if="yiquxiao" >取消订单</div>
       </section>
     </section>
     <transition name="loading">
       <loading v-if="showLoading"></loading>
     </transition>
+    <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
   </div>
 </template>
 
@@ -83,12 +87,16 @@
   import {getImgPath} from 'src/components/common/mixin'
   import loading from 'src/components/common/loading'
   import Request from 'src/service/api'
+  import alertTip from 'src/components/common/alertTip'
   export default {
     data(){
       return{
         showLoading: true, //显示加载动画
         orderData: null,
-        id:null
+        id:null,
+        showAlert: false, //显示提示组件
+        alertText: null, //提示的内容
+        yiquxiao:true
       }
     },
     mounted(){
@@ -98,6 +106,7 @@
     components: {
       headTop,
       loading,
+      alertTip,
     },
     computed: {
       ...mapState([
@@ -112,10 +121,32 @@
             .then((res) => {
               this.orderData = res.data;
               console.log(this.orderData);
+              if(res.data.status === '已取消'){
+                  this.yiquxiao = false
+              }
+
             });
           this.showLoading = false;
         }
       },
+      addAddress(){
+        let id = this.orderDetail;
+//        this.showAlert = true;
+//        this.alertText ="取消订单成功";
+        if (this.userToken) {
+          Request.Put('cancel_order/'+id, {token:this.userToken})
+            .then((res) => {
+            console.log(res);
+              if(res.code === 200){
+                this.showAlert = true;
+                this.alertText ="取消订单成功";
+              }
+            });
+        }
+
+      },
+
+
       payOrder(){
         if (this.userToken) {
           let id = this.orderDetail;
@@ -137,7 +168,14 @@
               }
             });
         }
+      },
+
+      closeTip(){
+        this.showAlert = false;
+        this.$router.go(-1);
       }
+
+
     }
   }
 </script>
@@ -155,7 +193,7 @@
     height: 100%;
   }
   .scroll_insert{
-    padding-bottom: 3rem;
+    /*padding-bottom: 3rem;*/
   }
   .order_titel{
     display: flex;
@@ -276,5 +314,14 @@
   }
   .loading-enter, .loading-leave-active {
     opacity: 0
+  }
+  .determine{
+    background-color: #4cd964;
+    @include sc(.7rem, #fff);
+    text-align: center;
+    margin: 0 .7rem;
+    line-height: 1.8rem;
+    border-radius: 0.2rem;
+    margin-top: .6rem;
   }
 </style>

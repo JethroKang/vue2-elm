@@ -69,7 +69,7 @@ export default {
       banner
     },
     computed: {
-      ...mapState([,,
+      ...mapState([
         'userInfo',
         'token',
         'userToken'

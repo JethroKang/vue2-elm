@@ -40,10 +40,10 @@
             </svg>
           </div>
         </header>
-        <section class="hongbo">
-          <span>红包</span>
-          <span>暂时没开放</span>
-        </section>
+        <!--<section class="hongbo">-->
+          <!--<span>红包</span>-->
+          <!--<span>暂时没开放</span>-->
+        <!--</section>-->
       </section>
       <section class="food_list">
         <header >
@@ -90,15 +90,15 @@
             </svg>
           </div>
         </router-link>
-        <router-link :to=" '/confirmOrder/invoice'" class="hongbo" >
-          <span>发票抬头</span>
-          <span>
-                        <!--{{checkoutData.invoice.status_text}}-->
-                        <svg class="address_empty_right">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                        </svg>
-                    </span>
-        </router-link>
+        <!--<router-link :to=" '/confirmOrder/invoice'" class="hongbo" >-->
+          <!--<span>发票抬头</span>-->
+          <!--<span>-->
+                        <!--&lt;!&ndash;{{checkoutData.invoice.status_text}}&ndash;&gt;-->
+                        <!--<svg class="address_empty_right">-->
+                            <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>-->
+                        <!--</svg>-->
+                    <!--</span>-->
+        <!--</router-link>-->
       </section>
       <section class="confrim_order">
         <p>待支付 ¥{{totalPrice}}</p>

@@ -5,7 +5,8 @@
         </head-top>
         <section class="address">
         	<ul class="addresslist">
-        		<li v-for="(item,index) in adressList.data">
+        		<!--<li v-for="(item,index) in adressList.data">-->
+              <router-link :to="{path:'/download', query:{id:item.id}}" tag="li" v-for="(item,index) in adressList.data">
         			<div>
         				<p>{{item.address}}</p>
         				<p><span>{{item.phone}}</span></p>
@@ -13,7 +14,8 @@
         			<div class="deletesite" v-if="deletesite">
         				<span @click="addressDelete(index ,item.id)">x</span>
         			</div>
-        		</li>
+              </router-link>
+        		<!--</li>-->
         	</ul>
 			<router-link to='/profile/info/address/add'>
 				<div class="addsite">
@@ -62,7 +64,7 @@
         },
         computed:{
              ...mapState([
-                'userInfo','removeAddress','userToken'
+                'userInfo','removeAddress','userToken','newAddress'
             ]),
 
         },
@@ -122,7 +124,10 @@
         watch: {
           deleteList: function (value) {
             this.initData();
-            }
+            },
+          newAddress: function (value) {
+            this.initData();
+          },
         }
     }
 </script>
@@ -176,9 +181,9 @@
     				}
     			}
     		}
-    		li:nth-of-type(1){
-    			background:#FFF8C3;
-    		}
+    		/*li:nth-of-type(1){*/
+    			/*background:#FFF8C3;*/
+    		/*}*/
     	}
     	.addsite{
     		margin-top:.4rem;

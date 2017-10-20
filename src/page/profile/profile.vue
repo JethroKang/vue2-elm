@@ -40,7 +40,7 @@
           <li>
             <router-link :to='{path: "/order" , query: {changeShowType: "order_unpayed"}}'>
             <div class="user_order">
-              <i class="iconfont">&#xe605;</i>
+              <img src="../../images/nopayment.png" style="width: 1.5rem; height: 1.5rem;"/>
             </div>
             <span>待付款</span>
             </router-link>
@@ -48,7 +48,7 @@
           <li>
             <router-link :to='{path: "/order" , query: {changeShowType: "order_unshipped"}}'>
             <div class="user_order">
-              <i class="iconfont">&#xe61f;</i>
+              <img src="../../images/noshipment.png" style="width: 1.5rem; height: 1.5rem;"/>
             </div>
             <span>待发货</span>
             </router-link>
@@ -56,7 +56,7 @@
           <li>
             <router-link :to='{path: "/order" , query: {changeShowType: "order_shipped"}}'>
             <div class="user_order">
-              <i class="iconfont">&#xe70b;</i>
+              <img src="../../images/receipt.png" style="width: 1.5rem; height: 1.5rem;"/>
             </div>
             <span>已收货</span>
             </router-link>
@@ -86,21 +86,21 @@
         <!--</router-link>-->
         <!-- 优惠券 -->
 
-        <li class="myorder">
-          <aside>
-            <svg fill="#fc7b53">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>
-            </svg>
-          </aside>
-          <div class="myorder-div">
-            <span>优惠券</span>
-            <span class="myorder-divsvg">
-                            <svg fill="#bbb">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
-          </div>
-        </li>
+        <!--<li class="myorder">-->
+          <!--<aside>-->
+            <!--<svg fill="#fc7b53">-->
+              <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>-->
+            <!--</svg>-->
+          <!--</aside>-->
+          <!--<div class="myorder-div">-->
+            <!--<span>优惠券</span>-->
+            <!--<span class="myorder-divsvg">-->
+                            <!--<svg fill="#bbb">-->
+                                <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>-->
+                            <!--</svg>-->
+                        <!--</span>-->
+          <!--</div>-->
+        <!--</li>-->
 
 
         <!-- 收货地址 -->
@@ -124,57 +124,22 @@
 
 
         <!-- 联系客服 -->
-        <router-link to='/service' class="myorder">
-          <aside>
-            <svg fill="#fc7b53">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>
-            </svg>
-          </aside>
-          <div class="myorder-div">
-            <span>联系客服</span>
-            <span class="myorder-divsvg">
-                            <svg fill="#bbb">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
-          </div>
-        </router-link>
+        <!--<router-link to='/service' class="myorder">-->
+          <!--<aside>-->
+            <!--<svg fill="#fc7b53">-->
+              <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>-->
+            <!--</svg>-->
+          <!--</aside>-->
+          <!--<div class="myorder-div">-->
+            <!--<span>联系客服</span>-->
+            <!--<span class="myorder-divsvg">-->
+                            <!--<svg fill="#bbb">-->
+                                <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>-->
+                            <!--</svg>-->
+                        <!--</span>-->
+          <!--</div>-->
+        <!--</router-link>-->
       </section>
-
-      <!--<section class="profile-1reTe">-->
-      <!--&lt;!&ndash; 服务中心 &ndash;&gt;-->
-      <!--<router-link to='/service' class="myorder">-->
-      <!--<aside>-->
-      <!--<svg fill="#4aa5f0">-->
-      <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#service"></use>-->
-      <!--</svg>-->
-      <!--</aside>-->
-      <!--<div class="myorder-div">-->
-      <!--<span>服务中心</span>-->
-      <!--<span class="myorder-divsvg">-->
-      <!--<svg fill="#bbb">-->
-      <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>-->
-      <!--</svg>-->
-      <!--</span>-->
-      <!--</div>-->
-      <!--</router-link>-->
-      <!--&lt;!&ndash; 下载饿了么APP &ndash;&gt;-->
-      <!--<router-link to='/download' class="myorder">-->
-      <!--<aside>-->
-      <!--<svg fill="#3cabff">-->
-      <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#download"></use>-->
-      <!--</svg>-->
-      <!--</aside>-->
-      <!--<div class="myorder-div" style="border-bottom:0;">-->
-      <!--<span>下载饿了么APP</span>-->
-      <!--<span class="myorder-divsvg">-->
-      <!--<svg fill="#bbb">-->
-      <!--<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>-->
-      <!--</svg>-->
-      <!--</span>-->
-      <!--</div>-->
-      <!--</router-link>-->
-      <!--</section>-->
 
     </section>
     <foot-guide></foot-guide>
@@ -215,7 +180,7 @@
     },
     created(){
       this.token = this.$route.query.token;
-//      this.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhdHpjbCIsImlhdCI6MTUwODMzNjk5MiwibmJmIjoxNTA4MzM2OTkyLCJleHAiOjE1MDgzNDQxOTIsInJlZl90dGwiOjE1MTAxNTEzOTIsInN1YiI6eyJpZCI6NCwib3BlbmlkIjoib0RRU1kwb2sydnh2YzlCVml5TEFiTW1aU1ZEQSIsIm5pY2tuYW1lIjoiXHU1ZWI3XHU1ZmQ3XHU3OTY1Iiwic2V4IjoxLCJwcm92aW5jZSI6Ilx1NWU3Zlx1NGUxYyIsImNpdHkiOiJcdTRmNWJcdTVjNzEiLCJoZWFkaW1ndXJsIjoiaHR0cDpcL1wvd3gucWxvZ28uY25cL21tb3BlblwvdmlfMzJcL0RZQUlPZ3E4M2VxbkZDQXhLcUVpYTFhd2xWREJib3FsQmlhZG9iVFJqSG41SEFBdkNKYzB6Sm5nSU9WVDI1SG1WUUlyelNpYTBEdzVNcFZ0bTg3Z281S3VBXC8wIiwibWVtYmVyIjpudWxsfX0.wh4Ypa-TMbX_GeMpGk80QZotXdJX75zTuiNZNWpv4MzqzsZRhRVMa2-3PNpNzRnSR0sro_SQMhN4Lihp2tbMcV_qjtgMYucEB_q-HdqRwAKa7qYCZ7N8tQXY8b7JPYd8LMcAONuzTrjuRSdi_8JV417py-WFknUtdkEcT7jxXtU";
+//      this.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhdHpjbCIsImlhdCI6MTUwODQxOTMwOSwibmJmIjoxNTA4MzM2OTkyLCJleHAiOjE1MDg0MjY1MDksInJlZl90dGwiOjE1MTAyMzM3MDksInN1YiI6eyJpZCI6NCwib3BlbmlkIjoib0RRU1kwb2sydnh2YzlCVml5TEFiTW1aU1ZEQSIsIm5pY2tuYW1lIjoiXHU1ZWI3XHU1ZmQ3XHU3OTY1Iiwic2V4IjoxLCJwcm92aW5jZSI6Ilx1NWU3Zlx1NGUxYyIsImNpdHkiOiJcdTRmNWJcdTVjNzEiLCJoZWFkaW1ndXJsIjoiaHR0cDpcL1wvd3gucWxvZ28uY25cL21tb3BlblwvdmlfMzJcL0RZQUlPZ3E4M2VxbkZDQXhLcUVpYTFhd2xWREJib3FsQmlhZG9iVFJqSG41SEFBdkNKYzB6Sm5nSU9WVDI1SG1WUUlyelNpYTBEdzVNcFZ0bTg3Z281S3VBXC8wIiwibWVtYmVyIjpudWxsfX0.LnTzkNgJuYW4TNmxWoJPqXPU2BGQsT0Y3rF_Zx7KW8IROEhnm4wuV1GqQDGnzpdlKW91nXxOvc_rPh0WuUgxpknNJwYirtwk0-Qd6dcvKFAfIfPlSdOJbI5U-qmttateyhA_nI_7Iae3F7tTdkP7Oucv8nQepIcG9bQRR6TLO_M";
     },
     computed:{
       ...mapState([

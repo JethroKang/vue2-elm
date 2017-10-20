@@ -77,9 +77,8 @@
            <dt>合计：<p id="total_price">¥<b>{{totalPrice}}元</b></p></dt>
            <dd>不含运费</dd>
          </dl>
-
-         <router-link class="settle_btn" href="javascript:void(0);" id="confirm_cart" v-if="!deletesite" @click="payOrder" :to="{path: '/confirmOrder', query: {data: goodsOrder,details:goodsDetails}}">结算</router-link>
-         <a class="settle_btn" href="javascript:void(0);"  v-else @click="deleteOrder">删除</a>
+         <a class="settle_btn" href="javascript:void(0);" id="confirm_cart" @click="payOrder">结算</a>
+         <!--<a class="settle_btn" href="javascript:void(0);"  v-else @click="deleteOrder">删除</a>-->
        </div>
 
 
@@ -91,14 +90,15 @@
           <img src="../../images/bg_empty_list.png">
         </div>
         <dl>
-          <dt>您还没有登录</dt>
+          <dt>购物车空荡荡</dt>
           <dd>可以去看看哪些想买的</dd>
         </dl>
-        <router-link to="/login">
-          <p class="no-data-btn">登录购买</p>
-        </router-link>
+        <!--<router-link to="/login">-->
+          <!--<p class="no-data-btn">登录购买</p>-->
+        <!--</router-link>-->
         <foot-guide></foot-guide>
       </div>
+      <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
     </div>
 </template>
 
@@ -127,7 +127,10 @@ export default {
             goodsOrder:null,
             goodsDetails:null,
             deletenum:null,
+            numcat:null,
             cartListnum:0,
+            showAlert: false, //显示提示组件
+            alertText: null, //提示的内容
         }
     },
     created(){
@@ -137,9 +140,9 @@ export default {
     },
     mounted(){
       this.initData();
-      if (!(this.userToken)) {
-            this.shopCaft = false;
-      }
+//      if (!(this.userToken)) {
+//            this.shopCaft = false;
+//      }
 
     },
     components:{
@@ -196,20 +199,30 @@ export default {
           .then((res) => {
           console.log(res);
             this.cartList = res.data;
+            this.numcat = res;
 //           console.log(this.showCartList);
-            this.cartListnum =this.cartList.length;
-          })
+            if(res.msg === '暂无数据'){
+              this.shopCaft = false;
+
+            }else {
+              this.cartListnum =this.cartList.length;
+            }
+//            this.cartListnum =this.cartList.length;
+          });
+
 
       },
 
       //编辑
       editThing(){
         if(this.editText == '删除'){
-          this.editText='完成';
-          this.deletesite=true;
-        }else{
-          this.editText='删除';
-          this.deletesite=false;
+          if(this.goodsDetails == ''){
+            alert("请选择商品");
+          }else {
+            this.deletesite=true;
+            this.showAlert = true;
+            this.alertText = '是否要删除选择的商品';
+          }
         }
       },
 
@@ -222,21 +235,26 @@ export default {
 //                      console.log(res);
               if(res.code === 200){
                 this.deletenum = res.data;
-                this.showAlert = true;
-                this.alertText = res.msg;
                 console.log(res.msg);
-              }else if(res.msg==="暂无数据"){
-                this.shopCaft=false;
+                if(this.deletenum){
+                  this.shopCaft=false;
+                }
               }
 
             })
         }else {
-            alert("请选择商品");
+          this.showAlert = true;
+          this.alertText = '请选择商品';
         }
       },
 
       payOrder(){
-        console.log(this.goodsOrder);
+        if(this.goodsDetails == ''){
+          alert("请选择商品");
+        }else {
+          this.$router.push({path: '/confirmOrder', query: {data: this.goodsOrder,details:this.goodsDetails}});
+        }
+
       },
 
 
@@ -303,6 +321,24 @@ export default {
             })
         }
       },
+      closeTip(){
+        this.showAlert = false;
+        if (this.goodsid.length) {
+          let  id =  this.goodsid[0];
+          console.log(id);
+          Request.Delete('cart/' + id, { token: this.userToken, delete_all: "true",ids:this.goodsid})
+            .then((res) => {
+//                      console.log(res);
+              if(res.code === 200){
+                this.deletenum = res.data;
+                console.log(res.msg);
+              }else if(res.data){
+                this.shopCaft=false;
+              }
+
+            })
+        }
+      }
 
 
     },
@@ -322,6 +358,10 @@ export default {
       right: 0.4rem;
     @include sc(0.7rem, #fff);
     @include ct;
+    }
+
+    .commodity_box{
+      padding-bottom: 3rem;
     }
     .commodity_list {
       background: #fff;

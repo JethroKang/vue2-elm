@@ -88,10 +88,10 @@ export default {
                 .then((res) => {
                   this.restaurantList = res;
                   console.log(res);
-                  if(this.restaurantList.code === '200'){
-                    this.emptyResult = false;
-                  }else {
+                  if(res.data == null){
                     this.emptyResult = true;
+                  }else {
+                    this.emptyResult = false;
                   }
                 })
             /**

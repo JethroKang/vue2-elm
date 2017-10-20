@@ -258,7 +258,7 @@
   import loading from 'src/components/common/loading'
   import {getImgPath} from 'src/components/common/mixin'
   import footGuide from 'src/components/footer/footGuide'
-//  import {getOrderList,listOrder} from 'src/service/getData'
+  import {getOrderList,listOrder} from 'src/service/getData'
   import {loadMore} from 'src/components/common/mixin'
   import {imgBaseUrl} from 'src/config/env'
   import Request from '../../service/api'
@@ -311,7 +311,7 @@
           Request.Get('order', {current:this.current, size:this.size,token:this.userToken,})
             .then((res) => {
               this.orderList = res.data;
-//              console.log(this.orderList);
+              console.log(this.orderList);
             });
 
           Request.Get('order', {current:this.current, size:this.size,token:this.userToken,query:"unpaid"})

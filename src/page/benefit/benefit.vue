@@ -2,7 +2,7 @@
   <div class="rating_page">
         <head-top head-title="我的优惠" go-back='true'></head-top>
         <section v-if="!showLoading">
-            <section class="category_title"> 
+            <section class="category_title">
                 <span :class="{choosed: categoryType === 1}" @click="categoryType = 1">红包</span>
                 <span :class="{choosed: categoryType === 2}" @click="categoryType = 2">商家代金券</span>
             </section>
@@ -131,10 +131,10 @@
         }
     }
 </script>
-  
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-  
+
     .rating_page{
         padding-top: 1.95rem;
         p, span{
@@ -220,7 +220,7 @@
                         p{
                             list-style-type: disc;
                             margin-left: -.7rem;
-                            @include sc(.4rem, #999);   
+                            @include sc(.4rem, #999);
                         }
                     }
                     .time_left{
