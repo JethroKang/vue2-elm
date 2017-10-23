@@ -86,10 +86,10 @@
         width: 50%;
         color: #fff;
         text-align: center;
+        top: .8rem;
         .title_text{
-            @include sc(0.8rem, #fff);
+            @include sc(0.7rem, #fff);
             text-align: center;
-            font-weight: bold;
         }
     }
 </style>

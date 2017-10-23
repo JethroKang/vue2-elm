@@ -23,16 +23,16 @@
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
         </svg>
       </router-link>
-      <section class="delivery_model container_style">
+      <!--<section class="delivery_model container_style">
         <p class="deliver_text">送达时间</p>
         <section class="deliver_time">
-          <p>尽快送达 | 预计 今天送达</p>
+          <p>尽快送达 | 预计 今天送达</p>-->
           <!--<p v-if="checkoutData.cart.is_deliver_by_fengniao">蜂鸟专送</p>-->
-        </section>
-      </section>
+        <!--</section>
+      </section>-->
       <section class="pay_way container_style">
         <header class="header_style">
-          <span>支付方式</span>
+          <span style="font-size:0.6rem;">支付方式</span>
           <div class="more_type" @click="showPayWayFun">
             <span>在线支付</span>
             <svg class="address_empty_right">
@@ -47,14 +47,15 @@
       </section>
       <section class="food_list">
         <header >
-          <span>订单信息</span>
+          <span style="font-size:0.6rem;">商品信息</span>
         </header>
         <ul class="food_list_ul" >
           <li class="food_item_style" v-for="item in details">
+            <img :src="item.thumb" style="width:2rem;height:2rem;" />
             <p class="food_name ellipsis">{{item.title}}</p>
             <div class="num_price">
-              <span>x {{item.num}}</span>
-              <span>¥ {{item.price}}</span>
+              <span style="width:30px;">x {{item.num}}</span>
+              <span style="width:60px;">¥ {{item.price}}</span>
             </div>
           </li>
         </ul>
@@ -73,16 +74,16 @@
         <!--<span>¥ 0</span>-->
         <!--</div>-->
         <!--</div>-->
-        <div class="food_item_style total_price">
+        <!--<div class="food_item_style total_price">
           <p class="food_name ellipsis"></p>
           <div class="num_price">
             <span>支付 ¥{{totalPrice}}</span>
           </div>
-        </div>
+        </div>-->
       </section>
       <section class="pay_way container_style">
         <router-link :to='{path: "/confirmOrder/remark"}' class="header_style">
-          <span>订单备注</span>
+          <span style="font-size:0.7rem;">订单备注</span>
           <div class="more_type">
             <span class="ellipsis">{{remarkText||inputText? remarklist: '口味、偏好等'}}</span>
             <svg class="address_empty_right">
@@ -101,8 +102,8 @@
         <!--</router-link>-->
       </section>
       <section class="confrim_order">
-        <p>待支付 ¥{{totalPrice}}</p>
-        <p @click="confrimOrder" id="confrimOrder">确认下单</p>
+        <p>共{{goodnums}}件&nbsp;<span style="color:#fd5138">¥{{totalPrice}}</span></p>
+        <p @click="confrimOrder" id="confrimOrder" style="color:#fff;">支付订单</p>
       </section>
       <transition name="fade">
         <div class="cover" v-if="showPayWay" @click="showPayWayFun"></div>
@@ -165,6 +166,7 @@
         details:null,
         goodsOrder:null,
         totalPrice:0,
+        goodnums:0,
       }
     },
     created(){
@@ -179,11 +181,14 @@
       this.details=this.$route.query.details;
 
       let total = 0;
+      let _goodnums = 0;
       var _this = this;
       this.details.forEach(function(good){
         total += good.price * good.num;
         _this.totalPrice = total;
+        _goodnums ++;
       });
+      this.goodnums = _goodnums;
       return total;
 
       if(!(this.userToken)) {
@@ -466,17 +471,18 @@
   .food_item_style{
   @include fj;
     line-height: 1.8rem;
-    padding: 0 .7rem;
+    padding: 5px 0 5px 5px;
   span,p{
   @include sc(.65rem, #666);
   }
   .food_name{
+    padding: 0 0 0 10px;
     width: 10rem;
   }
   .num_price{
     flex: 1;
   @include fj;
-    align-items: center;
+    /*align-items: center;*/
   span:nth-of-type(1){
     color: #f60;
   }
@@ -494,10 +500,10 @@
     height: 2rem;
   p{
     line-height: 2rem;
-  @include sc(.75rem, #fff);
+  @include sc(.75rem, #000);
   }
   p:nth-of-type(1){
-    background-color: #3c3c3c;
+    background-color: #fff;
     flex: 5;
     padding-left: .7rem;
   }

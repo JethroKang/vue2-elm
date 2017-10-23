@@ -4,8 +4,8 @@
       <header class="m_header">
         <div class="m_header_box" id="my_search">
           <form action="#">
-            <span class="icon_search"></span>
-            <input type="search" class="search" placeholder="点击搜索" @click="goSearch($event)">
+            <span class="icon_search"><img src="../../images/search.png" class="search-ico"></span>
+            <input type="search" class="search" placeholder="请输入美食名称" @click="goSearch($event)">
           </form>
         </div>
       </header>
@@ -220,18 +220,25 @@ export default {
       width: 100%;
       height: 1.2rem;
       border-radius: 1rem;
-      font-size: 0.4rem;
-      padding-left: 0.6rem;
+      font-size: 0.6rem;
+      padding-left: 1.4rem;
       margin-top: 0.375rem;
+    }
+
+    .m_header_box form .search-ico{
+      top:-5px;
+      left: 4px;
+      width: 15px;
+      height: 15px;
     }
 
     .m_header_box form .icon_search {
       display: block;
-      width: 37px;
-      height: 40px;
+      width: 20px;
+      height: 20px;
       position: absolute;
-      left: 85px;
-      top: 10px;
+      left: 22px;
+      top: 6px;
       background-position: -60px -109px;
     }
 

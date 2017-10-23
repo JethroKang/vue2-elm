@@ -4,10 +4,10 @@
 
     <section class="change_show_type" ref="chooseType">
       <div>
-        <span :class='{activity_show: changeShowType =="food"}' @click="changeShowType='food'"><i class="icon iconfont">&#xe602;</i>吃货至爱</span>
+        <span :class='{activity_show: changeShowType =="food"}' @click="changeShowType='food'"><img src="../../images/xin_action.png" style="width: 0.7rem ;height: 0.7rem ;position: relative;top: 0.15rem;" v-if="changeShowType =='food' "/><img src="../../images/xin.png" style="width: 0.7rem ;height: 0.7rem ;position: relative;top: 0.15rem;" v-else/>吃货至爱</span>
       </div>
       <div>
-        <span :class='{activity_show: changeShowType =="rating"}' @click="changeShowType='rating'"><i class="icon iconfont">&#xe668;</i>小编推荐</span>
+        <span :class='{activity_show: changeShowType =="rating"}' @click="changeShowType='rating'"><img src="../../images/zan_cation.png" style="width: 0.7rem ;height: 0.7rem ;position: relative;top: 0.15rem;" v-if="changeShowType =='rating' "/><img src="../../images/zan.png" style="width: 0.7rem ;height: 0.7rem ;position: relative;top: 0.15rem;" v-else/>小编推荐</span>
       </div>
     </section>
     <transition name="fade-choose">
@@ -48,13 +48,14 @@
               <div class="goods_hot_img">
                 <img :src="item.thumb" >
               </div>
-              <div class="goods_hot_content">
+							<div class="goods_hot_content">
                 <div class="goods_hot_content_inner">
                   <p class="goods_hot_title">{{item.name}}</p>
                   <p class="goods_hot_p">{{item.outline}}</p>
-                  <p class="goods_hot_price">￥ {{item.price}}</p>
                 </div>
-                <div></div>
+                <div class="goods_hot_content_price">
+                  <div class="goods_hot_price">￥ {{item.price}}</div>
+                </div>
               </div>
             </section>
           </router-link>
@@ -569,12 +570,18 @@ export default {
         .goods_hot_p{
           font-size: .6rem;
           color: #333333;
+          width: 12rem;
+          white-space:nowrap;
+          text-overflow:ellipsis;
+          -o-text-overflow:ellipsis;
+          overflow: hidden;
         }
 
       }
       .goods_hot_content_price{
         flex: 1;
         display: flex;
+
         justify-content: center;
         align-items: center;
         .goods_hot_price{

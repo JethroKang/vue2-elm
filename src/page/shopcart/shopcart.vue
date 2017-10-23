@@ -1,7 +1,7 @@
 <template>
   	<div class="paddingTop search_page">
-        <head-top head-title="购物车" goBack="true">
-          <span slot="edit" class="edit" @click="editThing">{{editText}}</span>
+        <head-top head-title="购物车" goBack="true"><!--{{editText}}-->
+          <span slot="edit" class="edit" @click="editThing"><img src="../../images/del.png" style="width: 22px; height: 22px;padding-top:10px"></span>
         </head-top>
 
       <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -74,10 +74,10 @@
            <!--</dt>-->
          <!--</dl>-->
          <dl class="total_amount">
-           <dt>合计：<p id="total_price">¥<b>{{totalPrice}}元</b></p></dt>
-           <dd>不含运费</dd>
+           <dt>合计：<p id="total_price" style="font-size:0.6rem;">¥{{totalPrice}}</p></dt>
+           <dd style="font-size:0.1rem;color:gray;">不含运费</dd>
          </dl>
-         <a class="settle_btn" href="javascript:void(0);" id="confirm_cart" @click="payOrder">结算</a>
+         <a class="settle_btn" href="javascript:void(0);" id="confirm_cart" @click="payOrder">去结算</a>
          <!--<a class="settle_btn" href="javascript:void(0);"  v-else @click="deleteOrder">删除</a>-->
        </div>
 
@@ -135,7 +135,7 @@ export default {
     },
     created(){
       if (!(this.userToken)) {
-        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/profile');
+        window.location.href='https://master.fstuis.com/api/v1/oauth/oauth_call?url_call=' + encodeURIComponent('?#/msite');
       }
     },
     mounted(){
@@ -173,9 +173,10 @@ export default {
               let num = good.num;
               let sku_spec_id = good.sku_spec.id;
               let price = good.sku_spec.price;
+              let thumb = good.goods.thumb;
               _this.goodsid.push(good.id);
               _this.goodsOrder.push({goods_id:goods_id,num:num,sku_spec_id:sku_spec_id});
-              _this.goodsDetails.push({title:title,num:num,price:price});
+              _this.goodsDetails.push({title:title,num:num,price:price,thumb:thumb});
             }
 
           });
@@ -435,7 +436,7 @@ export default {
                   font-size: 0.6rem;
                 }
                 .now_value{
-                  font-size: 0.8rem;
+                  font-size: 0.5rem;
                   margin-top: 6px;
                   font-family: "-apple-system","Helvetica Neue",Roboto,"Segoe UI",sans-serif;
                 }
@@ -526,7 +527,7 @@ export default {
     }
 
     .settle_box_h{ height:60px;}
-    .settle_box{ background:#fff; position:fixed; left:0px; bottom:0px; overflow:hidden; z-index:2;width: 100%;padding:0 0 0 4%;border-top: solid 1px #e6e6e6;}
+    .settle_box{ background:#fff; position:fixed; left:0px; bottom:0px; overflow:hidden; z-index:2;width: 100%;padding:0 20px 0 0;border-top: solid 1px #e6e6e6;height: 40px;}
     .settle_box .all_check,.settle_box .total_amount{ float:left;}
     .settle_box .all_check{ width:17%;margin-bottom:0;margin-top: 15px}
     .settle_box .all_check dd{ color:#999999; font-size:12px; width: 100%}
@@ -554,11 +555,23 @@ export default {
     }
     .settle_box .all_check .disabled{ background:#e1e1e1;border:solid 1px #e1e1e1;}
 
-    .settle_box .total_amount {color: #999;font-size: 14px;margin: 0;width: 50%;text-align: right;margin-top: 10px;padding-right: 2%;}
+    .settle_box .total_amount {color: #999;font-size: 14px;margin: 0 0 0 50px;text-align: right;margin-top: 1px;padding-bottom: 5px;}
     .settle_box .total_amount dd{ margin-top:1px;clear: both;font-size: 0.6rem;}
     .settle_box .total_amount dt p {color: #ff900d;font-size: 0.8rem;float: right;line-height: 20px;}
     .settle_box .total_amount dt p:first-letter{ font-size:0.6rem}
     .settle_box .total_amount dt {font-weight: initial;}
-    .settle_box .settle_btn{ float:right; width:33%; background:#ff900d; color:#fff; padding:17px 0; text-align:center;font-size: 0.7rem;}
+    .settle_box .settle_btn{
+      float:right;
+      width:120px;
+      background:#fd5138;
+      color:#fff;
+      padding:6px 0;
+      margin: 5px 0 0 0;
+      text-align:center;
+      font-size: 0.6rem;
+      border-radius: 20px;
+      border-top-right-radius: 20px;
+      border-bottom-left-radius: 20px;
+    }
 
 </style>

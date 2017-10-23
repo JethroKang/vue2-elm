@@ -6,7 +6,7 @@
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 <div class="swiper-slide" v-for="item in shopDetailData.pics">
-                  <img :src="item" >
+                  <img :src="'http://master.fstuis.com/'+item" >
                 </div>
               </div>
               <!-- Add Pagination -->
@@ -21,9 +21,9 @@
           <section class="food_service">
             <!--<p class="food_service_m"><span>包邮</span>全场满200元包邮</p>-->
             <ul>
-              <li><i class="icon iconfont">&#xe622;</i>正品保证</li>
-              <li><i class="icon iconfont">&#xe622;</i>快速发货</li>
-              <li><i class="icon iconfont">&#xe622;</i>优质服务</li>
+              <li><img src="../../images/queding.png" style="width: 0.7rem ;height: 0.7rem ;position: relative;top: 0.15rem;"/><span>正品保证</span></li>
+              <li><img src="../../images/queding.png" style="width: 0.7rem ;height: 0.7rem ;position: relative;top: 0.15rem;"/><span>快速发货</span></li>
+              <li><img src="../../images/queding.png" style="width: 0.7rem ;height: 0.7rem ;position: relative;top: 0.15rem;"/><span>优质服务</span></li>
             </ul>
             <div style="clear: both"></div>
           </section>
@@ -52,8 +52,8 @@
                 </div>
                 </router-link>
               </div>
-              <div class="c" @click="showChooseList">加入购物车</div>
-              <div class="r" @click="showChooseList">立即购买</div>
+              <!-- <div class="c" @click="showChooseList">加入购物车</div> -->
+              <div class="r" @click="showChooseList">加入购物车</div>
             </div>
 
           </section>
@@ -71,32 +71,35 @@
               </div>
 
               <div style="background-color: #ffffff; height: 24%;border-bottom: 1px solid #e9e9e9">
-                <p style="color: #fd5138; position: absolute; left: 30%; top: 6%; font-size: .6rem;font-weight: bold">￥ <span v-if="foodPrice">{{foodPrice}}</span><span v-else>{{shopDetailData.price}}</span></p>
+                <p style="color: #fd5138; position: absolute; left: 30%; top: 6%; font-size: .6rem;font-weight: bold">￥ <span  style="color: #fd5138;" v-if="foodPrice">{{foodPrice}}</span><span style="color: #fd5138;" v-else>{{shopDetailData.price}}</span></p>
                 <p style="color: #000000; position: absolute; left: 30%; top: 12%;font-size: .6rem">商品销量：{{shopDetailData.goods_sales}}</p>
               </div>
 
-              <section class="specs_details" style="background-color: #ffffff; height: 40%;border-bottom: 1px solid #f5f5f5">
-                <h5 class="specs_details_title">品种分类</h5>
-                <ul>
-                  <li v-for="(specsitem,itemIndex) in shopDetailData.sku_spec" :class="{specs_activity: itemIndex == specsIndex}" @click="chooseSpecs(itemIndex,specsitem.id,specsitem.price)">
-                    {{specsitem.key_name_arr}}
-                  </li>
-                </ul>
-              </section>
+              <div style="background-color: #ffffff; height: 62%;overflow-y:scroll">
+                <section class="specs_details" style="background-color: #ffffff;border-bottom: 1px solid #f5f5f5;overflow-y:scroll" >
+                  <h5 class="specs_details_title">商品规格</h5>
+                  <ul v-if="shopDetailData.goods_stock > 0">
+                    <li v-for="(specsitem,itemIndex) in shopDetailData.sku_spec" :class="{specs_activity: itemIndex == specsIndex}" @click="chooseSpecs(itemIndex,specsitem.id,specsitem.price)">
+                      {{specsitem.key_name_arr}}
+                    </li>
+                  </ul>
+                </section>
 
-              <section class="specs_details_num" style="background-color: #ffffff; height: 22%;border-bottom: 1px solid #f5f5f5">
+                <section class="specs_details_num" style="background-color: #ffffff; height: 22%;border-bottom: 1px solid #f5f5f5">
 
-              <div class="shop-arithmetic-t">
-                购买数量：
+                  <div class="shop-arithmetic-t">
+                    购买数量：
+                  </div>
+
+                  <div class="shop-arithmetic">
+                    <div class="minus"  @click="min">-</div>
+                    <input class="num" name="pricenum"  type="tel" v-model="numCounter"  maxlength="12 " />
+                    <div href="javascript:void(0)" class="plus" @click="add">+</div>
+                  </div>
+
+                </section>
               </div>
 
-              <div class="shop-arithmetic">
-                <div class="minus"  @click="min">-</div>
-                <input class="num" name="pricenum"  type="tel" v-model="numCounter"  maxlength="12 " />
-                <div href="javascript:void(0)" class="plus" @click="add">+</div>
-              </div>
-
-              </section>
 
               <section style="background-color: #ffffff; height: 15%">
                     <div style="width: 50%;height: 100%; text-align: center; background-color: #fea401; float: left;font-size: .8rem;color: #ffffff;vertical-align:middle; line-height: 2rem"
@@ -857,7 +860,7 @@
         left: 0;
         z-index: 99;
         display: flex;
-        @include wh(100%, 2rem);
+        @include wh(100%, 1.8rem);
         .cart_icon_num{
             flex: 1;
             .cart_icon_container{
@@ -1231,14 +1234,14 @@
         .specs_details{
             padding: .5rem;
             .specs_details_title{
-                @include sc(.6rem, #666);
+                @include sc(.5rem, #666);
             }
             ul{
                 display: flex;
                 flex-wrap: wrap;
                 padding: .4rem 0;
                 li{
-                    font-size: .6rem;
+                    font-size: .5rem;
                     padding: .3rem .5rem;
                     border: 0.025rem solid #ddd;
                     border-radius: .2rem;
@@ -1352,6 +1355,7 @@
     .food_secondary_title{
       font-size: 0.5rem;
       color: #8b8b8c;
+      line-height: 0.8rem;
     }
   }
     .food_service{
@@ -1374,11 +1378,14 @@
         padding: 0rem .3rem;
         li{
           float: left;
-          font-size: 0.6rem;
+          font-size: 0.4rem;
           padding: .4rem 0rem;
           margin-left: .3rem;
           .iconfont{
             color: #fd5138;
+          }
+          span{
+            padding-bottom: .4rem;
           }
         }
       }
@@ -1388,12 +1395,13 @@
 
     #msite_banner{
       padding-top: 1.95rem;
-    .swiper-container{
-    .swiper-slide img{
-      height: 10rem;
-      width: 100%;
-    }
-    }
+      height: 19rem;
+      .swiper-container{
+        .swiper-slide img{
+          height: 17rem;
+          width: 100%;
+        }
+      }
     }
 
     .specs_details{
@@ -1508,10 +1516,10 @@
     .bottom-btn{
       position: fixed;
       left:0;
-      bottom:0;
+      bottom:-.1rem;
       z-index: 10;
       width: 100%;
-      height: 2rem;
+      height: 1.9rem;
       display: flex;
       background: #fff;
     }
@@ -1519,7 +1527,7 @@
     .bottom-btn .l{
       float: left;
       /*height: 100rpx;*/
-      /*width: 162rpx;*/
+       /*width: 162rpx;*/
       border: 1px solid #f4f4f4;
       display: flex;
       align-items: center;
@@ -1537,22 +1545,21 @@
     .bottom-btn .l.l-cart .box{
       position: relative;
       /*height:rem;*/
-      width:2.4rem;
-
+      width:16rem;
     }
 
     .bottom-btn .l.l-cart .cart-count{
-      height:.8rem;
-      width: .8rem;
+      height:.6rem;
+      width: .6rem;
       z-index: 10;
       position: absolute;
-      top: -.2rem;
-      left: 1.3rem;
-      font-size: .6rem;
+      top: -.7rem;
+      left: 1.9rem;
+      font-size: .2rem;
       background: #fd5138;
       text-align: center;
       color: #fff;
-      line-height: .8rem;
+      line-height: .6rem;
       border-radius: 50%;
     }
 
@@ -1560,8 +1567,11 @@
       /*position: absolute;*/
       /*top: 10rpx;*/
       /*left:0;*/
-      text-align: center;
-      font-size: 1.1rem;
+      /*text-align: center;*/
+      position: absolute;
+      top: -.5rem;
+      left: 1.4rem;
+      font-size: .9rem;
     }
 
 
@@ -1579,19 +1589,26 @@
       color: #333;
       border-top: 1px solid #f4f4f4;
       border-bottom: 1px solid #f4f4f4;
-      font-size: .8rem;
+      font-size: .6rem;
     }
 
     .bottom-btn .r{
+      position: absolute;
+      top: .25rem;
+      left: 9.5rem;
+      width: 120px;
       border:1px solid #fd5138;
       background: #fd5138;
-      float: left;
-      height: 2rem;
-      line-height: 2rem;
+      height: 1.3rem;
+      line-height: 1.2rem;
       flex: 1;
-      text-align: center;
       color: #fff;
-      font-size: .8rem;
+      text-align: center;
+      vertical-align: middle;
+      font-size: .6rem;
+      border-radius: 20px;
+      border-top-right-radius: 20px;
+      border-bottom-left-radius: 20px;
     }
 
     .showcover-enter-active, .showcover-leave-active {
